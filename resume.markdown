@@ -91,7 +91,7 @@ Backend-focused engineer currently based in Cork, Ireland. Strong foundation in 
 
 - [Portfolio Website](https://kayis-rahman.github.io)
 - [GitHub](https://github.com/kayisrahman)
-- [LinkedIn](https://linkedin.com/in/kayisrahman)
+- [LinkedIn](https://www.linkedin.com/in/kayisrahman/)
 
 ---
 
