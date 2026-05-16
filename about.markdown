@@ -6,9 +6,12 @@ permalink: /about/
 background: '/img/about-me.jpg'
 ---
 
-A passionate **Software Engineer**, **Cloud Enthusiast**, and **Tech Leader** with over **9 years of experience** building scalable, reliable, and efficient solutions. I specialize in backend-heavy development using **Java** and **Spring Boot**, but I also enjoy diving into cloud ecosystems like **AWS** and **Google Cloud**. From leading cross-functional teams to architecting microservices, I bring both technical depth and collaborative spirit to the table.
+I'm a Staff Security Software Engineer at Qualcomm in Cork, Ireland, specialising in PKI, HSM, and secure device provisioning. I've been building software professionally since August 2015 — over 10 years across enterprise backend, cloud infrastructure, and now cryptographic security.
 
-Currently based in **Dublin**, I thrive at the intersection of clean code, creative problem-solving, and continuous improvement. I’ve worked on everything from high-performance APIs to Kubernetes deployments and CI/CD pipelines. I’m the kind of developer who gets excited by elegant solutions and new challenges — whether it’s optimizing performance or mentoring junior devs over a good cup of coffee ☕.
+My core expertise is in Java and Spring Boot. I've architected microservices platforms, led cloud migrations, and built full-stack systems with Angular and GraphQL. Alongside Java, I'm proficient in Go, JavaScript, and have hands-on experience across AWS, GCP, and Azure with Docker, Kubernetes, Terraform, and CI/CD automation.
 
-I’m currently open to **remote**, **freelance**, or **part-time roles** where I can contribute to meaningful projects in **Java**, **cloud infrastructure**, and beyond. If you're looking for someone who’s technically sharp, people-friendly, and always curious — let’s build something impactful together.
+Before Qualcomm, I was Senior Technical Lead at Ernst & Young GDS, where I led engineering teams through cloud-native transformations and mentored junior developers. I hold an MSc in Information Systems with Computing from Dublin Business School.
 
+When I'm not working, I build things. I've developed an automated swing trading system in Java/Spring Boot with TimescaleDB and LangChain4j running a local LLM. I also run a self-hosted LLM inference setup — vLLM serving Qwen3 on dual RTX 4090s — for experimentation and prototyping.
+
+Based near Cork, Ireland.

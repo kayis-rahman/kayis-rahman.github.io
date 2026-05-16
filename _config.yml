@@ -21,11 +21,14 @@
 title: Kayis Rahman
 email: kaisbk1@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Software Engineer | Cloud Enthusiast | Tech Leader | Java
+  Staff Security Engineer | PKI/HSM | Java & Go
+subheading: "Building automated trading systems and LLM inference infrastructure on the side."
+seo_description: "Staff Security Engineer specialising in PKI, HSM, and secure device provisioning. 10+ years of backend engineering experience. Based in Cork, Ireland."
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://kayis-rahman.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: kayisrahman
-github_username:  kayisrahman
+github_username: kayisrahman
+linkedin_username: kayisrahman
 disable_disk_cache: false
 
 navigation:
