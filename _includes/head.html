@@ -25,8 +25,16 @@
   {% if page.background %}<meta name="twitter:image" content="{{ page.background | absolute_url }}">{% endif %}
   {% if site.twitter_username %}<meta name="twitter:site" content="@{{ site.twitter_username }}">{% endif %}
 
-  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <!-- PWA -->
+  <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
+  <meta name="theme-color" content="#0085a1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+
+  <!-- Fonts — preconnect first to avoid extra round-trips -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&display=swap' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&display=swap' rel='stylesheet' type='text/css'>
 
   <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
 
@@ -41,7 +49,31 @@
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
+
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
+
+  {% if page.layout == 'post' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ page.title | escape }}",
+    "description": "{{ page.excerpt | strip_html | normalize_whitespace | truncate: 160 | escape }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ site.author | default: site.title | escape }}",
+      "url": "{{ site.url }}/about/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "{{ site.author | default: site.title | escape }}"
+    },
+    "datePublished": "{{ page.date | date_to_xmlschema }}",
+    "url": "{{ page.url | absolute_url }}"{% if page.background %},
+    "image": "{{ page.background | absolute_url }}"{% endif %}
+  }
+  </script>
+  {% endif %}
 
 </head>

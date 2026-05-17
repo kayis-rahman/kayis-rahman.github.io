@@ -1,0 +1,16 @@
+{
+  "name": "Kayis Rahman",
+  "short_name": "Kayis Rahman",
+  "description": "Staff Security Engineer | PKI/HSM | Java & Go",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0085a1",
+  "icons": [
+    {
+      "src": "/img/about-me.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ]
+}
