@@ -34,6 +34,17 @@ bundle exec jekyll build
 bundle exec jekyll serve --port 4000
 ```
 
+## Ruby Version
+This project requires Ruby 3.3.x (set via `.ruby-version`). Ruby 4.0+ is incompatible with the `github-pages` gem stack (`jekyll-feed` requires Ruby < 4.0).
+
+If you have `rbenv` installed, it will automatically use the correct Ruby version. Install with:
+```bash
+brew install rbenv
+rbenv install 3.3.8
+```
+
+A `pre-push` hook runs `jekyll build` before each push to catch build errors early.
+
 ## Deployment
 Pushes to `main` trigger a GitHub Actions workflow (`.github/workflows/jekyll-gh-pages.yml`) that builds and deploys to GitHub Pages. No manual steps needed. Manual runs via `workflow_dispatch` on the Actions tab.
 
