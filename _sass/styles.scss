@@ -2,107 +2,117 @@
 @import "../assets/vendor/startbootstrap-clean-blog/scss/styles";
 
 // ── Dark theme ──────────────────────────────────────────────────────────────
+// Flat selectors with !important to reliably beat the theme + Bootstrap.
+// html[data-theme] is set immediately by the inline script in <head>
+// so there is no flash of the wrong theme.
 
-[data-theme="dark"] {
-  body {
-    background-color: #121212;
-    color: #e0e0e0;
-  }
+html[data-theme="dark"] body {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
 
-  // Navbar
-  #mainNav {
-    background-color: #1a1a1a !important;
-    border-bottom: 1px solid #2e2e2e;
-  }
+// Navbar — cover both resting and scrolled (.navbar-shrink) states
+html[data-theme="dark"] #mainNav,
+html[data-theme="dark"] #mainNav.navbar-shrink {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #2e2e2e !important;
+}
 
-  #mainNav .navbar-brand,
-  #mainNav .nav-link {
-    color: #e0e0e0 !important;
-  }
+html[data-theme="dark"] #mainNav .navbar-brand,
+html[data-theme="dark"] #mainNav .nav-link {
+  color: #e0e0e0 !important;
+}
 
-  #mainNav .navbar-brand:hover,
-  #mainNav .nav-link:hover {
-    color: #ffffff !important;
-  }
+html[data-theme="dark"] #mainNav .navbar-brand:hover,
+html[data-theme="dark"] #mainNav .nav-link:hover {
+  color: #ffffff !important;
+}
 
-  // Hero / masthead overlay (keep image visible, darken overlay)
-  .masthead .overlay {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+// Hero overlay
+html[data-theme="dark"] .masthead .overlay {
+  background-color: rgba(0, 0, 0, 0.72) !important;
+}
 
-  // Post previews
-  .post-preview a {
-    color: #e0e0e0;
-  }
+// Post list
+html[data-theme="dark"] .post-preview > a {
+  color: #e0e0e0 !important;
+}
 
-  .post-preview a:hover {
-    color: #ffffff;
-    text-decoration: none;
-  }
+html[data-theme="dark"] .post-preview > a:hover,
+html[data-theme="dark"] .post-preview > a:focus {
+  color: #ffffff !important;
+  text-decoration: none;
+}
 
-  .post-meta {
-    color: #9e9e9e;
-  }
+html[data-theme="dark"] .post-meta {
+  color: #9e9e9e !important;
+}
 
-  // Horizontal rules
-  hr {
-    border-color: #2e2e2e;
-  }
+// Dividers
+html[data-theme="dark"] hr {
+  border-color: #2e2e2e !important;
+}
 
-  // Post / page body text
-  .post-content p,
-  .post-content li,
-  p {
-    color: #e0e0e0;
-  }
+// Body text & headings
+html[data-theme="dark"] p,
+html[data-theme="dark"] li,
+html[data-theme="dark"] td,
+html[data-theme="dark"] th {
+  color: #e0e0e0 !important;
+}
 
-  // Headings
-  h1, h2, h3, h4, h5, h6,
-  .post-title, .post-subtitle,
-  .page-heading {
-    color: #f0f0f0;
-  }
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6,
+html[data-theme="dark"] .post-title,
+html[data-theme="dark"] .post-subtitle,
+html[data-theme="dark"] .page-heading,
+html[data-theme="dark"] .site-heading {
+  color: #f0f0f0 !important;
+}
 
-  // Links in content
-  .post-content a,
-  article a {
-    color: #90b8ff;
-  }
+// In-content links
+html[data-theme="dark"] .post-content a,
+html[data-theme="dark"] article a {
+  color: #90b8ff !important;
+}
 
-  // Blockquotes
-  blockquote {
-    border-left-color: #444;
-    color: #aaa;
-  }
+// Blockquotes & code
+html[data-theme="dark"] blockquote {
+  border-left-color: #444 !important;
+  color: #aaa !important;
+}
 
-  // Code blocks
-  pre, code {
-    background-color: #1e1e1e;
-    color: #d4d4d4;
-    border-color: #333;
-  }
+html[data-theme="dark"] pre,
+html[data-theme="dark"] code {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  border-color: #333 !important;
+}
 
-  // Footer
-  footer {
-    background-color: #0a0a0a;
-    color: #aaa;
-  }
+// Footer
+html[data-theme="dark"] footer {
+  background-color: #0a0a0a !important;
+  color: #aaa !important;
+}
 
-  footer a {
-    color: #90b8ff;
-  }
+html[data-theme="dark"] footer a {
+  color: #90b8ff !important;
+}
 
-  // Buttons
-  .btn-primary {
-    background-color: #2a4a8a;
-    border-color: #2a4a8a;
-    color: #fff;
-  }
+// "View All Posts" button
+html[data-theme="dark"] .btn-primary {
+  background-color: #2a4a8a !important;
+  border-color: #2a4a8a !important;
+  color: #fff !important;
+}
 
-  .btn-primary:hover {
-    background-color: #3a5a9a;
-    border-color: #3a5a9a;
-  }
+html[data-theme="dark"] .btn-primary:hover {
+  background-color: #3a5a9a !important;
+  border-color: #3a5a9a !important;
 }
 
 // ── Toggle button ────────────────────────────────────────────────────────────
@@ -118,12 +128,6 @@
   opacity: 0.8;
   transition: opacity 0.2s;
 
-  &:hover {
-    opacity: 1;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+  &:hover { opacity: 1; }
+  &:focus { outline: none; box-shadow: none; }
 }
