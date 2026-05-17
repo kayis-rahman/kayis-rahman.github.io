@@ -36,7 +36,7 @@ disable_disk_cache: false
 future: true
 
 # Newsletter — sign up at buttondown.email then set your username to show the signup form
-# newsletter_username: yourname
+newsletter_username: kayis
 
 # Google Analytics 4 — add your Measurement ID to enable
 # google_analytics: G-XXXXXXXXXX
@@ -48,6 +48,8 @@ navigation:
     url: "/resume/"
   - title: "Blog"
     url: "/posts/"
+  - title: "Terminal"
+    url: "/terminal/"
 
 # Build settings
 sass:

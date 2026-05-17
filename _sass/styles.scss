@@ -7,6 +7,14 @@ html {
   scroll-behavior: smooth;
 }
 
+// Wider content area for better reading
+@media (min-width: 992px) {
+  .container { max-width: 90%; }
+}
+@media (min-width: 1200px) {
+  .container { max-width: 80%; }
+}
+
 // ── Reading progress bar ─────────────────────────────────────────────────────
 
 #reading-progress {
@@ -685,6 +693,117 @@ html[data-theme="dark"] .project-desc  { color: #9e9e9e !important; }
 html[data-theme="dark"] .project-status-active { background: #1a3a20 !important; color: #6fcf8a !important; }
 html[data-theme="dark"] .stack-badge { background: #2a2a2a !important; color: #aaa !important; }
 
+// ── Terminal ──────────────────────────────────────────────────────────────────
+
+.terminal-container {
+  position: relative;
+  min-height: 80vh;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3a3a3a;
+  height: 28px;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-right: 1rem;
+}
+
+.terminal-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+
+  &.close    { background: #ff5f57; }
+  &.minimize { background: #febc2e; }
+  &.maximize { background: #28c840; }
+}
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  color: #999;
+  font-size: 0.8rem;
+  font-family: inherit;
+  margin-right: 2.5rem; /* balance the buttons */
+}
+
+.terminal-body {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  padding: 1rem;
+  min-height: 60vh;
+  max-height: 75vh;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.terminal-output {
+  min-height: 4rem;
+}
+
+.terminal-output pre {
+  margin: 0 0 0.5rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  color: #e0e0e0;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.terminal-command {
+  color: #fff;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 0.25rem;
+}
+
+.terminal-prompt {
+  color: #90b8ff;
+  white-space: nowrap;
+}
+
+#terminal-input {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+  flex: 1;
+  outline: none;
+  caret-color: #28c840;
+  margin-left: 0.3rem;
+}
+
+#terminal-fallback {
+  display: none;
+}
+
+/* Terminal page: hide the masthead background */
+.terminal-container + .container .masthead {
+  display: none;
+}
+
 // ── Print styles (resume) ─────────────────────────────────────────────────────
 
 @media print {
@@ -711,4 +830,99 @@ html[data-theme="dark"] .stack-badge { background: #2a2a2a !important; color: #a
 
   table { border-collapse: collapse; width: 100%; }
   td, th { border: 1px solid #ccc; padding: 4pt 6pt; font-size: 10pt; }
+}
+
+// ── Contact page ───────────────────────────────────────────────────────────────
+
+.contact-content {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.contact-intro {
+  font-size: 1.15rem;
+  color: #555;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.contact-card {
+  margin-bottom: 2rem;
+}
+
+.btn-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border-radius: 6px;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+
+  &:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 133, 161, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  color: #555;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #0085a1;
+    border-color: #0085a1;
+    background: rgba(0, 133, 161, 0.05);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+html[data-theme="dark"] .contact-intro {
+  color: #aaa !important;
+}
+
+html[data-theme="dark"] .contact-link {
+  color: #aaa !important;
+  border-color: #444 !important;
+
+  &:hover {
+    color: #4a9ead !important;
+    border-color: #4a9ead !important;
+    background: rgba(74, 158, 173, 0.1) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-links {
+    flex-direction: column;
+  }
+  .contact-link {
+    justify-content: center;
+  }
 }
