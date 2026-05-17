@@ -49,6 +49,8 @@ navigation:
     url: "/posts/"
 
 # Build settings
+sass:
+  style: compressed
 remote_theme: StartBootstrap/startbootstrap-clean-blog-jekyll
 plugins:
   - jekyll-feed
