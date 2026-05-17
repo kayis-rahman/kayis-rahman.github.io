@@ -21,7 +21,7 @@ Those two years weren't glamorous. But the feedback loop was tight and honest. B
 
 Ideas to production. That's the job. Everything else is commentary.
 
----
+## TCS — 2018
 
 TCS in 2018 was a different world entirely.
 
@@ -37,7 +37,7 @@ Then a greenfield project from scratch. Microservices, Dockerized containers, Je
 
 The client was US-based. Calls at six-thirty or seven in the evening, Indian time. You adjust. You eat dinner late. After a while you stop noticing.
 
----
+## Ribalta — 2021
 
 Ribalta in 2021 was a choice I made with open eyes.
 
@@ -51,7 +51,7 @@ When something broke, there was no escalation path. There was the three of us, t
 
 That's where I learned what ownership actually means. Not ownership as a slide in a company all-hands. Ownership as in — if this breaks at midnight, it's on you, and you'd better already know the system well enough to fix it.
 
----
+## Ernst & Young — 2023
 
 EY, January 2023 to September 2024 — cloud at scale.
 
@@ -67,7 +67,7 @@ What I'll remember as much as any technical win is the people. Every company I'v
 
 Then September 2024 came. I handed in my notice and enrolled in a master's programme the same month.
 
----
+## Dublin — 2024
 
 No plan B on the table. A couple of weeks later I was sitting in a Dublin Business School lecture hall, student again at twenty-nine, wondering if I'd made a spectacular mistake.
 
@@ -79,7 +79,7 @@ Then Qualcomm called. January 2026. I packed up Dublin and headed to Cork. New c
 
 Some people need stability to do their best work. I've started to think I need the opposite.
 
----
+## Qualcomm — 2026
 
 Qualcomm since January 2026 is where everything converges.
 
