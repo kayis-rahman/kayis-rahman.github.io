@@ -16,6 +16,30 @@
 </script>
 {% endif %}
 
+<!-- Page transition animation on navbar clicks -->
+<script>
+(function() {
+  var navigating = false;
+  $('#mainNav a').on('click', function(e) {
+    var href = $(this).attr('href');
+    if (!href || href.startsWith('#') || href.startsWith('http')) return;
+    var url = new URL(href, window.location.href);
+    if (url.origin !== window.location.origin) return;
+    var path = url.pathname;
+    var current = window.location.pathname.replace(/\/$/, '') || '/';
+    if (path === current) return;
+    e.preventDefault();
+    if (navigating) return;
+    navigating = true;
+    var $content = $('.page-content');
+    $content.addClass('exiting');
+    setTimeout(function() {
+      window.location.href = href;
+    }, 200);
+  });
+})();
+</script>
+
 {% if page.url contains 'contact' %}
   <script>
     $(function () {

@@ -281,6 +281,7 @@ GEM
       thread_safe (~> 0.1)
     unicode-display_width (1.8.0)
     uri (1.1.1)
+    webrick (1.9.2)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -301,6 +302,7 @@ DEPENDENCIES
   jekyll-theme-clean-blog
   json
   liquid (~> 4.0.4)
+  webrick
 
 CHECKSUMS
   activesupport (6.0.6.1) sha256=6f01805552bb9b123db05b506ddc64af8285ccfc835a3169c9ec6c8a1d8c43ac
@@ -412,6 +414,7 @@ CHECKSUMS
   tzinfo (1.2.11) sha256=6501f6a12175ca0243118b83f7c7c2b7978aaec7a0980550a124d007ad6361b6
   unicode-display_width (1.8.0) sha256=0292132d364d59fcdd83f144910c48b3c8332b28a14c5c04bb093dd165600488
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
+  webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
   zeitwerk (2.7.5) sha256=d8da92128c09ea6ec62c949011b00ed4a20242b255293dd66bf41545398f73dd
 
 BUNDLED WITH

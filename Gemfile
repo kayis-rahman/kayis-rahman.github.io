@@ -4,6 +4,7 @@ source "https://rubygems.org"
 gem "csv"
 gem "bigdecimal"
 gem "json"
+gem "webrick"
 # Liquid 4.0.4+ drops String#tainted? call removed in Ruby 3.2+
 gem "liquid", "~> 4.0.4"
 

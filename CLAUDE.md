@@ -59,7 +59,21 @@ The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides ba
 - Blog posts go in `_posts/` with filenames like `YYYY-MM-DD-slug.markdown`
 - The Gemfile lists both `minima` and `jekyll-theme-clean-blog`; the active theme is the remote theme in `_config.yml`. `minima` is vestigial.
 
+## UI Verification Rule
+**After any UI change (layouts, includes, SCSS, CSS), verify visually before reporting completion:**
+1. Start dev server: `bundle exec jekyll serve --port 4000`
+2. Navigate to affected pages with Playwright (`browser_navigate`)
+3. Take snapshots (`browser_snapshot`) to verify layout, spacing, and content flow
+4. Take screenshots (`browser_take_screenshot`) for visual confirmation
+5. Check computed styles (`browser_evaluate`) for width/height changes
+6. Verify on post page, home page, and any modified layout
+7. Stop dev server when done
+
+Builds pass != UI is correct. Always verify rendering in browser.
+
 ## Gotchas
 - **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
 - **CI minification can't write in-place to `_site/`** — `actions/configure-pages` makes `_site/` read-only. Minify to a temp dir (`_minified/`) and upload that as the artifact instead.
 - **`_includes/scripts.html` is the canonical place for inline scripts** (GA, etc.) since it's always included via `default.html`. Don't add scripts to `default.html` directly — use the existing include partials.
+- **`jekyll serve` requires `webrick` gem** — Ruby 3.3+ doesn't include webrick in stdlib. Add `gem "webrick"` to Gemfile and run `bundle install`. Without it, `jekyll build` works but `jekyll serve` crashes with LoadError.
+- **Content column width is controlled by two things**: Bootstrap grid class (`col-lg-8`/`col-lg-10`) in layouts AND `.container` max-width in SCSS. Changing only one gives partial results. Change both for full effect.
