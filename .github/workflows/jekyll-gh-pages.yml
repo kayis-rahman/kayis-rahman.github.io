@@ -50,25 +50,24 @@ jobs:
             --minify-css true \
             --minify-js true
           # Copy non-HTML files unchanged
-          cp -r ./_site/assets ./_minified/ 2>/dev/null || true
-          cp -r ./_site/feed.xml ./_minified/ 2>/dev/null || true
-          cp -r ./_site/sitemap.xml ./_minified/ 2>/dev/null || true
-          cp -r ./_site/sw.js ./_minified/ 2>/dev/null || true
-          # Replace _site with minified output
-          rm -rf ./_site
-          mv ./_minified ./_site
+          cp -r ./_site/assets ./_minified/
+          cp ./_site/feed.xml ./_minified/
+          cp ./_site/sitemap.xml ./_minified/ 2>/dev/null || true
+          cp ./_site/sw.js ./_minified/ 2>/dev/null || true
 
       - name: Minify JavaScript
         run: |
-          npx --yes terser ./_site/assets/scripts.js \
+          npx --yes terser ./_minified/assets/scripts.js \
             --compress --mangle \
-            --output ./_site/assets/scripts.js.min
-          npx --yes terser ./_site/sw.js \
+            --output ./_minified/assets/scripts.js.min
+          npx --yes terser ./_minified/sw.js \
             --compress --mangle \
-            --output ./_site/sw.js.min
+            --output ./_minified/sw.js.min 2>/dev/null || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_minified
 
   deploy:
     environment:
