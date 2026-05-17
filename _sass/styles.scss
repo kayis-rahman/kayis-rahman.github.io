@@ -1,2 +1,129 @@
 // Import Core Clean Blog SCSS
 @import "../assets/vendor/startbootstrap-clean-blog/scss/styles";
+
+// ── Dark theme ──────────────────────────────────────────────────────────────
+
+[data-theme="dark"] {
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  // Navbar
+  #mainNav {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid #2e2e2e;
+  }
+
+  #mainNav .navbar-brand,
+  #mainNav .nav-link {
+    color: #e0e0e0 !important;
+  }
+
+  #mainNav .navbar-brand:hover,
+  #mainNav .nav-link:hover {
+    color: #ffffff !important;
+  }
+
+  // Hero / masthead overlay (keep image visible, darken overlay)
+  .masthead .overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  // Post previews
+  .post-preview a {
+    color: #e0e0e0;
+  }
+
+  .post-preview a:hover {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .post-meta {
+    color: #9e9e9e;
+  }
+
+  // Horizontal rules
+  hr {
+    border-color: #2e2e2e;
+  }
+
+  // Post / page body text
+  .post-content p,
+  .post-content li,
+  p {
+    color: #e0e0e0;
+  }
+
+  // Headings
+  h1, h2, h3, h4, h5, h6,
+  .post-title, .post-subtitle,
+  .page-heading {
+    color: #f0f0f0;
+  }
+
+  // Links in content
+  .post-content a,
+  article a {
+    color: #90b8ff;
+  }
+
+  // Blockquotes
+  blockquote {
+    border-left-color: #444;
+    color: #aaa;
+  }
+
+  // Code blocks
+  pre, code {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border-color: #333;
+  }
+
+  // Footer
+  footer {
+    background-color: #0a0a0a;
+    color: #aaa;
+  }
+
+  footer a {
+    color: #90b8ff;
+  }
+
+  // Buttons
+  .btn-primary {
+    background-color: #2a4a8a;
+    border-color: #2a4a8a;
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background-color: #3a5a9a;
+    border-color: #3a5a9a;
+  }
+}
+
+// ── Toggle button ────────────────────────────────────────────────────────────
+
+#theme-toggle {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
