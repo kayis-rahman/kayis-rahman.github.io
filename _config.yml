@@ -34,6 +34,12 @@ linkedin_username: kayisrahman
 disable_disk_cache: false
 future: true
 
+# Newsletter — sign up at buttondown.email then set your username to show the signup form
+# newsletter_username: yourname
+
+# Google Analytics 4 — add your Measurement ID to enable
+# google_analytics: G-XXXXXXXXXX
+
 navigation:
   - title: "Home"
     url: "/"

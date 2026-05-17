@@ -1,0 +1,67 @@
+---
+layout: page
+title: Search
+permalink: /search/
+background: '/img/home.jpg'
+---
+
+<div class="search-container">
+  <div class="input-group mb-4">
+    <input type="text" id="search-input" class="form-control search-input"
+           placeholder="Search posts…" autocomplete="off" autofocus>
+    <div class="input-group-append">
+      <span class="input-group-text"><i class="fas fa-search"></i></span>
+    </div>
+  </div>
+  <div id="search-hint" class="text-muted small mb-3">Type to search across all posts.</div>
+  <div id="search-results"></div>
+</div>
+
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script>
+(function () {
+  fetch('{{ "/search.json" | relative_url }}')
+    .then(function (r) { return r.json(); })
+    .then(function (posts) {
+      var idx = lunr(function () {
+        this.ref('id');
+        this.field('title', { boost: 10 });
+        this.field('tags',  { boost: 5  });
+        this.field('excerpt');
+        posts.forEach(function (p) { this.add(p); }, this);
+      });
+
+      var byId = {};
+      posts.forEach(function (p) { byId[p.id] = p; });
+
+      var input   = document.getElementById('search-input');
+      var results = document.getElementById('search-results');
+      var hint    = document.getElementById('search-hint');
+
+      input.addEventListener('input', function () {
+        var q = input.value.trim();
+        results.innerHTML = '';
+        if (!q) { hint.style.display = ''; return; }
+        hint.style.display = 'none';
+
+        var hits;
+        try { hits = idx.search(q + '~1'); } catch (e) { hits = []; }
+
+        if (!hits.length) {
+          results.innerHTML = '<p class="text-muted">No posts found for <strong>' + q + '</strong>.</p>';
+          return;
+        }
+        hits.forEach(function (hit) {
+          var p = byId[hit.ref];
+          if (!p) return;
+          results.innerHTML +=
+            '<article class="search-result">' +
+              '<h4><a href="' + p.url + '">' + p.title + '</a></h4>' +
+              '<p class="post-meta">' + p.date + (p.tags ? ' &middot; ' + p.tags : '') + '</p>' +
+              '<p>' + p.excerpt + '</p>' +
+            '</article><hr>';
+        });
+      });
+    });
+})();
+</script>

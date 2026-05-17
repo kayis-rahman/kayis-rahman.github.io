@@ -6,6 +6,12 @@ permalink: /resume/
 background: '/img/resume.jpg'
 ---
 
+<div class="d-print-none text-right mb-4">
+  <button onclick="window.print()" class="btn btn-primary">
+    <i class="fas fa-download mr-1"></i> Download as PDF
+  </button>
+</div>
+
 # Kayis Rahman - Resume
 
 I'm a Staff Security Software Engineer specialising in PKI, HSM, and secure device provisioning. With over 10 years of professional experience, I've delivered high-impact solutions across enterprise backend, cloud infrastructure, and cryptographic security.

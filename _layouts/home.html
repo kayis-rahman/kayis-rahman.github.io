@@ -66,6 +66,22 @@ layout: default
 
         {% endfor %}
 
+        <!-- Newsletter -->
+        {% if site.newsletter_username %}
+        <div class="newsletter-signup">
+          <h4 class="newsletter-heading">Stay updated</h4>
+          <p class="newsletter-desc">New posts about PKI, Java, LLM inference, and building things on the side. No spam.</p>
+          <form action="https://buttondown.email/api/emails/embed-subscribe/{{ site.newsletter_username }}" method="post" class="newsletter-form" target="_blank">
+            <div class="input-group">
+              <input type="email" name="email" placeholder="your@email.com" class="form-control" required>
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        {% endif %}
+
         <!-- Pager -->
         <div class="clearfix">
           <a class="btn btn-primary float-right" href="{{"/posts" | relative_url }}">View All Posts &rarr;</a>

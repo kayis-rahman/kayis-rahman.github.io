@@ -4,7 +4,6 @@ layout: default
 
 <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 
-<!-- Page Header -->
 {% if page.background %}
 <header class="masthead" style="background-image: url('{{ page.background | prepend: site.baseurl | replace: '//', '/' }}')">
   {% else %}
@@ -33,7 +32,11 @@ layout: default
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
 
-        {{ content }}
+        <div id="toc"></div>
+
+        <div class="post-body">
+          {{ content }}
+        </div>
 
         {% if page.tags.size > 0 %}
         <div class="post-tags mt-4">
@@ -60,7 +63,6 @@ layout: default
 
         {% include related-posts.html %}
 
-        <!-- Comments -->
         <div id="comments" class="mt-5 pt-3"></div>
 
       </div>

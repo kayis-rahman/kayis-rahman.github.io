@@ -1,0 +1,63 @@
+---
+layout: page
+title: Projects
+permalink: /projects/
+background: '/img/home.jpg'
+---
+
+<p class="lead mb-5">Things I build outside of work — trading systems, LLM infrastructure, and whatever else I can't stop myself from starting.</p>
+
+<div class="row project-grid">
+
+  <div class="col-md-6 mb-4">
+    <div class="project-card">
+      <div class="project-header">
+        <h3 class="project-title">Swing Trading System</h3>
+        <span class="project-status project-status-active">Active</span>
+      </div>
+      <p class="project-desc">Automated swing trading engine that ingests market data, runs technical analysis, and uses a locally-hosted LLM to generate and score trade signals before execution. Built for learning the hard way — not financial advice.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Java</span>
+        <span class="stack-badge">Spring Boot</span>
+        <span class="stack-badge">TimescaleDB</span>
+        <span class="stack-badge">LangChain4j</span>
+        <span class="stack-badge">LLM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="project-card">
+      <div class="project-header">
+        <h3 class="project-title">Self-Hosted LLM Inference</h3>
+        <span class="project-status project-status-active">Active</span>
+      </div>
+      <p class="project-desc">Self-hosted inference stack running Qwen3 on dual RTX 4090s via vLLM. Powers the trading system's analysis layer, local experimentation, and general prototyping without sending data to a third-party API.</p>
+      <div class="project-stack">
+        <span class="stack-badge">vLLM</span>
+        <span class="stack-badge">Qwen3</span>
+        <span class="stack-badge">CUDA</span>
+        <span class="stack-badge">Python</span>
+        <span class="stack-badge">RTX 4090</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="project-card">
+      <div class="project-header">
+        <h3 class="project-title">This Site</h3>
+        <span class="project-status project-status-active">Active</span>
+      </div>
+      <p class="project-desc">Jekyll-based personal site with dark mode, full-text client-side search, reading progress bar, utterances comments, a service worker, and a growing collection of posts. Deployed on GitHub Pages.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Jekyll</span>
+        <span class="stack-badge">GitHub Pages</span>
+        <span class="stack-badge">JavaScript</span>
+        <span class="stack-badge">SCSS</span>
+        <span class="stack-badge">Lunr.js</span>
+      </div>
+    </div>
+  </div>
+
+</div>

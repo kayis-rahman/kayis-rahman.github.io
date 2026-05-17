@@ -17,11 +17,19 @@
         <li class="nav-item{% if page.url contains '/posts' or page.layout == 'post' %} active{% endif %}">
           <a class="nav-link" href="{{"/posts" | relative_url }}">Blog</a>
         </li>
+        <li class="nav-item{% if page.url contains '/projects' %} active{% endif %}">
+          <a class="nav-link" href="{{"/projects" | relative_url }}">Projects</a>
+        </li>
         <li class="nav-item{% if page.url contains '/resume' %} active{% endif %}">
           <a class="nav-link" href="{{ "/resume" | relative_url }}">Resume</a>
         </li>
         <li class="nav-item{% if page.url contains '/contact' %} active{% endif %}">
           <a class="nav-link" href="{{"/contact" | relative_url }}">Contact</a>
+        </li>
+        <li class="nav-item{% if page.url contains '/search' %} active{% endif %}">
+          <a class="nav-link" href="{{"/search" | relative_url }}" aria-label="Search">
+            <i class="fas fa-search"></i>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link rss-link" href="{{ "/feed.xml" | relative_url }}" title="RSS Feed" aria-label="RSS Feed">
