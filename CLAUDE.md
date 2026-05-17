@@ -58,3 +58,8 @@ The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides ba
 - `baseurl` is empty string (site deploys at repo root, not a subpath)
 - Blog posts go in `_posts/` with filenames like `YYYY-MM-DD-slug.markdown`
 - The Gemfile lists both `minima` and `jekyll-theme-clean-blog`; the active theme is the remote theme in `_config.yml`. `minima` is vestigial.
+
+## Gotchas
+- **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
+- **CI minification can't write in-place to `_site/`** — `actions/configure-pages` makes `_site/` read-only. Minify to a temp dir (`_minified/`) and upload that as the artifact instead.
+- **`_includes/scripts.html` is the canonical place for inline scripts** (GA, etc.) since it's always included via `default.html`. Don't add scripts to `default.html` directly — use the existing include partials.
