@@ -26,6 +26,8 @@ subheading: "Building automated trading systems and LLM inference infrastructure
 seo_description: "Staff Security Engineer specialising in PKI, HSM, and secure device provisioning. 10+ years of backend engineering experience. Based in Cork, Ireland."
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://kayis-rahman.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+author: Kayis Rahman
+author_bio: "Staff Security Engineer at Qualcomm. I write about PKI, Java, LLM inference, and building things on the side."
 twitter_username: kayisrahman
 github_username: kayisrahman
 linkedin_username: kayisrahman

@@ -1,0 +1,28 @@
+---
+layout: page
+title: Tags
+permalink: /tags/
+background: '/img/home.jpg'
+---
+
+<div class="tag-cloud mb-5">
+  {% assign sorted_tags = site.tags | sort %}
+  {% for tag in sorted_tags %}
+  <a href="#{{ tag[0] | slugify }}" class="tag-badge tag-badge-lg">
+    {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
+  </a>
+  {% endfor %}
+</div>
+
+{% assign sorted_tags = site.tags | sort %}
+{% for tag in sorted_tags %}
+<div id="{{ tag[0] | slugify }}" class="tag-section mb-5">
+  <h3 class="tag-section-heading">{{ tag[0] }}</h3>
+  {% for post in tag[1] %}
+  <div class="tag-post-item">
+    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <span class="tag-post-date">{{ post.date | date: '%B %d, %Y' }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}

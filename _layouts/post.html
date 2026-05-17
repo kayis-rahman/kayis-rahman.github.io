@@ -21,8 +21,7 @@ layout: default
             {% endif %}
             <span class="meta">Posted by
               <a href="#">{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</a>
-              on {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html
-              content=page.content %}
+              on {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=page.content %}
             </span>
           </div>
         </div>
@@ -36,6 +35,16 @@ layout: default
 
         {{ content }}
 
+        {% if page.tags.size > 0 %}
+        <div class="post-tags mt-4">
+          {% for tag in page.tags %}
+          <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag-badge">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% include share-buttons.html %}
+
         <hr>
 
         <div class="clearfix">
@@ -46,6 +55,10 @@ layout: default
           <a class="btn btn-primary float-right" href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{ page.next.title }}">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
           {% endif %}
         </div>
+
+        {% include author-card.html %}
+
+        {% include related-posts.html %}
 
         <!-- Comments -->
         <div id="comments" class="mt-5 pt-3"></div>
