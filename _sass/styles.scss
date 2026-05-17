@@ -262,20 +262,12 @@ html[data-theme="dark"] #back-to-top {
   &:hover { background: #3a5a9a !important; }
 }
 
-// ── Toggle button ────────────────────────────────────────────────────────────
+// ── Toggle button — reset browser defaults, nav-link handles the rest ────────
 
 #theme-toggle {
   background: none;
   border: none;
-  color: inherit;
   cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem 0.75rem;
-  line-height: 1;
-  opacity: 0.8;
-  transition: opacity 0.2s;
   -webkit-tap-highlight-color: transparent;
-
-  &:hover { opacity: 1; }
   &:focus { outline: none; box-shadow: none; }
 }
