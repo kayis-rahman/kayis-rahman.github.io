@@ -1,10 +1,80 @@
 // Import Core Clean Blog SCSS
 @import "../assets/vendor/startbootstrap-clean-blog/scss/styles";
 
+// ── Reading progress bar ─────────────────────────────────────────────────────
+
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: #0085a1;
+  z-index: 9999;
+  transition: width 0.08s linear;
+}
+
+// ── Back to top button ───────────────────────────────────────────────────────
+
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #0085a1;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s, background 0.2s;
+  z-index: 999;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:hover {
+    background: #006f87;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 133, 161, 0.4);
+  }
+}
+
+// ── Syntax highlighting (GitHub-style) ───────────────────────────────────────
+
+.highlight {
+  background: #f6f8fa;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+
+  pre { margin: 0; background: transparent; border: none; padding: 0; }
+
+  .c, .c1, .cm, .cs  { color: #6a737d; font-style: italic; } // comments
+  .k, .kd, .kn, .kp, .kr, .kt { color: #d73a49; font-weight: bold; } // keywords
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .si, .sx { color: #032f62; } // strings
+  .n  { color: #24292e; } // names
+  .na { color: #6f42c1; } // attr names
+  .nb { color: #005cc5; } // builtins
+  .nc { color: #6f42c1; } // class names
+  .nf { color: #6f42c1; } // function names
+  .m, .mi, .mf       { color: #005cc5; } // numbers
+  .o                  { color: #d73a49; } // operators
+}
+
 // ── Dark theme ──────────────────────────────────────────────────────────────
-// Flat selectors with !important to reliably beat the theme + Bootstrap.
-// html[data-theme] is set immediately by the inline script in <head>
-// so there is no flash of the wrong theme.
 
 html[data-theme="dark"] body {
   background-color: #121212 !important;
@@ -93,6 +163,18 @@ html[data-theme="dark"] code {
   border-color: #333 !important;
 }
 
+html[data-theme="dark"] .highlight {
+  background: #1e1e1e !important;
+
+  .c, .c1, .cm, .cs  { color: #7c8591 !important; }
+  .k, .kd, .kn       { color: #ff7b72 !important; }
+  .s, .s1, .s2       { color: #a5d6ff !important; }
+  .nb, .nf, .nc      { color: #79c0ff !important; }
+  .m, .mi, .mf       { color: #79c0ff !important; }
+  .o                  { color: #ff7b72 !important; }
+  .n                  { color: #e0e0e0 !important; }
+}
+
 // Footer
 html[data-theme="dark"] footer {
   background-color: #0a0a0a !important;
@@ -103,7 +185,7 @@ html[data-theme="dark"] footer a {
   color: #90b8ff !important;
 }
 
-// "View All Posts" button
+// Buttons
 html[data-theme="dark"] .btn-primary {
   background-color: #2a4a8a !important;
   border-color: #2a4a8a !important;
@@ -113,6 +195,17 @@ html[data-theme="dark"] .btn-primary {
 html[data-theme="dark"] .btn-primary:hover {
   background-color: #3a5a9a !important;
   border-color: #3a5a9a !important;
+}
+
+// Progress bar & back-to-top in dark mode
+html[data-theme="dark"] #reading-progress {
+  background: #4a90d9 !important;
+}
+
+html[data-theme="dark"] #back-to-top {
+  background: #2a4a8a !important;
+
+  &:hover { background: #3a5a9a !important; }
 }
 
 // ── Toggle button ────────────────────────────────────────────────────────────

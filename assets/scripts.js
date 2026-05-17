@@ -2,7 +2,7 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-// Dark mode
+// ── Dark mode ────────────────────────────────────────────────────────────────
 (function () {
   var html = document.documentElement;
   var toggle = document.getElementById('theme-toggle');
@@ -15,7 +15,6 @@ $(function () {
     }
   }
 
-  // Sync icon with whatever the head script already set
   var current = html.getAttribute('data-theme') || 'light';
   applyTheme(current);
 
@@ -27,10 +26,44 @@ $(function () {
     });
   }
 
-  // Follow system preference changes only when the user hasn't made a choice
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
     if (!localStorage.getItem('theme')) {
       applyTheme(e.matches ? 'dark' : 'light');
     }
+  });
+})();
+
+// ── Reading progress bar ─────────────────────────────────────────────────────
+(function () {
+  var bar = document.getElementById('reading-progress');
+  if (!bar) return;
+
+  function update() {
+    var docEl = document.documentElement;
+    var scrollTop = docEl.scrollTop || document.body.scrollTop;
+    var scrollHeight = docEl.scrollHeight - docEl.clientHeight;
+    var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+    bar.setAttribute('aria-valuenow', Math.round(pct));
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+})();
+
+// ── Back to top ──────────────────────────────────────────────────────────────
+(function () {
+  var btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 300) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }, { passive: true });
+
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
