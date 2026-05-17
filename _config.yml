@@ -30,6 +30,7 @@ twitter_username: kayisrahman
 github_username: kayisrahman
 linkedin_username: kayisrahman
 disable_disk_cache: false
+future: true
 
 navigation:
   - title: "Home"
