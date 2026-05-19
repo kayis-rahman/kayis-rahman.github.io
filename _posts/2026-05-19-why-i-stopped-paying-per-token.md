@@ -97,6 +97,8 @@ Real gpuhub instance prices from actual sessions:
 
 Prices from actual sessions — verify current rates at gpuhub.com before provisioning. gpuhub bills per second.
 
+One important distinction from subscription plans: gpuhub is pure pay-as-you-go. The 6hr/day estimate in the table is just that — an estimate. If you use it for 2 hours one day and 8 the next, you pay exactly for those hours. No monthly floor, no wasted budget, no commitment. What you use is what you pay.
+
 Token maths at scale:
 
 |Monthly volume   |Sonnet 4.6 API cost|2x RTX 5090 gpuhub|
