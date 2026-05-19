@@ -7,22 +7,15 @@ tags: [vllm, gpuhub, claude-code, self-hosted-llm, qwen3]
 description: "Claude Code mid-session, 500 errors, rate limits, and the decision to self-host. Part 1 of a 5-part series on running your own LLM on rented GPUs."
 ---
 
-It happened mid-session.
+I was on the $20 Claude Pro plan and hitting rate limits every other session.
 
-Claude Code was deep inside `TechnicalIndicators.java` — editing a smoothed value calculation, six files open, tool calls chained across the last twenty minutes of work. Then this:
+Mid-refactor. Mid-thought. "You've hit your session limit — resets 3:45pm." Close the laptop, come back later, rebuild the context in your head all over again.
 
-```
-500 {"type":"error","error":{"type":"internal_error","message":"This model's
-maximum context length is 196176 tokens. However, you requested 32000 output
-tokens and your prompt contains at least 164177 input tokens, for a total of
-at least 196177 tokens."}}
+The fix seemed obvious — upgrade. But before spending $100 or $200 a month I wanted to understand what I was actually paying for, and whether there was a smarter way.
 
-Retrying in 10 seconds… (attempt 6/10)
-```
+There was. It involved renting GPUs in Singapore, several weeks of broken CUDA drivers, and more OOM crashes than I care to count.
 
-Six retries. Ten seconds each. A minute of watching it fail repeatedly at the worst possible moment.
-
-This wasn't a free tier problem. This was the Max plan. The plan that costs $200 a month.
+But first — what Claude Code is actually doing to your token budget.
 
 ---
 
@@ -50,64 +43,78 @@ Real numbers from actual sessions:
 - Default output request per call: **32,000 tokens**
 - Combined: exactly one token over the limit
 
-The error wasn't lying. Claude Code had grown the context so naturally, across so many incremental steps, that nobody noticed it approaching the wall until it hit it at full speed.
+The context didn't spike. It crept. File by file, tool call by tool call, edit by edit. By the time the error fired, the session had been growing for twenty minutes and nobody noticed until it hit the ceiling at full speed.
 
-> **As of May 2026:** Claude Code operates on a 5-hour rolling window. Pro users get approximately 44,000 tokens per window, Max 5x around 88,000, and Max 20x roughly 220,000 tokens. Developers have reported burning through 4 hours of usage in 3 prompts when using plan mode to refactor a frontend architecture.
+Also worth knowing: auto-compaction reserves roughly 33K tokens on a 200K window as a buffer so Claude can finish its current response when compaction triggers. Your effective working limit is always lower than the headline number.
 
-The official fix is `autoCompact` — a setting that compresses conversation history when context gets long. In theory it fires automatically. In practice, by the time it triggers, queued requests have already exceeded the model's limit. The workaround is to lower `contextWindowSize` so compaction fires earlier:
+This is why upgrading the plan alone doesn't fully solve it.
 
-```json
-{
-  "autoCompact": true,
-  "maxTokens": 16000,
-  "contextWindowSize": 98304
-}
-```
+Rate limits cut you off at the plan level — you've exhausted your 5-hour window, wait for the reset. Context walls cut you off at the session level — a single task grew too large for the model to continue. Two different problems, same result: Claude Code stops mid-work.
 
-Which means: deliberately cripple the context window to stop the tool from breaking itself. That's not a solution. That's a band-aid on a structural problem.
+On a paid plan, both happen. On a self-hosted instance, neither does. The context window is whatever your GPU's VRAM can hold. There's no rolling window, no shared quota, no plan ceiling.
 
-Run three or four parallel Claude Code sessions — which is exactly what building multiple apps simultaneously looks like — and a new problem appears. LiteLLM 429 errors. Internal rate limits throttling requests before they even reach the model. You're paying $200 a month and still getting throttled.
+But to get there, you first need to understand how sessions grow this fast — and what you can do about it while still on the API.
 
-Also worth knowing: **agent teams use approximately 7x more tokens than standard sessions** when teammates run in plan mode, because each teammate maintains its own context window and runs as a separate Claude instance.
+So you have two problems. Rate limits at the plan level and context walls at the session level.
+
+For context walls, Anthropic's official fixes are /compact, /context, and disabling unused MCP servers. Run /context first — you'll typically find MCP tool definitions quietly consuming thousands of tokens you never asked for.
+
+/compact compresses conversation history to free space. If it fails because the window is already full, press Esc twice to step back a few turns, then compact from there. If that still fails, /clear and start fresh — your previous session is preserved and reopenable with /resume.
+
+The community workaround of lowering contextWindowSize in settings exists too. It forces earlier compaction but trades depth for stability — longer sessions and multi-file refactors become harder the moment you cap the window. It treats the symptom, not the cause.
+
+For rate limits there's no workaround. You wait for the reset or you upgrade. That's the plan ceiling — and it's why the maths on self-hosting started making sense.
 
 -----
 
 ## The Cost Maths
 
+I was on the $20 Pro plan. Hitting rate limits every other session.
+
+The obvious next step was to upgrade. But before reaching for a credit card I did the maths — and the maths told a different story.
+
 Here's what the options actually look like in 2026:
 
-|Plan                   |Monthly Cost |Token window      |Reality                            |
-|-----------------------|-------------|------------------|-----------------------------------|
-|Claude Pro             |$20          |~44K tokens / 5hr |Hits limit in 3 Claude Code prompts|
-|Claude Max 5x          |$100         |~88K tokens / 5hr |Ok for light daily use             |
-|Claude Max 20x         |$200         |~220K tokens / 5hr|One heavy agentic week burns it    |
-|Sonnet 4.6 API         |Pay-per-token|Unlimited         |$3/M input, $15/M output           |
-|**2× RTX 4080S gpuhub**|**~$84/mo**  |**Unlimited**     |**Private, no throttle**           |
-|**2× RTX 5090 gpuhub** |**~$130/mo** |**Unlimited**     |**Private, no throttle**           |
+|Plan               |Monthly Cost |Token window       |Reality                         |
+|-------------------|-------------|-------------------|--------------------------------|
+|Claude Pro         |$20          |~44K tokens / 5hr* |Hits limit mid-session regularly|
+|Claude Max 5x      |$100         |~88K tokens / 5hr* |Ok for light daily use          |
+|Claude Max 20x     |$200         |~220K tokens / 5hr*|One heavy agentic week burns it |
+|Sonnet 4.6 API     |Pay-per-token|Unlimited          |$3/M input, $15/M output        |
+|2x RTX 4080S gpuhub|~$84/mo      |Unlimited          |Private, no throttle            |
+|2x RTX 5090 gpuhub |~$130/mo     |Unlimited          |Private, no throttle            |
+
+*Token estimates are community-reported approximations — Anthropic does not publish exact per-window token counts. Source: SSD Nodes, Duet, CloudZero.
 
 Real gpuhub instance prices from actual sessions:
 
 |GPU Instance   |VRAM         |Cost/hr   |Est. monthly (6hr/day)|
 |---------------|-------------|----------|----------------------|
-|2× RTX 4080S   |64GB combined|$0.46–0.48|~$84                  |
+|2x RTX 4080S   |64GB combined|$0.46-0.48|~$84                  |
 |RTX 5090 single|32GB         |$0.36     |~$65                  |
-|2× RTX 5090    |64GB combined|$0.72     |~$130                 |
+|2x RTX 5090    |64GB combined|$0.72     |~$130                 |
 |RTX PRO 6000   |96GB         |$0.91     |~$164                 |
 
-*Prices from actual sessions — verify current rates at [gpuhub.com](https://gpuhub.com) before provisioning. gpuhub bills per second.*
+Prices from actual sessions — verify current rates at gpuhub.com before provisioning. gpuhub bills per second.
 
 Token maths at scale:
 
-|Monthly volume   |Sonnet 4.6 API cost|2× RTX 5090 gpuhub|
+|Monthly volume   |Sonnet 4.6 API cost|2x RTX 5090 gpuhub|
 |-----------------|-------------------|------------------|
-|10M in / 2M out  |~$60               |~$50–80           |
+|10M in / 2M out  |~$60               |~$50-80           |
 |50M in / 10M out |~$300              |~$130             |
 |100M in / 20M out|~$600              |~$130             |
 |200M in / 40M out|~$1,200            |~$130             |
 
-Break-even hits at medium usage. Above that, the gap widens every month. And this is worth knowing: **your usage limit is shared across Claude.ai chat and Claude Code from the same bucket.** Heavy chat usage eats into your Claude Code allocation.
+Sonnet 4.6 API pricing source: anthropic.com/pricing
 
-One developer tracked 8 months of intensive Claude Code usage. API equivalent cost exceeded $15,000. Max plan for the same period: ~$800. That's a 93% reduction — but it still doesn't solve the privacy problem.
+Upgrading to Max 20x would cost $200 a month — and still hit limits on a heavy agentic week. The API pay-per-token route spikes unpredictably on long sessions. One developer tracked 8 months of intensive Claude Code usage — API equivalent exceeded $15,000, Max plan for the same period was ~$800, a 93% reduction. Source: CloudZero.
+
+One more thing worth knowing: your usage limit is shared across Claude.ai chat and Claude Code from the same bucket. Heavy chat usage eats directly into your Claude Code allocation. Source: Duet.
+
+But even $84/month on gpuhub beats Max 5x at $100 — with no rolling window, no shared quota, and no data leaving your network.
+
+The upgrade path wasn't worth it. Self-hosting was.
 
 -----
 
