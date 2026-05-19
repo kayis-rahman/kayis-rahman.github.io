@@ -13,9 +13,7 @@ Mid-refactor. Mid-thought. "You've hit your session limit — resets 3:45pm." Cl
 
 The fix seemed obvious — upgrade. But before spending $100 or $200 a month I wanted to understand what I was actually paying for, and whether there was a smarter way.
 
-There was. It involved renting GPUs in Singapore, several weeks of broken CUDA drivers, and more OOM crashes than I care to count.
-
-But first — what Claude Code is actually doing to your token budget.
+Here is what Claude Code is actually doing to your token budget.
 
 ---
 
@@ -36,6 +34,8 @@ Before you even type your first message, context is already pre-consumed:
 | Memory files | ~300 |
 | **Pre-consumed at session start** | **~22,000** |
 
+Source: 32blog.com — Claude Code context window exceeded fix
+
 Real numbers from actual sessions:
 
 - Mid-session, medium complexity: **53,152 tokens**
@@ -45,7 +45,7 @@ Real numbers from actual sessions:
 
 The context didn't spike. It crept. File by file, tool call by tool call, edit by edit. By the time the error fired, the session had been growing for twenty minutes and nobody noticed until it hit the ceiling at full speed.
 
-Also worth knowing: auto-compaction reserves roughly 33K tokens on a 200K window as a buffer so Claude can finish its current response when compaction triggers. Your effective working limit is always lower than the headline number.
+Also worth knowing: auto-compaction reserves roughly 33K tokens on a 200K window as a buffer so Claude can finish its current response when compaction triggers. Your effective working limit is always lower than the headline number. (32blog.com)
 
 This is why upgrading the plan alone doesn't fully solve it.
 
@@ -57,7 +57,7 @@ But to get there, you first need to understand how sessions grow this fast — a
 
 So you have two problems. Rate limits at the plan level and context walls at the session level.
 
-For context walls, Anthropic's official fixes are /compact, /context, and disabling unused MCP servers. Run /context first — you'll typically find MCP tool definitions quietly consuming thousands of tokens you never asked for.
+For context walls, Anthropic's official fixes are /compact, /context, and disabling unused MCP servers. (Claude Code error docs) Run /context first — you'll typically find MCP tool definitions quietly consuming thousands of tokens you never asked for.
 
 /compact compresses conversation history to free space. If it fails because the window is already full, press Esc twice to step back a few turns, then compact from there. If that still fails, /clear and start fresh — your previous session is preserved and reopenable with /resume.
 
@@ -84,7 +84,7 @@ Here's what the options actually look like in 2026:
 |2x RTX 4080S gpuhub|~$84/mo      |Unlimited          |Private, no throttle            |
 |2x RTX 5090 gpuhub |~$130/mo     |Unlimited          |Private, no throttle            |
 
-*Token estimates are community-reported approximations — Anthropic does not publish exact per-window token counts. Source: SSD Nodes, Duet, CloudZero.
+Token estimates are community-reported approximations — Anthropic does not publish exact per-window token counts. Sources: SSD Nodes, Duet, CloudZero
 
 Real gpuhub instance prices from actual sessions:
 
@@ -108,11 +108,11 @@ Token maths at scale:
 |100M in / 20M out|~$600              |~$130             |
 |200M in / 40M out|~$1,200            |~$130             |
 
-Sonnet 4.6 API pricing source: anthropic.com/pricing
+Sonnet 4.6 API pricing source: Anthropic
 
-Upgrading to Max 20x would cost $200 a month — and still hit limits on a heavy agentic week. The API pay-per-token route spikes unpredictably on long sessions. One developer tracked 8 months of intensive Claude Code usage — API equivalent exceeded $15,000, Max plan for the same period was ~$800, a 93% reduction. Source: CloudZero.
+Upgrading to Max 20x would cost $200 a month — and still hit limits on a heavy agentic week. The API pay-per-token route spikes unpredictably on long sessions. One developer tracked 8 months of intensive Claude Code usage — API equivalent exceeded $15,000, Max plan for the same period was ~$800, a 93% reduction. (CloudZero, Verdent)
 
-One more thing worth knowing: your usage limit is shared across Claude.ai chat and Claude Code from the same bucket. Heavy chat usage eats directly into your Claude Code allocation. Source: Duet.
+One more thing worth knowing: your usage limit is shared across Claude.ai chat and Claude Code from the same bucket. Heavy chat usage eats directly into your Claude Code allocation. (Duet)
 
 But even $84/month on gpuhub beats Max 5x at $100 — with no rolling window, no shared quota, and no data leaving your network.
 
@@ -128,14 +128,14 @@ The apps being built process data that cannot leave the local network. Sending a
 
 Here's what the actual data policy looks like in 2026, because most people haven't read it:
 
-> **Free, Pro, and Max accounts are consumer accounts. By default, these train on your data unless you manually opt out. Only Commercial or Enterprise tiers prohibit data training by default.**
+> **Free, Pro, and Max accounts are consumer accounts. By default, these train on your data unless you manually opt out. Only Commercial or Enterprise tiers prohibit data training by default. (Anthropic Privacy Policy)**
 
-In August 2025, Anthropic introduced an opt-in toggle with a deadline of September 28. If you opted in, Anthropic could retain conversations in de-identified form for up to **5 years** — a 60x increase from the previous 30-day retention period.
+In August 2025, Anthropic introduced an opt-in toggle with a deadline of September 28. If you opted in, Anthropic could retain conversations in de-identified form for up to **5 years** — a 60x increase from the previous 30-day retention period. (Anthropic)
 
 Even with training opted out:
 
 - Consumer account data: retained 30 days
-- Zero Data Retention (ZDR): **only available for commercial API keys or Claude Enterprise — not Pro or Max**
+- Zero Data Retention (ZDR): **only available for commercial API keys or Claude Enterprise — not Pro or Max** (Anthropic Privacy)
 - Claude Code still stores every read, bash command, search result, and file edit locally as a plaintext JSONL file — and the prompts containing all of it still transit Anthropic's servers
 
 For financial data, proprietary logic, anything sensitive — self-hosting isn't paranoia. It's the only architecture where the data genuinely doesn't leave.
@@ -163,7 +163,7 @@ The actual switch to self-hosting is a few lines in `~/.claude/settings.json`:
 
 `ANTHROPIC_BASE_URL` pointing at localhost. Claude Code doesn't know or care what's running on the other end. It sends requests. Something answers. As far as the tool is concerned, nothing changed.
 
-> **Critical gotcha:** `CLAUDE_CODE_ATTRIBUTION_HEADER: "0"` must be in `settings.json` — not exported in the terminal. Without it, Claude Code injects a per-request hash into the system prompt on every call, which invalidates the KV cache on local models and makes inference roughly **90% slower**. This one line matters.
+> **Critical gotcha:** `CLAUDE_CODE_ATTRIBUTION_HEADER: "0"` must be in `settings.json` — not exported in the terminal. Without it, Claude Code injects a per-request hash into the system prompt on every call, which invalidates the KV cache on local models and makes inference roughly **90% slower**. This one line matters. (Jonathan's Blog, vLLM docs)
 
 For remote instances on gpuhub, one more step — `claude setup-token` generates a one-year OAuth token from your subscription that authenticates against the remote server without sending credentials over the wire:
 
