@@ -82,7 +82,10 @@ $(function () {
   var btn = document.createElement('button');
   btn.className = 'toc-toggle';
   btn.setAttribute('aria-expanded', 'true');
-  btn.innerHTML = 'Contents <i class="fas fa-chevron-up toc-chevron"></i>';
+  btn.appendChild(document.createTextNode('Contents '));
+  var chevron = document.createElement('i');
+  chevron.className = 'fas fa-chevron-up toc-chevron';
+  btn.appendChild(chevron);
   nav.appendChild(btn);
 
   var list = document.createElement('ol');
@@ -90,7 +93,10 @@ $(function () {
   headings.forEach(function (h) {
     var li = document.createElement('li');
     li.className = h.tagName === 'H3' ? 'toc-h3' : 'toc-h2';
-    li.innerHTML = '<a href="#' + h.id + '">' + h.textContent + '</a>';
+    var link = document.createElement('a');
+    link.setAttribute('href', '#' + h.id);
+    link.textContent = h.textContent;
+    li.appendChild(link);
     list.appendChild(li);
   });
   nav.appendChild(list);

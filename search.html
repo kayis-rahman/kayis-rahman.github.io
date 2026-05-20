@@ -17,7 +17,7 @@ background: '/img/home.jpg'
   <div id="search-results"></div>
 </div>
 
-<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script src="https://unpkg.com/lunr@2.3.9/lunr.js" integrity="sha384-bKKLJnLcJONf72nRSHI5d7FJ0xpuiJvpqVYyHWqvHcBtfG28U9VqDZEPqLJdnFdx" crossorigin="anonymous"></script>
 <script>
 (function () {
   fetch('{{ "/search.json" | relative_url }}')
@@ -48,18 +48,43 @@ background: '/img/home.jpg'
         try { hits = idx.search(q + '~1'); } catch (e) { hits = []; }
 
         if (!hits.length) {
-          results.innerHTML = '<p class="text-muted">No posts found for <strong>' + q + '</strong>.</p>';
+          var noResults = document.createElement('p');
+          noResults.className = 'text-muted';
+          var noResultsText = document.createTextNode('No posts found for ');
+          var strong = document.createElement('strong');
+          strong.textContent = q;
+          noResults.appendChild(noResultsText);
+          noResults.appendChild(strong);
+          noResults.appendChild(document.createTextNode('.'));
+          results.appendChild(noResults);
           return;
         }
         hits.forEach(function (hit) {
           var p = byId[hit.ref];
           if (!p) return;
-          results.innerHTML +=
-            '<article class="search-result">' +
-              '<h4><a href="' + p.url + '">' + p.title + '</a></h4>' +
-              '<p class="post-meta">' + p.date + (p.tags ? ' &middot; ' + p.tags : '') + '</p>' +
-              '<p>' + p.excerpt + '</p>' +
-            '</article><hr>';
+          var article = document.createElement('article');
+          article.className = 'search-result';
+
+          var h4 = document.createElement('h4');
+          var link = document.createElement('a');
+          link.setAttribute('href', p.url);
+          link.textContent = p.title;
+          h4.appendChild(link);
+          article.appendChild(h4);
+
+          var meta = document.createElement('p');
+          meta.className = 'post-meta';
+          meta.textContent = p.date + (p.tags ? ' · ' + p.tags : '');
+          article.appendChild(meta);
+
+          var excerpt = document.createElement('p');
+          excerpt.textContent = p.excerpt;
+          article.appendChild(excerpt);
+
+          results.appendChild(article);
+
+          var hr = document.createElement('hr');
+          results.appendChild(hr);
         });
       });
     });
