@@ -168,6 +168,17 @@ $(function () {
   });
 })();
 
+// ── Table wrapper (overflow scroll, Chirpy-style) ────────────────────────────
+(function () {
+  document.querySelectorAll('.post-body table').forEach(function (table) {
+    if (table.parentElement.classList.contains('table-wrapper')) return;
+    var wrapper = document.createElement('div');
+    wrapper.className = 'table-wrapper';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
+})();
+
 // ── Lazy-load images ─────────────────────────────────────────────────────────
 (function () {
   document.querySelectorAll('img:not([loading])').forEach(function (img) {

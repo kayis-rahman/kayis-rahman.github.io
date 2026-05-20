@@ -200,20 +200,15 @@ h1, h2, h3, h4, h5, h6,
 
 // ── Tables (Chirpy-style) ────────────────────────────────────────────────────
 
-.post-body {
-  // Chirpy-style table wrapper
-  div.table-wrapper,
-  & > table,
-  p + table,
-  table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-bottom: 1.5rem;
-  }
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
 
+.post-body {
   table {
-    width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
     border: 1px solid #dee2e6;
