@@ -51,27 +51,52 @@ h1, h2, h3, h4, h5, h6,
 
 // ── Page transition animation ────────────────────────────────────────────────
 
-.page-content {
-  opacity: 0;
-  transform: translateY(6px);
-  animation: page-fade-in 0.35s ease-out forwards;
+body {
+  animation: page-fade-in 0.35s ease-out both;
+}
+
+body.exiting {
+  animation: page-fade-out 0.2s ease-in both;
+  pointer-events: none;
 }
 
 @keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.page-content.exiting {
-  animation: page-fade-out 0.2s ease-in forwards;
-}
-
 @keyframes page-fade-out {
   to {
     opacity: 0;
     transform: translateY(-4px);
+  }
+}
+
+// ── Masthead hero image fade-in ───────────────────────────────────────────────
+
+header.masthead {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+
+  &.masthead-loaded {
+    opacity: 1;
+  }
+}
+
+// ── Post content image fade-in ────────────────────────────────────────────────
+
+.post-content img {
+  opacity: 0;
+  transition: opacity 0.4s ease-in;
+
+  &.img-loaded {
+    opacity: 1;
   }
 }
 
