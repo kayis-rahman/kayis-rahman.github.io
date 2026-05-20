@@ -483,9 +483,13 @@ html[data-theme="dark"] #back-to-top {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   -webkit-tap-highlight-color: transparent;
+
+  i { font-size: 12px; }
+
   &:focus { outline: none; box-shadow: none; }
 }
 
