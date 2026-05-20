@@ -3,11 +3,11 @@ layout: page
 title: About
 description: This is what I do
 permalink: /about/
-background: '/img/about-me.jpg'
+background: '/img/avatar.png'
 ---
 
 <div class="about-profile">
-  <img src="{{ '/img/about-me.jpg' | relative_url }}" alt="Kayis Rahman" class="about-avatar">
+  <img src="{{ '/img/avatar.png' | relative_url }}" alt="Kayis Rahman" class="about-avatar">
 </div>
 
 I'm a Staff Security Software Engineer at Qualcomm in Cork, Ireland, specialising in PKI, HSM, and secure device provisioning. I've been building software professionally since August 2015 — over 10 years across enterprise backend, cloud infrastructure, and now cryptographic security.
