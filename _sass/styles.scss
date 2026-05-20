@@ -254,6 +254,23 @@ html[data-theme="dark"] .post-body table {
   }
 }
 
+// ── Navbar: always opaque (vendor makes it transparent + white on desktop) ────
+
+@media only screen and (min-width: 992px) {
+  #mainNav {
+    background-color: white !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+
+    .navbar-brand,
+    .navbar-nav > li.nav-item > a,
+    .navbar-nav > li.nav-item > button {
+      color: #404040 !important;
+
+      &:hover, &:focus { color: #0056b2 !important; }
+    }
+  }
+}
+
 // ── Navbar active link ───────────────────────────────────────────────────────
 
 #mainNav .nav-item.active .nav-link {
