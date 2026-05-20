@@ -1,0 +1,25 @@
+---
+layout: page
+title: Categories
+description: Browse posts by topic — PKI, LLM inference, Java, security, and more.
+permalink: /categories/
+background: '/img/home.jpg'
+---
+
+{% assign sorted_cats = site.categories | sort %}
+{% for category in sorted_cats %}
+<section class="category-section mb-5">
+  <h3 class="tag-section-heading" id="{{ category[0] | slugify }}">
+    {{ category[0] | capitalize }}
+    <span class="tag-count ms-1">({{ category[1].size }})</span>
+  </h3>
+  <div>
+    {% for post in category[1] %}
+    <div class="tag-post-item">
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span class="tag-post-date">{{ post.date | date: '%b %d, %Y' }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}

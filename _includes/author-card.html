@@ -16,6 +16,11 @@
         <i class="fab fa-linkedin"></i> LinkedIn
       </a>
       {% endif %}
+      {% if site.newsletter_username %}
+      <a href="{{ '/subscribe/' | relative_url }}" class="author-subscribe-link">
+        <i class="far fa-envelope"></i> Subscribe
+      </a>
+      {% endif %}
     </div>
   </div>
 </div>

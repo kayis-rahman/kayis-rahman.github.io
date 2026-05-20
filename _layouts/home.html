@@ -12,14 +12,19 @@ layout: default
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto page-content">
-          <div class="page-heading">
+          <div class="page-heading home-heading">
+            <img src="{{ '/img/about-me.jpg' | relative_url }}" alt="{{ site.author }}" class="hero-avatar" loading="eager">
             <h1>{{ site.title }}</h1>
             {% if site.description %}
             <span class="subheading">{{ site.description }}</span>
             {% endif %}
             {% if site.subheading %}
-            <p class="subheading" style="margin-top: 0.5rem; font-style: italic;">{{ site.subheading }}</p>
+            <p class="subheading hero-subheading">{{ site.subheading }}</p>
             {% endif %}
+            <div class="hero-cta mt-4">
+              <a href="{{ '/posts/' | relative_url }}" class="btn btn-light hero-btn">Read the Blog</a>
+              <a href="{{ '/subscribe/' | relative_url }}" class="btn btn-outline-light hero-btn">Subscribe</a>
+            </div>
           </div>
         </div>
       </div>
@@ -41,16 +46,11 @@ layout: default
             {% if post.subtitle %}
             <h3 class="post-subtitle">{{ post.subtitle }}</h3>
             {% else %}
-            <h3 class="post-subtitle">{{ post.excerpt | strip_html | truncatewords: 15 }}</h3>
+            <h3 class="post-subtitle">{{ post.excerpt | strip_html | truncatewords: 25 }}</h3>
             {% endif %}
           </a>
-          <p class="post-meta">Posted by
-            {% if post.author %}
-            {{ post.author }}
-            {% else %}
-            {{ site.author }}
-            {% endif %}
-            on
+          <p class="post-meta">
+            {% if post.categories.size > 0 %}<span class="post-category-badge">{{ post.categories | first }}</span>{% endif %}
             {{ post.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=post.content %}
           </p>
           {% if post.tags.size > 0 %}
@@ -66,21 +66,7 @@ layout: default
 
         {% endfor %}
 
-        <!-- Newsletter -->
-        {% if site.newsletter_username %}
-        <div class="newsletter-signup">
-          <h4 class="newsletter-heading">Stay updated</h4>
-          <p class="newsletter-desc">New posts about PKI, Java, LLM inference, and building things on the side. No spam.</p>
-          <form action="https://buttondown.email/api/emails/embed-subscribe/{{ site.newsletter_username }}" method="post" class="newsletter-form" target="_blank">
-            <div class="input-group">
-              <input type="email" name="email" placeholder="your@email.com" class="form-control" required>
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Subscribe</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        {% endif %}
+        {% include newsletter-cta.html %}
 
         <!-- Pager -->
         <div class="clearfix">

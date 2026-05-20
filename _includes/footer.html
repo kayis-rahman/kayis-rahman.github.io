@@ -68,6 +68,14 @@
           </li>
           {% endif %}
         </ul>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="{{ '/posts/' | relative_url }}">Blog</a>
+          <a href="{{ '/categories/' | relative_url }}">Categories</a>
+          <a href="{{ '/tags/' | relative_url }}">Tags</a>
+          <a href="{{ '/subscribe/' | relative_url }}">Subscribe</a>
+          <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+          <a href="{{ '/about/' | relative_url }}">About</a>
+        </nav>
         <p class="copyright text-muted">Copyright &copy; {{ site.author }} {{ 'now' | date: "%Y" }}</p>
       </div>
     </div>

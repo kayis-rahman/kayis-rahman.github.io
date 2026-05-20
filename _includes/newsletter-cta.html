@@ -1,0 +1,19 @@
+{% if site.newsletter_username %}
+<div class="newsletter-signup newsletter-cta-block">
+  <div class="newsletter-cta-inner">
+    <div class="newsletter-cta-icon" aria-hidden="true"><i class="far fa-envelope-open"></i></div>
+    <div class="newsletter-cta-text">
+      <h4 class="newsletter-heading">Join engineers in the loop</h4>
+      <p class="newsletter-desc">PKI, Java, LLM inference, and what I'm building on the side — straight to your inbox. No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+  <form action="https://buttondown.email/api/emails/embed-subscribe/{{ site.newsletter_username }}" method="post" class="newsletter-form" target="_blank">
+    <div class="input-group newsletter-input-group">
+      <input type="email" name="email" placeholder="your@email.com" class="form-control" required aria-label="Email address">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary">Subscribe &rarr;</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endif %}
