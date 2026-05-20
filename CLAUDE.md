@@ -71,6 +71,59 @@ The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides ba
 
 Builds pass != UI is correct. Always verify rendering in browser.
 
+## Newsletter & Subscriber Strategy
+**High-impact placements (prioritize):**
+1. **Post footer** (`_layouts/post.html`) — readers most engaged, drives 10-15% conversion
+2. **Author card** (`_includes/author-card.html`) — visible on every post
+3. **Dedicated `/subscribe/` page** — landing page for newsletter value prop
+
+**Newsletter copy guide:**
+- Strong heading: "Join engineers in the loop" (not "Stay updated")
+- Value prop + reassurance: "PKI, Java, LLM inference... No spam. Unsubscribe anytime."
+- Use reusable `_includes/newsletter-cta.html` include for consistency
+
+**Buttondown integration:**
+- Config: `newsletter_username: kayis` in `_config.yml`
+- Form action: `https://buttondown.email/api/emails/embed-subscribe/{username}`
+- Submit button label should have arrow: "Subscribe →"
+
+## Post Frontmatter Fields
+Use these fields in `_posts/` frontmatter for better SEO + discovery:
+```yaml
+---
+layout: post
+title: "Post Title"
+date: 2026-05-19
+categories: [llm, infrastructure, self-hosting]  # Use lowercase, for /categories/ page
+tags: [vllm, gpuhub, claude-code]                # Individual topic keywords
+description: "Unique 160-char description for meta tags and preview text"
+image: /img/hero.jpg                              # og:image fallback (if no background)
+word_count: 4500                                  # For schema.org BlogPosting
+reading_time: 12                                  # Displayed in post meta
+series: "Series Name"                             # For series-nav.html include
+series_part: 1
+---
+```
+
+Categories show up on `/categories/` page and post cards. Tags link to `/tags/` page.
+
+## Growth Audit Pattern
+**Before writing new posts, audit for quick wins across three dimensions:**
+
+| Dimension | Quick Win | Impact |
+|-----------|-----------|--------|
+| Traffic | Hero CTA buttons | Direct action, stops bounces |
+| | Category pages | SEO + discovery without content |
+| | Post excerpt length | Better hooks on home/listing |
+| Subscribers | Post footer newsletter | 10-15% conversion from engaged readers |
+| | Author card subscribe link | Visible on every post |
+| | Dedicated /subscribe/ page | Value prop landing page |
+| Design | Hero avatar + CTA | Humanize + drive action |
+| | Category badges | Visual type indicators |
+| | Footer nav | Discoverability + subscribe link |
+
+See memory `growth_audit_pattern.md` for detailed approach and when to apply.
+
 ## Gotchas
 - **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
 - **CI minification can't write in-place to `_site/`** — `actions/configure-pages` makes `_site/` read-only. Minify to a temp dir (`_minified/`) and upload that as the artifact instead.
@@ -80,3 +133,4 @@ Builds pass != UI is correct. Always verify rendering in browser.
 - **SRI integrity hashes for CDN resources become stale** — jQuery, Bootstrap, and Font Awesome hashes in `head.html` and `scripts.html` require periodic updates. When resources are blocked (check console errors), fetch the actual computed hash from the browser error message and update the `integrity` attribute. See May 2026 session for example: FA `sha384-DyZ88MY4...` became `sha384-DyZ88mC6Up...`
 - **Font Awesome async preload (`rel="preload" onload="..."`)** is unreliable for CSS. Use direct `<link rel="stylesheet">` instead. The async preload trick's `onload` handler doesn't reliably fire when integrity checks are involved or under network delays.
 - **Navbar opacity issue with vendor theme** — the Clean Blog vendor SCSS makes the navbar `background: transparent` at desktop (≥992px) with white text, then uses `.is-fixed` class (added via missing scroll JS) to make it opaque. Without scroll JS, navbar stays transparent and text becomes invisible after scrolling past the dark masthead. Override in `_sass/styles.scss` with solid white background at desktop to fix.
+- **Remove `future: true` from config** — prevents accidental publication of draft posts with future dates. With this setting enabled, any post dated in the future will publish immediately. Use post frontmatter draft flag or manual scheduling instead.
