@@ -43,7 +43,7 @@ $(function () {
     var el  = document.documentElement;
     var pct = el.scrollHeight - el.clientHeight > 0
       ? ((window.pageYOffset || el.scrollTop) / (el.scrollHeight - el.clientHeight)) * 100 : 0;
-    bar.style.width = pct + '%';
+    bar.style.transform = 'scaleX(' + (pct / 100) + ')';
     bar.setAttribute('aria-valuenow', Math.round(pct));
   }
   window.addEventListener('scroll', update, { passive: true });

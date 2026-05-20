@@ -4,7 +4,10 @@ title: "Ideas to Production — Ten Years, Five Companies, One Direction"
 subtitle: "A decade of building things, across five companies and two continents."
 date: 2026-05-17 09:00:00 +0100
 background: '/img/about-me.jpg'
+image: /img/about-me.jpg
 tags: [career, engineering, security, backend]
+word_count: 3800
+reading_time: 11
 ---
 
 I finished college in April 2015 and spent two months doing absolutely nothing useful.

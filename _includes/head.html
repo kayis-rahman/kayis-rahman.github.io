@@ -37,9 +37,11 @@
   <!-- Fonts — preconnect first to avoid extra round-trips -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href='https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@400;700;900&display=swap' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@400;700&display=swap' rel='stylesheet'>
 
-  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+  <!-- Font Awesome CSS async — avoids render-blocking JS SVG injection -->
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous"></noscript>
 
   <link rel="stylesheet" href="{{"/assets/main.css" | relative_url }}">
 
@@ -55,26 +57,91 @@
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
+  <link rel="search" type="application/opensearchdescription+xml" href="{{ '/opensearch.xml' | relative_url }}" title="Search {{ site.title | escape }}">
+
+  {% if page.layout == 'home' %}
+  <!-- Person schema for home page -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ site.author | default: site.title | escape }}",
+    "url": "{{ site.url }}",
+    "image": "{{ site.url }}/img/profile.jpg",
+    "jobTitle": "Staff Security Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Qualcomm"
+    },
+    "sameAs": [
+      {% if site.twitter_username %}"https://twitter.com/{{ site.twitter_username }}",{% endif %}
+      {% if site.linkedin_username %}"https://www.linkedin.com/in/{{ site.linkedin_username }}",{% endif %}
+      {% if site.github_username %}"https://github.com/{{ site.github_username }}"{% endif %}
+    ]
+  }
+  </script>
+  {% endif %}
 
   {% if page.layout == 'post' %}
+  <!-- BlogPosting schema with enhanced metadata -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": "{{ page.title | escape }}",
-    "description": "{{ page.excerpt | strip_html | normalize_whitespace | truncate: 160 | escape }}",
+    "description": "{{ page.excerpt | default: page.content | strip_html | normalize_whitespace | truncate: 160 | escape }}",
     "author": {
       "@type": "Person",
       "name": "{{ site.author | default: site.title | escape }}",
-      "url": "{{ site.url }}/about/"
+      "url": "{{ site.url }}"
     },
     "publisher": {
-      "@type": "Person",
-      "name": "{{ site.author | default: site.title | escape }}"
+      "@type": "Organization",
+      "name": "{{ site.title | escape }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ site.url }}/favicon.svg"
+      }
     },
     "datePublished": "{{ page.date | date_to_xmlschema }}",
-    "url": "{{ page.url | absolute_url }}"{% if page.background %},
-    "image": "{{ page.background | absolute_url }}"{% endif %}
+    "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+    "url": "{{ page.url | absolute_url }}"{% if page.image %},
+    "image": "{{ page.image | absolute_url }}"{% elsif page.background %},
+    "image": "{{ page.background | absolute_url }}"{% endif %}{% if page.word_count %},
+    "wordCount": {{ page.word_count }}{% endif %}{% if page.reading_time %},
+    "timeRequired": "PT{{ page.reading_time }}M"{% endif %}
+  }
+  </script>
+  <!-- BreadcrumbList schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ site.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "{{ site.url }}/posts/"
+      }{% if page.categories %}{% for category in page.categories %},
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ category | capitalize }}",
+        "item": "{{ site.url }}/posts/#{{ category }}"
+      }{% endfor %}{% endif %},
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "{{ page.title | escape }}"
+      }
+    ]
   }
   </script>
   {% endif %}
