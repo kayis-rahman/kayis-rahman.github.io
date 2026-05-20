@@ -200,40 +200,45 @@ h1, h2, h3, h4, h5, h6,
 
 // ── Tables (Chirpy-style) ────────────────────────────────────────────────────
 
-.post-body table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  overflow: hidden;
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-
-  thead tr {
-    background-color: #4d6a85;
-    color: #fff;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.85rem;
-    letter-spacing: 0.02em;
+.post-body {
+  // Chirpy-style table wrapper
+  div.table-wrapper,
+  & > table,
+  p + table,
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.5rem;
   }
 
-  th, td {
-    padding: 0.65rem 1rem;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
     border: 1px solid #dee2e6;
-    vertical-align: top;
-    line-height: 1.5;
-  }
 
-  th { border-color: #3d5a73; }
+    thead tr {
+      background-color: #eaeef1;
+      color: #525f6a;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
 
-  tbody tr {
-    &:nth-child(even) { background-color: #f5f7f9; }
-    &:nth-child(odd)  { background-color: #fff; }
-    &:hover           { background-color: #e8f0fe; }
+    th, td {
+      padding: 0.55rem 0.9rem;
+      border: 1px solid #dee2e6;
+      vertical-align: middle;
+      line-height: 1.45;
+    }
+
+    tbody tr {
+      &:nth-child(odd)  { background-color: #fff; }
+      &:nth-child(even) { background-color: #f6f8fa; }
+      &:hover           { background-color: #edf2ff; transition: background 0.15s; }
+    }
   }
 }
 
@@ -241,18 +246,16 @@ html[data-theme="dark"] .post-body table {
   border-color: #3a3b3c !important;
 
   thead tr {
-    background-color: #2d3748 !important;
-    color: #e2e8f0 !important;
+    background-color: #25282f !important;
+    color: #a8b3bf !important;
   }
 
-  th { border-color: #2d3748 !important; }
-
-  td { border-color: #3a3b3c !important; }
+  th, td { border-color: #3a3b3c !important; }
 
   tbody tr {
-    &:nth-child(even) { background-color: #1e2028 !important; }
-    &:nth-child(odd)  { background-color: #16181e !important; }
-    &:hover           { background-color: #252840 !important; }
+    &:nth-child(odd)  { background-color: #1b1d23 !important; }
+    &:nth-child(even) { background-color: #1f2128 !important; }
+    &:hover           { background-color: #252a3a !important; }
   }
 }
 
@@ -385,15 +388,69 @@ html[data-theme="dark"] footer a {
   color: #8ab4f8 !important;
 }
 
-html[data-theme="dark"] .btn-primary {
-  background-color: #1a3060 !important;
-  border-color: #1a3060 !important;
-  color: #fff !important;
+// ── Buttons — site-wide consistent style ────────────────────────────────────
+
+.btn-primary {
+  background-color: #0056b2;
+  border-color: #0056b2;
+  color: #fff;
+  font-size: 0.875rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+  &:hover, &:focus {
+    background-color: #004494;
+    border-color: #004494;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 86, 178, 0.3);
+  }
+
+  &:active {
+    background-color: #003880 !important;
+    border-color: #003880 !important;
+  }
 }
 
-html[data-theme="dark"] .btn-primary:hover {
-  background-color: #2a4070 !important;
-  border-color: #2a4070 !important;
+.btn-outline-secondary {
+  color: #555;
+  border-color: #ced4da;
+  font-size: 0.875rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover, &:focus {
+    background-color: #f0f0f0;
+    border-color: #adb5bd;
+    color: #333;
+  }
+}
+
+html[data-theme="dark"] .btn-primary {
+  background-color: #1a56a8 !important;
+  border-color: #1a56a8 !important;
+  color: #fff !important;
+
+  &:hover, &:focus {
+    background-color: #2466c0 !important;
+    border-color: #2466c0 !important;
+    box-shadow: 0 2px 8px rgba(26, 86, 168, 0.4) !important;
+  }
+}
+
+html[data-theme="dark"] .btn-outline-secondary {
+  color: #9e9e9e !important;
+  border-color: #3a3b3c !important;
+
+  &:hover {
+    background-color: #2a2b2d !important;
+    color: #e0e0e0 !important;
+    border-color: #555 !important;
+  }
 }
 
 html[data-theme="dark"] #reading-progress {
