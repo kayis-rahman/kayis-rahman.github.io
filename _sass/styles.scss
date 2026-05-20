@@ -484,21 +484,62 @@ html[data-theme="dark"] #back-to-top {
   box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
 }
 
-// ── Toggle button ────────────────────────────────────────────────────────────
-// Make button.nav-link sit identically to a.nav-link
+// ── Navbar icon buttons (search, RSS, theme toggle) ───────────────────────────
 
+// Separator before icon cluster
+#mainNav .nav-item:has(.nav-icon-link):first-of-type {
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(128,128,128,0.2);
+}
+
+// Shared circle button style for all three icons
+.nav-icon-link,
+#theme-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0 !important;
+  border: 1px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  i { font-size: 13px; }
+
+  &:hover, &:focus {
+    background: rgba(0, 86, 178, 0.08);
+    border-color: rgba(0, 86, 178, 0.2);
+    color: #0056b2 !important;
+  }
+}
+
+// RSS orange on hover
+.rss-link {
+  &:hover, &:focus { color: #f26522 !important; border-color: rgba(242,101,34,0.3) !important; background: rgba(242,101,34,0.07) !important; }
+}
+
+// Theme toggle button
 #theme-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
   -webkit-tap-highlight-color: transparent;
-
-  i { font-size: 12px; }
-
   &:focus { outline: none; box-shadow: none; }
+}
+
+// Dark mode icon button adjustments
+html[data-theme="dark"] .nav-icon-link,
+html[data-theme="dark"] #theme-toggle {
+  &:hover, &:focus {
+    background: rgba(138, 180, 248, 0.12) !important;
+    border-color: rgba(138, 180, 248, 0.25) !important;
+    color: #8ab4f8 !important;
+  }
+}
+html[data-theme="dark"] .rss-link {
+  &:hover, &:focus { color: #f79256 !important; border-color: rgba(247,146,86,0.3) !important; background: rgba(247,146,86,0.08) !important; }
 }
 
 // ── Tags ─────────────────────────────────────────────────────────────────────

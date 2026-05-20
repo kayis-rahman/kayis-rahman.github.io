@@ -27,12 +27,12 @@
           <a class="nav-link" href="{{"/contact" | relative_url }}">Contact</a>
         </li>
         <li class="nav-item{% if page.url contains '/search' %} active{% endif %}">
-          <a class="nav-link" href="{{"/search" | relative_url }}" aria-label="Search">
+          <a class="nav-link nav-icon-link" href="{{"/search" | relative_url }}" aria-label="Search">
             <i class="fas fa-search"></i>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link rss-link" href="{{ "/feed.xml" | relative_url }}" title="RSS Feed" aria-label="RSS Feed">
+          <a class="nav-link nav-icon-link rss-link" href="{{ "/feed.xml" | relative_url }}" title="RSS Feed" aria-label="RSS Feed">
             <i class="fas fa-rss"></i>
           </a>
         </li>
