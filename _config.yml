@@ -79,3 +79,7 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - CLAUDE.md
+  - private/
+  - .idea/
+  - .DS_Store
+  - .playwright-mcp/

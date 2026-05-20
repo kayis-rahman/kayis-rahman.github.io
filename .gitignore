@@ -3,3 +3,8 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+private/
+.idea/
+.playwright-mcp/
+.DS_Store
+screenshots/
