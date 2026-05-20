@@ -147,42 +147,11 @@ For financial data, proprietary logic, anything sensitive — self-hosting isn't
 
 -----
 
-## One Config Change
+The actual switch turned out to be a single line in one config file. Claude Code doesn't know or care what's on the other end of the URL — it just sends requests. But figuring out what to put on the other end took several weeks, five model attempts, and more broken GPU instances than expected.
 
-The actual switch to self-hosting is a few lines in `~/.claude/settings.json`:
+Spoiler: the first model attempt ran out of VRAM in under ten seconds.
 
-```json
-{
-  "env": {
-    "ANTHROPIC_MODEL": "claude-sonnet-4-6",
-    "ANTHROPIC_BASE_URL": "http://localhost:6006",
-    "ANTHROPIC_AUTH_TOKEN": "local-key",
-    "CLAUDE_CODE_USE_NATIVE_TOOLS": "1",
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
-  },
-  "autoCompact": true,
-  "maxTokens": 16000,
-  "contextWindowSize": 180000
-}
-```
-
-`ANTHROPIC_BASE_URL` pointing at localhost. Claude Code doesn't know or care what's running on the other end. It sends requests. Something answers. As far as the tool is concerned, nothing changed.
-
-> **Critical gotcha:** `CLAUDE_CODE_ATTRIBUTION_HEADER: "0"` must be in `settings.json` — not exported in the terminal. Without it, Claude Code injects a per-request hash into the system prompt on every call, which invalidates the KV cache on local models and makes inference roughly **90% slower**. This one line matters. ([vLLM docs](https://docs.vllm.ai/))
-
-For remote instances on gpuhub, one more step — `claude setup-token` generates a one-year OAuth token from your subscription that authenticates against the remote server without sending credentials over the wire:
-
-```bash
-# On your Mac
-claude setup-token
-
-# On gpuhub server
-export CLAUDE_CODE_OAUTH_TOKEN=your-token-here
-export ANTHROPIC_BASE_URL=http://localhost:6006/v1
-claude
-```
-
-What followed was several weeks of figuring out what actually works on the other end of that URL. That's Part 2.
+That's Part 2.
 
 -----
 
