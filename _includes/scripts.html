@@ -16,28 +16,39 @@
 </script>
 {% endif %}
 
-<!-- Page transition animation on navbar clicks -->
+<!-- Page transition animation on all internal link clicks -->
 <script>
-(function() {
-  var navigating = false;
-  $('#mainNav a').on('click', function(e) {
-    var href = $(this).attr('href');
-    if (!href || href.startsWith('#') || href.startsWith('http')) return;
-    var url = new URL(href, window.location.href);
-    if (url.origin !== window.location.origin) return;
-    var path = url.pathname;
-    var current = window.location.pathname.replace(/\/$/, '') || '/';
-    if (path === current) return;
-    e.preventDefault();
-    if (navigating) return;
-    navigating = true;
-    var $content = $('.page-content');
-    $content.addClass('exiting');
-    setTimeout(function() {
-      window.location.href = href;
-    }, 200);
-  });
-})();
+$(document).on('click', 'a[href]', function (e) {
+  var href = $(this).attr('href');
+  if (
+    !href ||
+    href.charAt(0) === '#' ||
+    href.indexOf('mailto:') === 0 ||
+    href.indexOf('tel:') === 0 ||
+    href.indexOf('javascript:') === 0 ||
+    href.indexOf('://') !== -1
+  ) return;
+  e.preventDefault();
+  var url = href;
+  $('body').addClass('exiting');
+  setTimeout(function () { window.location.href = url; }, 200);
+});
+
+// Masthead background-image load detection
+(function () {
+  var $masthead = $('header.masthead');
+  if (!$masthead.length) return;
+  var bg = $masthead.css('background-image');
+  var match = bg && bg.match(/url\(["']?([^"')]+)["']?\)/);
+  if (match) {
+    var img = new Image();
+    img.onload = function () { $masthead.addClass('masthead-loaded'); };
+    img.onerror = function () { $masthead.addClass('masthead-loaded'); }; // show even on error
+    img.src = match[1];
+  } else {
+    $masthead.addClass('masthead-loaded');
+  }
+}());
 </script>
 
 {% if page.url contains 'contact' %}
