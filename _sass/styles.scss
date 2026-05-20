@@ -81,11 +81,13 @@ h1, h2, h3, h4, h5, h6,
   position: fixed;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 4px;
   background: #0056b2;
   z-index: 10000; // above navbar (typically 1030)
-  transition: width 0.08s linear;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.08s linear;
   pointer-events: none;
 }
 
@@ -108,6 +110,7 @@ h1, h2, h3, h4, h5, h6,
   font-size: 1rem;
   opacity: 0;
   visibility: hidden;
+  will-change: transform;
   transition: opacity 0.5s ease-in-out, transform 0.2s ease-out, visibility 0.5s;
   z-index: 1040;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -373,7 +376,7 @@ html[data-theme="dark"] #back-to-top {
   margin-right: 0.4rem;
   margin-bottom: 0.3rem;
   line-height: 1.6rem;
-  transition: background 0.35s ease-in-out, color 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   border: 1px solid #dee2e6;
   box-shadow: 0 0 3px 0 #e9ecef;
 
@@ -513,7 +516,7 @@ html[data-theme="dark"] #back-to-top {
   border: 1px solid #e9ecef;
   border-radius: 10px;
   height: 100%;
-  transition: box-shadow 0.35s ease-in-out, border-color 0.35s;
+  transition: border-color 0.2s;
 
   &:hover {
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -732,7 +735,7 @@ html[data-theme="dark"] .newsletter-desc { color: #9e9e9e !important; }
   border-radius: 10px;
   padding: 1.5rem;
   height: 100%;
-  transition: box-shadow 0.35s ease-in-out, border-color 0.35s;
+  transition: border-color 0.2s;
 
   &:hover {
     box-shadow: rgba(104, 104, 104, 0.05) 0 2px 6px 0, rgba(211, 209, 209, 0.15) 0 0 0 1px;
