@@ -127,6 +127,7 @@ body.exiting {
 header.masthead {
   opacity: 0;
   transition: opacity 0.5s ease-in;
+  background-position-y: -170px;
 
   &.masthead-loaded {
     opacity: 1;
