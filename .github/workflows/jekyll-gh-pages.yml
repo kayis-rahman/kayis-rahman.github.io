@@ -49,11 +49,8 @@ jobs:
             --use-short-doctype \
             --minify-css true \
             --minify-js true
-          # Copy non-HTML files unchanged
-          cp -r ./_site/assets ./_minified/
-          cp ./_site/feed.xml ./_minified/
-          cp ./_site/sitemap.xml ./_minified/ 2>/dev/null || true
-          cp ./_site/sw.js ./_minified/ 2>/dev/null || true
+          # Copy ALL non-HTML files first (img/, assets/, manifest.json, etc.)
+          rsync -a --exclude="*.html" ./_site/ ./_minified/
 
       - name: Minify JavaScript
         run: |
