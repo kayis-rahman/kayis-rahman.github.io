@@ -198,6 +198,64 @@ h1, h2, h3, h4, h5, h6,
   max-width: 100% !important;
 }
 
+// ── Tables (Chirpy-style) ────────────────────────────────────────────────────
+
+.post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  overflow: hidden;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  thead tr {
+    background-color: #4d6a85;
+    color: #fff;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+  }
+
+  th, td {
+    padding: 0.65rem 1rem;
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  th { border-color: #3d5a73; }
+
+  tbody tr {
+    &:nth-child(even) { background-color: #f5f7f9; }
+    &:nth-child(odd)  { background-color: #fff; }
+    &:hover           { background-color: #e8f0fe; }
+  }
+}
+
+html[data-theme="dark"] .post-body table {
+  border-color: #3a3b3c !important;
+
+  thead tr {
+    background-color: #2d3748 !important;
+    color: #e2e8f0 !important;
+  }
+
+  th { border-color: #2d3748 !important; }
+
+  td { border-color: #3a3b3c !important; }
+
+  tbody tr {
+    &:nth-child(even) { background-color: #1e2028 !important; }
+    &:nth-child(odd)  { background-color: #16181e !important; }
+    &:hover           { background-color: #252840 !important; }
+  }
+}
+
 // ── Navbar active link ───────────────────────────────────────────────────────
 
 #mainNav .nav-item.active .nav-link {
