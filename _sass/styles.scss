@@ -34,11 +34,19 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6,
-.post-title, .page-heading, .site-heading, .post-subtitle,
-.masthead h1, .masthead h2 {
+.post-title, .post-subtitle {
   font-family: 'Lato', sans-serif;
   color: #2a2a2a;
   font-weight: 400;
+}
+
+.masthead h1, .masthead h2,
+.masthead .page-heading, .masthead .post-heading,
+.masthead .site-heading, .masthead .subheading,
+.masthead span, .masthead p {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  color: white;
 }
 
 // ── Page transition animation ────────────────────────────────────────────────
