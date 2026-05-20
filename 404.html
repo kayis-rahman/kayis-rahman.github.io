@@ -7,9 +7,23 @@ background: '/img/home.jpg'
 ---
 
 <div class="text-center py-5">
-  <h1 class="display-1 font-weight-bold" style="font-size: 6rem; color: #0085a1;">404</h1>
+  <h1 class="display-1 font-weight-bold" style="font-size: 6rem; color: #0056b2;">404</h1>
   <h2 class="mb-3">Page not found</h2>
   <p class="lead mb-4">The page you're looking for doesn't exist or has been moved.</p>
   <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-lg">Go Home</a>
   <a href="{{ '/posts' | relative_url }}" class="btn btn-outline-secondary btn-lg ml-2">Read the Blog</a>
+</div>
+
+<hr class="mt-5">
+
+<div class="row mt-4">
+  <div class="col-lg-10 mx-auto">
+    <h4>Recent Posts</h4>
+    {% for post in site.posts limit: 3 %}
+    <div class="mb-3">
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span class="text-muted ml-2" style="font-size:0.85rem;">{{ post.date | date: '%B %d, %Y' }}</span>
+    </div>
+    {% endfor %}
+  </div>
 </div>

@@ -8,6 +8,8 @@ description: "Claude Code mid-session, 500 errors, rate limits, and the decision
 image: /img/home.jpg
 word_count: 4500
 reading_time: 12
+series: "Self-Hosting LLM Inference on Rented GPUs"
+series_part: 1
 ---
 
 I was on the $20 Claude Pro plan and hitting rate limits every other session.
@@ -184,7 +186,7 @@ What followed was several weeks of figuring out what actually works on the other
 
 -----
 
-*Next: [The model hunt — five attempts, one winner →](#)*
+*Next: Part 2 — The model hunt (five attempts, one winner) — coming soon.*
 
 *This is Part 1 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
