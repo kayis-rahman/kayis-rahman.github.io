@@ -1,0 +1,5 @@
+[     223ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://kayis-rahman.github.io/manifest.json:0
+[     223ms] [ERROR] Manifest fetch from https://kayis-rahman.github.io/manifest.json failed, code 404 @ https://kayis-rahman.github.io/contact:0
+[     309ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://kayis-rahman.github.io/img/contact.jpg:0
+[     329ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://kayis-rahman.github.io/manifest.json:0
+[     329ms] [ERROR] Manifest fetch from https://kayis-rahman.github.io/manifest.json failed, code 404 @ https://kayis-rahman.github.io/contact:0

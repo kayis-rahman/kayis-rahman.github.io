@@ -1,0 +1,76 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Kayis Rahman" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e9]:
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /about
+        - listitem [ref=e11]:
+          - link "Blog" [ref=e12] [cursor=pointer]:
+            - /url: /posts
+        - listitem [ref=e13]:
+          - link "Terminal" [ref=e14] [cursor=pointer]:
+            - /url: /terminal
+        - listitem [ref=e15]:
+          - link "Projects" [ref=e16] [cursor=pointer]:
+            - /url: /projects
+        - listitem [ref=e17]:
+          - link "Resume" [ref=e18] [cursor=pointer]:
+            - /url: /resume
+        - listitem [ref=e19]:
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /contact
+        - listitem [ref=e21]:
+          - link "Search" [ref=e22] [cursor=pointer]:
+            - /url: /search
+            - img [ref=e67]
+        - listitem [ref=e23]:
+          - link "RSS Feed" [ref=e24] [cursor=pointer]:
+            - /url: /feed.xml
+            - img [ref=e69]
+        - listitem [ref=e25]:
+          - button "Toggle dark mode" [ref=e26] [cursor=pointer]:
+            - img [ref=e71]
+  - text: /2026/05/17/ideas-to-production.html|
+  - generic [ref=e27]:
+    - generic [ref=e33]: kayisrahman ~ ~
+    - generic [ref=e34]:
+      - button "Copy code" [ref=e36] [cursor=pointer]:
+        - img [ref=e73]
+      - generic [ref=e37]:
+        - generic [ref=e38]: kayisrahman@home ~ $
+        - textbox [active] [ref=e39]: help
+  - separator [ref=e40]
+  - contentinfo [ref=e41]:
+    - generic [ref=e44]:
+      - list [ref=e45]:
+        - listitem [ref=e46]:
+          - link [ref=e47] [cursor=pointer]:
+            - /url: mailto:kaisbk1@gmail.com
+            - generic [ref=e48]:
+              - img [ref=e75]
+              - img [ref=e77]
+        - listitem [ref=e51]:
+          - link [ref=e52] [cursor=pointer]:
+            - /url: https://twitter.com/kayisrahman
+            - generic [ref=e53]:
+              - img [ref=e79]
+              - img [ref=e81]
+        - listitem [ref=e56]:
+          - link [ref=e57] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/kayisrahman
+            - generic [ref=e58]:
+              - img [ref=e83]
+              - img [ref=e85]
+        - listitem [ref=e61]:
+          - link [ref=e62] [cursor=pointer]:
+            - /url: https://github.com/kayisrahman
+            - generic [ref=e63]:
+              - img [ref=e87]
+              - img [ref=e89]
+      - paragraph [ref=e66]: Copyright © Kayis Rahman 2026

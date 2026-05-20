@@ -48,8 +48,6 @@ navigation:
     url: "/resume/"
   - title: "Blog"
     url: "/posts/"
-  - title: "Terminal"
-    url: "/terminal/"
 
 # Build settings
 sass:

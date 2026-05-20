@@ -1,0 +1,125 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Kayis Rahman" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Home" [ref=e8] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=e9]:
+          - link "About" [ref=e10] [cursor=pointer]:
+            - /url: /about
+        - listitem [ref=e11]:
+          - link "Blog" [ref=e12] [cursor=pointer]:
+            - /url: /posts
+        - listitem [ref=e13]:
+          - link "Terminal" [ref=e14] [cursor=pointer]:
+            - /url: /terminal
+        - listitem [ref=e15]:
+          - link "Projects" [ref=e16] [cursor=pointer]:
+            - /url: /projects
+        - listitem [ref=e17]:
+          - link "Resume" [ref=e18] [cursor=pointer]:
+            - /url: /resume
+        - listitem [ref=e19]:
+          - link "Contact" [ref=e20] [cursor=pointer]:
+            - /url: /contact
+        - listitem [ref=e21]:
+          - link "Search" [ref=e22] [cursor=pointer]:
+            - /url: /search
+            - img [ref=e23]
+        - listitem [ref=e25]:
+          - link "RSS Feed" [ref=e26] [cursor=pointer]:
+            - /url: /feed.xml
+            - img [ref=e27]
+        - listitem [ref=e29]:
+          - button "Toggle dark mode" [ref=e30] [cursor=pointer]:
+            - img [ref=e31]
+  - banner [ref=e33]:
+    - generic [ref=e38]:
+      - heading "Kayis Rahman" [level=1] [ref=e39]
+      - generic [ref=e40]: Staff Security Engineer | PKI/HSM | Java & Go
+      - paragraph [ref=e41]: Building automated trading systems and LLM inference infrastructure on the side.
+  - generic [ref=e44]:
+    - article [ref=e45]:
+      - link "Ideas to Production — Ten Years, Five Companies, One Direction A decade of building things, across five companies and two continents." [ref=e46] [cursor=pointer]:
+        - /url: /2026/05/17/ideas-to-production.html
+        - heading "Ideas to Production — Ten Years, Five Companies, One Direction" [level=2] [ref=e47]
+        - heading "A decade of building things, across five companies and two continents." [level=3] [ref=e48]
+      - paragraph [ref=e49]: Posted by Kayis Rahman on May 17, 2026 · 11 mins read
+      - generic [ref=e50]:
+        - link "career" [ref=e51] [cursor=pointer]:
+          - /url: /tags/#career
+        - link "engineering" [ref=e52] [cursor=pointer]:
+          - /url: /tags/#engineering
+        - link "security" [ref=e53] [cursor=pointer]:
+          - /url: /tags/#security
+        - link "backend" [ref=e54] [cursor=pointer]:
+          - /url: /tags/#backend
+    - separator [ref=e55]
+    - article [ref=e56]:
+      - link "Man must explore, and this is exploration at its greatest Problems look mighty small from 150 miles up" [ref=e57] [cursor=pointer]:
+        - /url: /private/var/folders/tk/3w3bz7xd1f94qz9xv2zr8y2w0000gn/t/jekyll-remote-theme-20260517-56535-6d07w0/2020/01/31/man-must-explore.html
+        - heading "Man must explore, and this is exploration at its greatest" [level=2] [ref=e58]
+        - heading "Problems look mighty small from 150 miles up" [level=3] [ref=e59]
+      - paragraph [ref=e60]: Posted by Kayis Rahman on January 31, 2020 · 4 mins read
+    - separator [ref=e61]
+    - article [ref=e62]:
+      - link "I believe every human has a finite number of heartbeats. I don't intend to waste any of mine. Never in all their history have men been able truly to conceive of the world..." [ref=e63] [cursor=pointer]:
+        - /url: /private/var/folders/tk/3w3bz7xd1f94qz9xv2zr8y2w0000gn/t/jekyll-remote-theme-20260517-56535-6d07w0/2020/01/31/heartbeats.html
+        - heading "I believe every human has a finite number of heartbeats. I don't intend to waste any of mine." [level=2] [ref=e64]
+        - heading "Never in all their history have men been able truly to conceive of the world..." [level=3] [ref=e65]
+      - paragraph [ref=e66]: Posted by Kayis Rahman on January 31, 2020 · 4 mins read
+    - separator [ref=e67]
+    - article [ref=e68]:
+      - link "Science has not yet mastered prophecy We predict too much for the next year and yet far too little for the next ten." [ref=e69] [cursor=pointer]:
+        - /url: /private/var/folders/tk/3w3bz7xd1f94qz9xv2zr8y2w0000gn/t/jekyll-remote-theme-20260517-56535-6d07w0/2020/01/30/prophecy.html
+        - heading "Science has not yet mastered prophecy" [level=2] [ref=e70]
+        - heading "We predict too much for the next year and yet far too little for the next ten." [level=3] [ref=e71]
+      - paragraph [ref=e72]: Posted by Kayis Rahman on January 30, 2020 · 4 mins read
+    - separator [ref=e73]
+    - article [ref=e74]:
+      - link "Failure is not an option Many say exploration is part of our destiny, but it’s actually our duty to future generations." [ref=e75] [cursor=pointer]:
+        - /url: /private/var/folders/tk/3w3bz7xd1f94qz9xv2zr8y2w0000gn/t/jekyll-remote-theme-20260517-56535-6d07w0/2020/01/29/exploration.html
+        - heading "Failure is not an option" [level=2] [ref=e76]
+        - heading "Many say exploration is part of our destiny, but it’s actually our duty to future generations." [level=3] [ref=e77]
+      - paragraph [ref=e78]: Posted by Kayis Rahman on January 29, 2020 · 4 mins read
+    - separator [ref=e79]
+    - generic [ref=e80]:
+      - heading "Stay updated" [level=4] [ref=e81]
+      - paragraph [ref=e82]: New posts about PKI, Java, LLM inference, and building things on the side. No spam.
+      - generic [ref=e84]:
+        - textbox "your@email.com" [ref=e85]
+        - button "Subscribe" [ref=e87] [cursor=pointer]
+    - link "View All Posts →" [ref=e89] [cursor=pointer]:
+      - /url: /posts
+  - separator [ref=e90]
+  - contentinfo [ref=e91]:
+    - generic [ref=e94]:
+      - list [ref=e95]:
+        - listitem [ref=e96]:
+          - link [ref=e97] [cursor=pointer]:
+            - /url: mailto:kaisbk1@gmail.com
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - img [ref=e101]
+        - listitem [ref=e103]:
+          - link [ref=e104] [cursor=pointer]:
+            - /url: https://twitter.com/kayisrahman
+            - generic [ref=e105]:
+              - img [ref=e106]
+              - img [ref=e108]
+        - listitem [ref=e110]:
+          - link [ref=e111] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/kayisrahman
+            - generic [ref=e112]:
+              - img [ref=e113]
+              - img [ref=e115]
+        - listitem [ref=e117]:
+          - link [ref=e118] [cursor=pointer]:
+            - /url: https://github.com/kayisrahman
+            - generic [ref=e119]:
+              - img [ref=e120]
+              - img [ref=e122]
+      - paragraph [ref=e124]: Copyright © Kayis Rahman 2026
