@@ -183,6 +183,16 @@ $(function () {
 (function () {
   document.querySelectorAll('img:not([loading])').forEach(function (img) {
     img.setAttribute('loading', 'lazy');
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add('img-loaded');
+    } else {
+      img.addEventListener('load', function () {
+        img.classList.add('img-loaded');
+      });
+      img.addEventListener('error', function () {
+        img.classList.add('img-loaded'); // show broken images too
+      });
+    }
   });
 })();
 
