@@ -49,6 +49,21 @@ h1, h2, h3, h4, h5, h6,
   color: white;
 }
 
+// Home page masthead — larger hero
+.masthead .home-heading h1 {
+  font-size: 6rem !important;
+  line-height: 7rem !important;
+  margin-bottom: 20px;
+}
+
+.home-heading {
+  padding: 80px 0 120px 0;
+
+  .subheading {
+    font-size: 1.4rem;
+  }
+}
+
 // ── Page transition animation ────────────────────────────────────────────────
 
 body {
