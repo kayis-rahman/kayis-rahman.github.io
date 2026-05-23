@@ -5,3 +5,5 @@
 layout: home
 background: '/assets/img/home.jpg'
 ---
+
+<p class="subheading forced-light-theme">Building automated trading systems and LLM inference infrastructure on the side.</p>

@@ -867,6 +867,18 @@ html[data-theme="dark"] .rss-link {
   flex-shrink: 0;
 }
 
+.author-avatar-dark {
+  display: none;
+}
+
+html[data-theme="dark"] .author-avatar-light {
+  display: none;
+}
+
+html[data-theme="dark"] .author-avatar-dark {
+  display: block;
+}
+
 .author-name {
   font-weight: 700;
   font-size: 1rem;
@@ -1739,3 +1751,4 @@ html[data-theme="dark"] .post-content table tbody tr {
 
 html[data-theme="dark"] .post-content table td,
 html[data-theme="dark"] .post-content table th { color: var(--color-text) !important; }
+

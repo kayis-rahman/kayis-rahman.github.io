@@ -6,6 +6,8 @@ permalink: /resume/
 background: '/assets/img/resume.jpg'
 ---
 
+<p class="subheading forced-light-theme">Staff Security Engineer at Qualcomm. PKI, HSM, Java, Go.</p>
+
 # Kayis Rahman
 
 Staff Security Software Engineer · PKI · HSM · Java · Go

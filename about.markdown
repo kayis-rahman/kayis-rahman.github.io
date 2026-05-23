@@ -6,6 +6,8 @@ permalink: /about/
 background: '/assets/img/about-me.png'
 ---
 
+<p class="subheading forced-light-theme">Kerala roots. Cork now. Ten years of shipping software.</p>
+
 I grew up in a small coastal town in Kerala, South India. I write code for a living and have done for ten years.
 
 Right now I'm a Staff Security Software Engineer at Qualcomm in Cork, Ireland, working on PKI, Hardware Security Modules, and secure device provisioning. The infrastructure that establishes cryptographic trust between hardware and backend systems at scale. It's slow, deliberate work with very little margin for error. I like it more than I expected to.
