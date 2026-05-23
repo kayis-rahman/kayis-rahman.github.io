@@ -11,12 +11,19 @@ _config.yml          # Site config: title, navigation, remote theme, URL
 index.markdown       # Home page (layout: home)
 about.markdown       # About page (layout: page, permalink: /about/)
 resume.markdown      # Resume/CV (layout: page, permalink: /resume/)
+projects.html        # Projects page (layout: page, permalink: /projects/)
 contact.html         # Contact form (layout: page, permalink: /contact)
+subscribe.html       # Newsletter landing page (permalink: /subscribe/)
+search.html          # Client-side search (permalink: /search/)
+tags.html            # Tag index page (permalink: /tags/)
+categories.html      # Category index page (permalink: /categories/)
+404.html             # Custom 404 page
 _posts/              # Blog posts (chronological filenames)
-_includes/           # Custom partials: footer, head, navbar, scripts
+_includes/           # Custom partials: footer, head, navbar, scripts, author-card, etc.
 _layouts/            # Custom layouts: default, home, page, post
 _sass/styles.scss    # Imports Clean Blog SCSS from vendor
-img/                 # Background images referenced in frontmatter
+assets/img/          # Background images referenced in frontmatter
+assets/scripts.js    # Client-side JS: dark mode, reading progress, TOC, back-to-top
 ```
 
 ## Common Commands
@@ -53,11 +60,10 @@ The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides ba
 
 ## Key Conventions
 - Pages use YAML frontmatter for layout, title, permalink, and background image
-- Background images are referenced as `'/img/<name>.jpg'` in frontmatter
-- Navigation is defined in `_config.yml` under `navigation:` key
+- Background images are referenced as `'/assets/img/<name>.jpg'` in frontmatter
+- Navigation is defined in `_config.yml` under `navigation:` key (6 items: Home, About, Blog, Projects, Resume, Contact). Navbar also includes Search, RSS, and Theme Toggle icons hardcoded in `_includes/navbar.html`.
 - `baseurl` is empty string (site deploys at repo root, not a subpath)
 - Blog posts go in `_posts/` with filenames like `YYYY-MM-DD-slug.markdown`
-- The Gemfile lists both `minima` and `jekyll-theme-clean-blog`; the active theme is the remote theme in `_config.yml`. `minima` is vestigial.
 
 ## UI Verification Rule
 **After any UI change (layouts, includes, SCSS, CSS), verify visually before reporting completion:**
@@ -174,9 +180,12 @@ Don't change masthead padding — only adjust content margin. Keeps header visua
 - **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
 - **CI minification can't write in-place to `_site/`** — `actions/configure-pages` makes `_site/` read-only. Minify to a temp dir (`_minified/`) and upload that as the artifact instead.
 - **`_includes/scripts.html` is the canonical place for inline scripts** (GA, etc.) since it's always included via `default.html`. Don't add scripts to `default.html` directly — use the existing include partials.
+- **GA is gated on `jekyll.environment == 'production'`** — the GA snippet in `scripts.html` only loads in production. Set `JEKYLL_ENV=production` or use `--lsi`/`--safe` flags for production builds. Local `jekyll serve` won't fire analytics. Internal traffic is tagged via `ga_internal=true` cookie.
 - **`jekyll serve` requires `webrick` gem** — Ruby 3.3+ doesn't include webrick in stdlib. Add `gem "webrick"` to Gemfile and run `bundle install`. Without it, `jekyll build` works but `jekyll serve` crashes with LoadError.
 - **Content column width is controlled by two things**: Bootstrap grid class (`col-lg-8`/`col-lg-10`) in layouts AND `.container` max-width in SCSS. Changing only one gives partial results. Change both for full effect.
 - **SRI integrity hashes for CDN resources become stale** — jQuery, Bootstrap, and Font Awesome hashes in `head.html` and `scripts.html` require periodic updates. When resources are blocked (check console errors), fetch the actual computed hash from the browser error message and update the `integrity` attribute. See May 2026 session for example: FA `sha384-DyZ88MY4...` became `sha384-DyZ88mC6Up...`
 - **Font Awesome async preload (`rel="preload" onload="..."`)** is unreliable for CSS. Use direct `<link rel="stylesheet">` instead. The async preload trick's `onload` handler doesn't reliably fire when integrity checks are involved or under network delays.
 - **Navbar opacity issue with vendor theme** — the Clean Blog vendor SCSS makes the navbar `background: transparent` at desktop (≥992px) with white text, then uses `.is-fixed` class (added via missing scroll JS) to make it opaque. Without scroll JS, navbar stays transparent and text becomes invisible after scrolling past the dark masthead. Override in `_sass/styles.scss` with solid white background at desktop to fix.
 - **Remove `future: true` from config** — prevents accidental publication of draft posts with future dates. With this setting enabled, any post dated in the future will publish immediately. Use post frontmatter draft flag or manual scheduling instead.
+- **Remote theme demo posts bleed into output** — the Clean Blog theme ships 6 sample posts in its `_posts/` directory. Jekyll merges these with your local `_posts/`. To suppress them, create stub files with matching filenames and `published: false` frontmatter. The 6 stubs are in `_posts/` with dates `2020-01-26` through `2020-01-31` (dinosaurs, dreams, exploration, prophecy, heartbeats, man-must-explore).
+- **`jekyll-theme-clean-blog` gem was removed** — the Gemfile previously listed `jekyll-theme-clean-blog` as a dependency. It was vestigial (the remote theme handles everything via `jekyll-remote-theme`). Removed in commit `d07c886`.
