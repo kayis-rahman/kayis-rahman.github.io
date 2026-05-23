@@ -1,12 +1,10 @@
 ---
 layout: page
 title: Resume
-description: This is what I do
+description: "Staff Security Engineer at Qualcomm. PKI, HSM, Java, Go."
 permalink: /resume/
 background: '/assets/img/resume.jpg'
 ---
-
-<p class="subheading forced-light-theme">Staff Security Engineer at Qualcomm. PKI, HSM, Java, Go.</p>
 
 # Kayis Rahman
 

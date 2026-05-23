@@ -1,12 +1,10 @@
 ---
 layout: page
 title: About
-description: This is what I do
+description: "Kerala roots. Cork now. Ten years of shipping software."
 permalink: /about/
 background: '/assets/img/about-me.png'
 ---
-
-<p class="subheading forced-light-theme">Kerala roots. Cork now. Ten years of shipping software.</p>
 
 I grew up in a small coastal town in Kerala, South India. I write code for a living and have done for ten years.
 
