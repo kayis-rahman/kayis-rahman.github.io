@@ -6,103 +6,101 @@ permalink: /resume/
 background: '/assets/img/resume.jpg'
 ---
 
-<div class="d-print-none text-right mb-4">
-  <button onclick="window.print()" class="btn btn-primary">
-    <i class="fas fa-download mr-1"></i> Download as PDF
-  </button>
-</div>
+# Kayis Rahman
 
-# Kayis Rahman - Resume
-
-I'm a Staff Security Software Engineer specialising in PKI, HSM, and secure device provisioning. With over 10 years of professional experience, I've delivered high-impact solutions across enterprise backend, cloud infrastructure, and cryptographic security.
-
----
-
-## About Me
-
-Backend-focused engineer currently based in Cork, Ireland. Strong foundation in Java, Spring Boot, and microservices architecture, with growing expertise in cryptographic infrastructure and security engineering. My career has taken me through leading engineering teams, deploying Kubernetes clusters, automating CI/CD pipelines, and now designing secure provisioning systems at scale.
-
-**Current Focus**:
-- PKI, HSM, and secure device provisioning
-- Cryptographic infrastructure at scale
-- Backend Engineering (Java, Go)
-- Cloud Platforms (AWS, GCP, Azure)
-- DevOps & Automation (Docker, Kubernetes, Terraform)
-
----
-
-## Skills
-
-| Language | Frameworks & Tools | Cloud & DevOps | Databases |
-|---------|--------------------|----------------|-----------|
-| Java | Spring Boot, JPA, Hibernate, Maven | AWS, GCP, Azure, Docker, Kubernetes, Jenkins, Terraform | PostgreSQL, MySQL, Oracle, MongoDB, Cassandra |
-| Go / Golang | PKI, HSM, Cryptography, Secure Provisioning | CI/CD, GitLab CI, Git, Jira | SQL & NoSQL |
-| JavaScript | Angular, Vue.js, GraphQL, LangChain4j, TimescaleDB, vLLM | IntelliJ, VS Code, Agile/Scrum | Log4j, Unit Testing |
-
----
-
-## Projects
-
-### Gift Management System - TCS
-- Architected a scalable Java backend for managing corporate gift orders across regions.
-- Integrated secure authentication, logging, and audit features using Spring Security and Log4j.
-- Automated deployments with Jenkins and Docker.
-
-### EY Project Management Tool - Ernst & Young GDS
-- Developed a full-stack Angular + Spring Boot platform for resource allocation, auditing, and escalations.
-- Deployed services using GitLab CI to GKE with load balancing and health checks.
-
-### Cloud Monitoring & Cost Optimizer
-- Designed and implemented a cost-efficient cloud resource management tool.
-- Integrated with AWS CloudWatch and GCP Billing APIs for live monitoring and alerts.
-- Reduced monthly cloud expenses by 25% for clients.
+Staff Security Software Engineer · PKI · HSM · Java · Go
+Cork, Ireland · [kaisbk1@gmail.com](mailto:kaisbk1@gmail.com) · [GitHub](https://github.com/kayisrahman) · [LinkedIn](https://www.linkedin.com/in/kayisrahman)
 
 ---
 
 ## Work Experience
 
-**Staff Security Engineer**
-*Qualcomm (QT Technologies Ireland Ltd) - Cork, Ireland*
-*January 2026 - Present*
-- Working in PKI/HSM and secure device provisioning
-- Focus on cryptographic infrastructure and security engineering at scale
+**Staff Security Software Engineer**
+Qualcomm (QT Technologies Ireland Ltd), Cork, Ireland
+January 2026 – Present
+
+- Working on PKI, HSM and secure device provisioning at scale
+- Designing cryptographic infrastructure for hardware trust establishment
+- Focused on security engineering at the intersection of hardware and backend systems
+
+---
 
 **Senior Technical Lead**
-*Ernst & Young GDS, Remote / Ireland*
-*Jan 2021 - Dec 2023*
-- Led cloud migration strategy for a legacy enterprise platform.
-- Implemented Kubernetes rollout reducing infra setup time by 50%.
-- Collaborated with cross-functional teams and mentored junior engineers.
+Ernst & Young GDS, Kochi, India (Hybrid)
+January 2023 – September 2024
 
-**Java Developer**
-*Tata Consultancy Services (TCS)*
-*2015 - 2020*
-- Built and maintained high-availability backend systems.
-- Developed REST APIs and services with high code quality and test coverage.
+- Led a cross-functional engineering team of seven across cloud-native platform development
+- Automated Kubernetes namespace provisioning via Terraform, reducing infrastructure setup time significantly
+- Redesigned legacy email archival system using S3, SQS and Pub/Sub, cutting licensing costs substantially
+- Introduced a new branching strategy that removed large amounts of redundant deployment work
+- Mentored junior engineers and drove technical decision making across the team
+- Stack: Java, Spring Boot, Angular, GKE, Terraform, GitLab CI, AWS, GCP, Azure
+
+---
+
+**Senior Software Engineer**
+Ribalta Media Technologies, Trivandrum, India
+January 2021 – December 2022
+
+- One of three engineers covering the full platform end to end at an early stage streaming startup
+- Rewrote Android home screen and introduced infinite scroll, significantly improving user engagement
+- Built a new OTP authentication microservice for mobile login from scratch
+- Implemented HLS and FFmpeg video optimisation, reducing GCP bandwidth costs meaningfully
+- Developed Android TV application from scratch with no prior playbook
+- Introduced CI/CD pipeline for Android and API service, eliminating error-prone manual releases
+- Stack: Golang, Java, Android, Android TV, PHP, Docker, GCP
+
+---
+
+**Senior Process Associate / Java Backend Developer**
+Tata Consultancy Services, Kochi, India
+February 2018 – December 2020
+
+- Started in application support, monitoring live production systems and resolving incidents
+- Worked on vendor application upgrades and integration interfaces across legacy systems
+- Built Spring Boot microservices with LDAP and SSO authentication for corporate gift management system
+- Designed and deployed Dockerized microservices with Kubernetes orchestration and Jenkins CI/CD
+- Configured batch jobs using Spring Batch and Oracle for third-party data integration
+- Stack: Java, Spring Boot, Spring Security, LDAP, AWS, Docker, Kubernetes, Jenkins, Oracle
+
+---
+
+**Software Developer**
+Green Info Solutions, Kochi, India
+August 2015 – August 2017
+
+- Built and maintained MediSoft, a LAN-based hospital management system serving multiple hospitals
+- Introduced three new modules including pharmacy tracking and outpatient billing
+- Contributed to Windows desktop applications built in C# and .NET alongside the main Java project
+- Deployed releases directly to production servers via WAR file deployment
+- Stack: Java EE, Hibernate, JSP, C#, .NET, SQL
+
+---
+
+## Skills
+
+| Language | Frameworks and Tools | Cloud and DevOps | Databases |
+|---|---|---|---|
+| Java | Spring Boot, JPA, Hibernate, Maven | AWS, GCP, Azure, Docker, Kubernetes, Terraform | PostgreSQL, MySQL, Oracle, Cassandra |
+| Go / Golang | PKI, HSM, Cryptography, Secure Provisioning | Jenkins, GitLab CI, Git, CI/CD | TimescaleDB, MongoDB |
+| JavaScript | Angular, GraphQL, LangChain4j, vLLM | Agile, Scrum, Jira | Redis |
+| C# | Spring Security, LDAP, SSO, Spring Batch | IntelliJ, VS Code | SQL and NoSQL |
 
 ---
 
 ## Education
 
 **MSc in Information Systems with Computing**
-*Dublin Business School*
-*Ireland (2023-2025)*
+Dublin Business School, Ireland
+September 2024 – 2025
 
 **B.Tech in Computer Science Engineering**
-*Anna University, India*
-
----
-
-## Links
-
-- [Portfolio Website](https://kayis-rahman.github.io)
-- [GitHub](https://github.com/kayisrahman)
-- [LinkedIn](https://www.linkedin.com/in/kayisrahman/)
+Anna University, India
 
 ---
 
 ## Contact
 
-- **Email**: kaisbk1@gmail.com
-- **Location**: Cork, Ireland
-- **Status**: Employed full-time at Qualcomm
+- Email: kaisbk1@gmail.com
+- Location: Cork, Ireland
+- Status: Employed full-time at Qualcomm
