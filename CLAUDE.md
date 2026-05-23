@@ -97,7 +97,8 @@ date: 2026-05-19
 categories: [llm, infrastructure, self-hosting]  # Use lowercase, for /categories/ page
 tags: [vllm, gpuhub, claude-code]                # Individual topic keywords
 description: "Unique 160-char description for meta tags and preview text"
-image: /img/hero.jpg                              # og:image fallback (if no background)
+background: /img/posts/hero.jpg                  # Post hero/masthead image
+image: /img/og-image.jpg                          # og:image meta tag (social sharing)
 word_count: 4500                                  # For schema.org BlogPosting
 reading_time: 12                                  # Displayed in post meta
 series: "Series Name"                             # For series-nav.html include
@@ -105,7 +106,7 @@ series_part: 1
 ---
 ```
 
-Categories show up on `/categories/` page and post cards. Tags link to `/tags/` page.
+Categories show up on `/categories/` page and post cards. Tags link to `/tags/` page. Use `background:` for post hero image (checked in `_layouts/post.html`), not `image:`.
 
 ## Growth Audit Pattern
 **Before writing new posts, audit for quick wins across three dimensions:**
@@ -151,6 +152,16 @@ html[data-theme="dark"] {
 ```
 
 Use `var(--color-primary)` for all accents. Bright blue should appear only on interactive elements (buttons, links, hover states), not as a dominant color.
+
+**STRICT RULE: No Hardcoded Colors**
+Never use hex values (`#fff`), `rgb()`, or `rgba()` with literal numbers directly in component styles in `_sass/styles.scss`. Every color must come from a CSS variable defined in `:root` or `html[data-theme="dark"]`. When adding a new color:
+1. Define the semantic variable in both `:root` (light) and `html[data-theme="dark"]` (dark)
+2. Use `var(--color-name)` in component styles
+
+Documented exceptions (leave as-is):
+- Syntax highlighting token colors in `.highlight` block (GitHub Solarized theme)
+- Print media colors in `@media print` (CSS variables unreliable in print)
+- Semantic alert colors in `blockquote.prompt-*` (tip/info/warning/danger)
 
 ## Home Header Positioning
 Push name and buttons down slightly to reveal more of the face background image. Use `margin-top` on `.home-heading`:
