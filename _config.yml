@@ -43,10 +43,16 @@ newsletter_username: kayis
 navigation:
   - title: "Home"
     url: "/"
-  - title: "Resume"
-    url: "/resume/"
+  - title: "About"
+    url: "/about/"
   - title: "Blog"
     url: "/posts/"
+  - title: "Projects"
+    url: "/projects/"
+  - title: "Resume"
+    url: "/resume/"
+  - title: "Contact"
+    url: "/contact/"
 
 # Build settings
 sass:
