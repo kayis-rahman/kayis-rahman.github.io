@@ -124,6 +124,38 @@ Categories show up on `/categories/` page and post cards. Tags link to `/tags/` 
 
 See memory `growth_audit_pattern.md` for detailed approach and when to apply.
 
+## Color System & Theme
+**Primary brand color: `#0056b2`** (professional blue). Matches technical tone (security/infrastructure focus). Use this for light theme.
+
+**Dark theme variant: `#8ab4f8`** (bright blue). Provides readability on dark backgrounds without sacrificing brand cohesion.
+
+**CSS Variables** (`_sass/styles.scss`):
+```scss
+:root {
+  --color-primary: #0056b2;
+  --color-primary-dark: #8ab4f8;
+  --color-text: #34343c;
+  --color-bg: #ffffff;
+  --color-border: #e9ecef;
+}
+
+html[data-theme="dark"] {
+  --color-primary: #8ab4f8;
+  --color-text: #afafb1;
+  --color-bg: #1b1b1e;
+  --color-border: #2c2d2d;
+}
+```
+
+Use `var(--color-primary)` everywhere instead of hard-coded colors. Ensures consistency across light/dark themes.
+
+## Home Header Positioning
+Push name and buttons down slightly to reveal more of the face background image. Use `margin-top` on `.home-heading`:
+- Mobile: `20px`
+- Desktop: `30px`
+
+Don't change masthead padding — only adjust content margin. Keeps header visual balance while showing more of the background photo.
+
 ## Gotchas
 - **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
 - **CI minification can't write in-place to `_site/`** — `actions/configure-pages` makes `_site/` read-only. Minify to a temp dir (`_minified/`) and upload that as the artifact instead.

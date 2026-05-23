@@ -1,6 +1,24 @@
 // Import Core Clean Blog SCSS
 @import "../assets/vendor/startbootstrap-clean-blog/scss/styles";
 
+// ── Color System (CSS Variables) ──────────────────────────────────────────────
+
+:root {
+  --color-primary: #0056b2;
+  --color-text: #34343c;
+  --color-bg: #ffffff;
+  --color-border: #e9ecef;
+  --color-link-hover: #d2603a;
+}
+
+html[data-theme="dark"] {
+  --color-primary: #8ab4f8;
+  --color-text: #afafb1;
+  --color-bg: #1b1b1e;
+  --color-border: #2c2d2d;
+  --color-link-hover: #d2603a;
+}
+
 // ── Global ───────────────────────────────────────────────────────────────────
 
 html {
@@ -67,7 +85,7 @@ h1, h2, h3, h4, h5, h6,
 
 @media only screen and (min-width: 768px) {
   header.masthead .home-heading {
-    padding: 300px 0 80px 0;
+    padding: 300px 0 60px 0;
     margin-top: 30px;
   }
 }
