@@ -1596,7 +1596,7 @@ blockquote.prompt-danger {
   color: rgba(46, 46, 46, 0.77);
 
   &::before {
-    font-family: 'Font Awesome 5 Free';
+    font-family: 'Font Awesome 6 Free';
     text-align: center;
     width: 3rem;
     position: absolute;
@@ -1614,7 +1614,7 @@ blockquote.prompt-tip {
 
 blockquote.prompt-info {
   background-color: #e1f5fe;
-  &::before { content: '\f06a'; color: #0070cb; font-weight: 900; transform: rotate(180deg); display: inline-block; }
+  &::before { content: '\f05a'; color: #0070cb; font-weight: 900; }
 }
 
 blockquote.prompt-warning {

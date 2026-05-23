@@ -74,7 +74,7 @@ exclude:
   - .jekyll-cache/
   - gemfiles/
   - Gemfile
-  - Gemfile.lockme
+  - Gemfile.lock
   - node_modules/
   - vendor/bundle/
   - vendor/cache/
