@@ -6,6 +6,7 @@ categories: [llm, infrastructure, self-hosting]
 tags: [vllm, gpuhub, claude-code, self-hosted-llm, qwen3]
 description: "Claude Code mid-session, 500 errors, rate limits, and the decision to self-host. Part 1 of a 5-part series on running your own LLM on rented GPUs."
 background: /assets/img/posts/gpu.jpg
+image: /assets/img/posts/gpu.jpg
 word_count: 4500
 reading_time: 12
 series: "Self-Hosting LLM Inference on Rented GPUs"

@@ -7,6 +7,7 @@ categories: [career, engineering]
 tags: [career, engineering, security, backend]
 description: "Ten years, five companies, two continents. A retrospective on what stayed the same across every job, stack, and city."
 background: '/assets/img/posts/ideas-to-production.jpg'
+image: /assets/img/posts/ideas-to-production.jpg
 word_count: 3800
 reading_time: 11
 ---

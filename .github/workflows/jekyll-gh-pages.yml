@@ -21,24 +21,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Ruby with gem cache
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-
-      - name: Setup Node.js
+      - name: Setup Node.js with cache
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+
+      - name: Install build tools
+        run: npm install --no-save html-minifier-terser terser sharp
+
+      - name: Build with Jekyll
+        run: bundle exec jekyll build --destination ./_site
 
       - name: Minify HTML
         run: |
           mkdir -p ./_minified
-          npx --yes html-minifier-terser \
+          npx html-minifier-terser \
             --input-dir ./_site \
             --output-dir ./_minified \
             --file-ext html \
@@ -54,16 +61,25 @@ jobs:
 
       - name: Minify JavaScript
         run: |
-          npx --yes terser ./_minified/assets/scripts.js \
+          npx terser ./_minified/assets/scripts.js \
             --compress --mangle \
             --output ./_minified/assets/scripts.js.min
-          npx --yes terser ./_minified/sw.js \
+          npx terser ./_minified/sw.js \
             --compress --mangle \
             --output ./_minified/sw.js.min 2>/dev/null || true
 
-      - name: Optimize images
+      - name: Check if images changed
+        id: image-changes
         run: |
-          npm install --no-save sharp
+          if git diff --name-only HEAD~1 HEAD | grep -q 'assets/img/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Optimize images
+        if: steps.image-changes.outputs.changed == 'true'
+        run: |
           node << 'EOF'
           const sharp = require('sharp');
           const fs = require('fs');
