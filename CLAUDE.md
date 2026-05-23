@@ -125,29 +125,32 @@ Categories show up on `/categories/` page and post cards. Tags link to `/tags/` 
 See memory `growth_audit_pattern.md` for detailed approach and when to apply.
 
 ## Color System & Theme
-**Primary brand color: `#0056b2`** (professional blue). Matches technical tone (security/infrastructure focus). Use this for light theme.
+**Aesthetic: Brutalist minimalism + technical accent**
 
-**Dark theme variant: `#8ab4f8`** (bright blue). Provides readability on dark backgrounds without sacrificing brand cohesion.
+- **Base**: Pure black (`#000000`) and white (`#ffffff`) — brutal, unforgettable, zero distraction
+- **Accent**: Bright blue (`#0099ff`) — reserved for CTAs (Subscribe, Read Blog), links, and interactive states
+- **Dark theme**: Black background, white text, same bright blue accent
 
 **CSS Variables** (`_sass/styles.scss`):
 ```scss
 :root {
-  --color-primary: #0056b2;
-  --color-primary-dark: #8ab4f8;
-  --color-text: #34343c;
-  --color-bg: #ffffff;
-  --color-border: #e9ecef;
+  --color-primary: #0099ff;    // Bright blue accent only
+  --color-text: #000000;       // Black text on white
+  --color-bg: #ffffff;         // White background
+  --color-border: #cccccc;     // Light gray borders
+  --color-link-hover: #0099ff; // Bright blue on hover
 }
 
 html[data-theme="dark"] {
-  --color-primary: #8ab4f8;
-  --color-text: #afafb1;
-  --color-bg: #1b1b1e;
-  --color-border: #2c2d2d;
+  --color-primary: #0099ff;
+  --color-text: #ffffff;
+  --color-bg: #000000;
+  --color-border: #333333;
+  --color-link-hover: #0099ff;
 }
 ```
 
-Use `var(--color-primary)` everywhere instead of hard-coded colors. Ensures consistency across light/dark themes.
+Use `var(--color-primary)` for all accents. Bright blue should appear only on interactive elements (buttons, links, hover states), not as a dominant color.
 
 ## Home Header Positioning
 Push name and buttons down slightly to reveal more of the face background image. Use `margin-top` on `.home-heading`:

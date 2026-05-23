@@ -2,21 +2,22 @@
 @import "../assets/vendor/startbootstrap-clean-blog/scss/styles";
 
 // ── Color System (CSS Variables) ──────────────────────────────────────────────
+// Black & white minimalist + bright blue accent for CTAs and interactive elements
 
 :root {
-  --color-primary: #0056b2;
-  --color-text: #34343c;
+  --color-primary: #0099ff;
+  --color-text: #000000;
   --color-bg: #ffffff;
-  --color-border: #e9ecef;
-  --color-link-hover: #d2603a;
+  --color-border: #cccccc;
+  --color-link-hover: #0099ff;
 }
 
 html[data-theme="dark"] {
-  --color-primary: #8ab4f8;
-  --color-text: #afafb1;
-  --color-bg: #1b1b1e;
-  --color-border: #2c2d2d;
-  --color-link-hover: #d2603a;
+  --color-primary: #0099ff;
+  --color-text: #ffffff;
+  --color-bg: #000000;
+  --color-border: #333333;
+  --color-link-hover: #0099ff;
 }
 
 // ── Global ───────────────────────────────────────────────────────────────────
