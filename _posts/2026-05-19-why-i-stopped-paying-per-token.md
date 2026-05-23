@@ -14,7 +14,7 @@ series_part: 1
 
 I was on the $20 Claude Pro plan and hitting rate limits every other session.
 
-Mid-refactor. Mid-thought. "You've hit your session limit — resets 3:45pm." Close the laptop, come back later, rebuild the context in your head all over again.
+Mid-refactor. Mid-thought. "You've hit your session limit. Resets 3:45pm." Close the laptop, come back later, rebuild the context in your head all over again.
 
 The fix seemed obvious — upgrade. But before spending $100 or $200 a month I wanted to understand what I was actually paying for, and whether there was a smarter way.
 
@@ -54,7 +54,7 @@ Also worth knowing: auto-compaction reserves roughly 33K tokens on a 200K window
 
 This is why upgrading the plan alone doesn't fully solve it.
 
-Rate limits cut you off at the plan level — you've exhausted your 5-hour window, wait for the reset. Context walls cut you off at the session level — a single task grew too large for the model to continue. Two different problems, same result: Claude Code stops mid-work.
+Rate limits cut you off at the plan level. You've exhausted your 5-hour window, wait for the reset. Context walls cut you off at the session level. A single task grew too large for the model to continue. Two different problems, same result: Claude Code stops mid-work.
 
 On a paid plan, both happen. On a self-hosted instance, neither does. The context window is whatever your GPU's VRAM can hold. There's no rolling window, no shared quota, no plan ceiling.
 
@@ -147,7 +147,7 @@ For financial data, proprietary logic, anything sensitive — self-hosting isn't
 
 -----
 
-The actual switch turned out to be a single line in one config file. Claude Code doesn't know or care what's on the other end of the URL — it just sends requests. But figuring out what to put on the other end took several weeks, five model attempts, and more broken GPU instances than expected.
+The actual switch turned out to be a single line in one config file. Claude Code doesn't know or care what's on the other end of the URL. It just sends requests. But figuring out what to put on the other end took several weeks, five model attempts, and more broken GPU instances than expected.
 
 Spoiler: the first model attempt ran out of VRAM in under ten seconds.
 
