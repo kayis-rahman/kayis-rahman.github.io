@@ -3,7 +3,7 @@ layout: page
 title: About
 description: This is what I do
 permalink: /about/
-background: '/img/about-me.png'
+background: '/assets/img/about-me.png'
 ---
 
 I grew up in a small coastal town in Kerala, South India. I write code for a living and have done for ten years.

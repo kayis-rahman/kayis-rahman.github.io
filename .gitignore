@@ -8,3 +8,5 @@ private/
 .playwright-mcp/
 .DS_Store
 screenshots/
+*-light.png
+.well-known/

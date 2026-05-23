@@ -61,6 +61,40 @@ jobs:
             --compress --mangle \
             --output ./_minified/sw.js.min 2>/dev/null || true
 
+      - name: Optimize images
+        run: |
+          npm install --no-save sharp
+          node << 'EOF'
+          const sharp = require('sharp');
+          const fs = require('fs');
+          const path = require('path');
+
+          function findImages(dir) {
+            const results = [];
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) {
+                results.push(...findImages(full));
+              } else if (/\.(jpg|jpeg|png)$/i.test(entry.name)) {
+                results.push(full);
+              }
+            }
+            return results;
+          }
+
+          const files = findImages('./_minified/assets/img');
+          Promise.all(files.map(async (f) => {
+            const tmp = f + '.opt';
+            if (/\.(jpg|jpeg)$/i.test(f)) {
+              await sharp(f).jpeg({ quality: 80, mozjpeg: true }).toFile(tmp);
+            } else {
+              await sharp(f).png({ quality: 80, compressionLevel: 9, palette: true }).toFile(tmp);
+            }
+            fs.renameSync(tmp, f);
+            console.log('Optimized:', f);
+          })).then(() => console.log(`Done. Compressed ${files.length} images.`));
+          EOF
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

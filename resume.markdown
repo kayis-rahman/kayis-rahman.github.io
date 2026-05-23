@@ -3,7 +3,7 @@ layout: page
 title: Resume
 description: This is what I do
 permalink: /resume/
-background: '/img/resume.jpg'
+background: '/assets/img/resume.jpg'
 ---
 
 <div class="d-print-none text-right mb-4">

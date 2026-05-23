@@ -97,8 +97,8 @@ date: 2026-05-19
 categories: [llm, infrastructure, self-hosting]  # Use lowercase, for /categories/ page
 tags: [vllm, gpuhub, claude-code]                # Individual topic keywords
 description: "Unique 160-char description for meta tags and preview text"
-background: /img/posts/hero.jpg                  # Post hero/masthead image
-image: /img/og-image.jpg                          # og:image meta tag (social sharing)
+background: /assets/img/posts/hero.jpg           # Post hero/masthead image
+image: /assets/img/og-image.jpg                   # og:image meta tag (social sharing)
 word_count: 4500                                  # For schema.org BlogPosting
 reading_time: 12                                  # Displayed in post meta
 series: "Series Name"                             # For series-nav.html include
