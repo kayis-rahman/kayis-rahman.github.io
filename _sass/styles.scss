@@ -127,7 +127,7 @@ body.exiting {
 header.masthead {
   opacity: 0;
   transition: opacity 0.5s ease-in;
-  background-position-y: 50%;
+  background-position-y: 35%;
 
   &.masthead-loaded {
     opacity: 1;
@@ -1222,17 +1222,6 @@ html[data-theme="dark"] .footer-nav a {
 
 // ── About page avatar ─────────────────────────────────────────────────────────
 
-.about-profile { margin-bottom: 1.5rem; }
-
-.about-avatar {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border: 3px solid #e9ecef;
-  display: block;
-}
-
-html[data-theme="dark"] .about-avatar { border-color: #2c2d2d !important; }
 
 // ── Author card subscribe link ────────────────────────────────────────────────
 
