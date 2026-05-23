@@ -3,8 +3,10 @@ layout: post
 title: "Ideas to Production — Ten Years, Five Companies, One Direction"
 subtitle: "A decade of building things, across five companies and two continents."
 date: 2026-05-17 09:00:00 +0100
-background: '/assets/img/posts/ideas-to-production.jpg'
+categories: [career, engineering]
 tags: [career, engineering, security, backend]
+description: "Ten years, five companies, two continents. A retrospective on what stayed the same across every job, stack, and city."
+background: '/assets/img/posts/ideas-to-production.jpg'
 word_count: 3800
 reading_time: 11
 ---
