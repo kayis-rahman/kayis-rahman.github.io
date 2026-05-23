@@ -5,29 +5,155 @@
 // Black & white minimalist + bright blue accent for CTAs and interactive elements
 
 :root {
+  // ── Brand ─────────────────────────────────────────────────────────────
   --color-primary: #0099ff;
   --color-primary-rgb: 0, 153, 255;
+  --color-link-accent: #8ab4f8;
+  --color-link-accent-rgb: 0, 153, 255;
+
+  // ── Base ──────────────────────────────────────────────────────────────
   --color-text: #000000;
   --color-text-rgb: 0, 0, 0;
   --color-bg: #ffffff;
   --color-bg-rgb: 255, 255, 255;
+  --color-bg-body: #ffffff;
   --color-border: #cccccc;
   --color-border-rgb: 204, 204, 204;
-  --color-link-hover: #0099ff;
-  --color-link-hover-dark: #8ab4f8;
+
+  // ── Text shades ────────────────────────────────────────────────────────
+  --color-text-heading: #333333;
+  --color-text-muted: #555555;
+  --color-text-subtle: #666666;
+  --color-text-xmuted: #757575;
+  --color-text-faint: #999999;
+  --color-text-ghost: #aaaaaa;
+  --color-text-icon: #686868;
+  --color-text-nav: #404040;
+  --color-text-strong: #222222;
+
+  // ── Border shades ──────────────────────────────────────────────────────
+  --color-border-light: #f1f1f1;
+  --color-border-input: #dee2e6;
+  --color-border-medium: #dddddd;
+  --color-border-card: #c8cfd6;
+  --color-border-nav: #e8e8e8;
+
+  // ── Surface backgrounds ────────────────────────────────────────────────
+  --color-surface: #f6f8fa;
+  --color-surface-alt: #fbfcfd;
+  --color-surface-hover: #edf2ff;
+  --color-surface-header: #eaeef1;
+  --color-surface-muted: #f0f0f0;
+
+  // ── Transparency helpers ───────────────────────────────────────────────
+  --color-white-75: rgba(255, 255, 255, 0.75);
+  --color-white-85: rgba(255, 255, 255, 0.85);
+  --color-black-overlay: rgba(0, 0, 0, 0.72);
+  --color-separator: rgba(128, 128, 128, 0.2);
+  --color-shadow-xs: rgba(0, 0, 0, 0.08);
+  --color-shadow-sm: rgba(0, 0, 0, 0.12);
+
+  // ── Semantic: alerts ───────────────────────────────────────────────────
+  --color-success-bg: #d4edda;
+  --color-success-text: #155724;
+  --color-info-text: #0070cb;
+  --color-warn-text: #ef9c03;
+  --color-danger-text: #df3c30;
+  --color-rss: #f26522;
+  --color-rss-rgb: 242, 101, 34;
+
+  // ── Semantic: components ───────────────────────────────────────────────
+  --color-code-text: #3f596f;
+  --color-code-bg: rgba(25, 25, 28, 0.05);
+  --color-contact-accent: var(--color-primary);
+  --color-contact-accent-rgb: 0, 153, 255;
+  --color-link-underline: var(--color-border-input);
+  --color-series-bg: rgba(var(--color-primary-rgb), 0.08);
+  --color-tag-border: var(--color-border-input);
+  --color-tag-hover-bg: var(--color-border-input);
+  --color-subscribe-bg: rgba(var(--color-primary-rgb), 0.1);
+  --color-subscribe-hover: rgba(var(--color-primary-rgb), 0.18);
+  --color-newsletter-bg: var(--color-bg);
+  --color-newsletter-border: var(--color-border);
+  --color-card-bg: var(--color-bg);
+  --color-footer-bg: var(--color-bg);
+  --color-reading-progress: var(--color-primary);
 }
 
 html[data-theme="dark"] {
+  // ── Brand (same) ──────────────────────────────────────────────────────
   --color-primary: #0099ff;
   --color-primary-rgb: 0, 153, 255;
+  --color-link-accent: #8ab4f8;
+  --color-link-accent-rgb: 138, 180, 248;
+
+  // ── Base (inverted) ───────────────────────────────────────────────────
   --color-text: #ffffff;
   --color-text-rgb: 255, 255, 255;
   --color-bg: #000000;
   --color-bg-rgb: 0, 0, 0;
+  --color-bg-body: #1b1b1e;
   --color-border: #333333;
   --color-border-rgb: 51, 51, 51;
-  --color-link-hover: #0099ff;
-  --color-link-hover-dark: #8ab4f8;
+
+  // ── Text shades (dark) ─────────────────────────────────────────────────
+  --color-text-heading: #cccccc;
+  --color-text-muted: #9e9e9e;
+  --color-text-subtle: #9e9e9e;
+  --color-text-xmuted: #868686;
+  --color-text-faint: #666666;
+  --color-text-ghost: #aaaaaa;
+  --color-text-icon: #afafb1;
+  --color-text-nav: #afafb1;
+  --color-text-strong: var(--color-bg);
+
+  // ── Border shades (dark) ───────────────────────────────────────────────
+  --color-border-light: #212122;
+  --color-border-input: #3a3b3c;
+  --color-border-medium: #444444;
+  --color-border-card: #74b2f3;
+  --color-border-nav: #2c2d2d;
+
+  // ── Surface backgrounds (dark) ─────────────────────────────────────────
+  --color-surface: #151515;
+  --color-surface-alt: #252526;
+  --color-surface-hover: #252a3a;
+  --color-surface-header: #25282f;
+  --color-surface-muted: #2a2b2d;
+
+  // ── Transparency helpers (dark) ────────────────────────────────────────
+  --color-white-75: rgba(255, 255, 255, 0.75);
+  --color-white-85: rgba(30, 30, 30, 0.9);
+  --color-black-overlay: rgba(0, 0, 0, 0.72);
+  --color-separator: rgba(128, 128, 128, 0.2);
+  --color-shadow-xs: rgba(0, 0, 0, 0.4);
+  --color-shadow-sm: rgba(0, 0, 0, 0.4);
+
+  // ── Semantic: alerts (dark) ────────────────────────────────────────────
+  --color-success-bg: #1a3a20;
+  --color-success-text: #6fcf8a;
+  --color-info-text: #0075d1;
+  --color-warn-text: rgba(255, 165, 0, 0.8);
+  --color-danger-text: #cd0202;
+  --color-rss: #f79256;
+  --color-rss-rgb: 247, 146, 86;
+
+  // ── Semantic: components (dark) ────────────────────────────────────────
+  --color-code-text: #c9def1;
+  --color-code-bg: rgba(255, 255, 255, 0.05);
+  --color-contact-accent: #4a9ead;
+  --color-contact-accent-rgb: 74, 158, 173;
+  --color-link-underline: rgb(82, 108, 150);
+  --color-series-bg: #1a2035;
+  --color-tag-border: rgb(59, 79, 88);
+  --color-tag-hover-bg: rgb(43, 56, 62);
+  --color-subscribe-bg: #1a2a4a;
+  --color-subscribe-hover: #203358;
+  --color-newsletter-bg: #1a2a2e;
+  --color-newsletter-border: #2a4a50;
+  --color-card-bg: #1e1e1e;
+  --color-footer-bg: #0a0a0a;
+  --color-reading-progress: #74b2f3;
 }
 
 // ── Global ───────────────────────────────────────────────────────────────────
@@ -43,7 +169,7 @@ html {
   top: -40px;
   left: 0;
   background: var(--color-primary);
-  color: white;
+  color: var(--color-bg);
   padding: 8px 16px;
   text-decoration: none;
   z-index: 100;
@@ -75,7 +201,7 @@ h1, h2, h3, h4, h5, h6,
 .masthead span, .masthead p {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
-  color: white;
+  color: var(--color-bg);
 }
 
 // Home page masthead — larger hero
@@ -108,14 +234,14 @@ h1, h2, h3, h4, h5, h6,
   bottom: 5px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-white-75);
   font-size: 2rem;
   animation: scroll-bounce 1.6s ease-in-out infinite;
   cursor: pointer;
   z-index: 10;
 
   &:hover {
-    color: white;
+    color: var(--color-bg);
   }
 }
 
@@ -210,8 +336,8 @@ header.masthead {
   height: 2.75rem;
   border-radius: 50%;
   background: var(--color-bg);
-  color: #686868;
-  border: 1px solid #f1f1f1;
+  color: var(--color-text-icon);
+  border: 1px solid var(--color-border-light);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -222,7 +348,7 @@ header.masthead {
   will-change: transform;
   transition: opacity 0.5s ease-in-out, transform 0.2s ease-out, visibility 0.5s;
   z-index: 1040;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px var(--color-shadow-xs);
   -webkit-tap-highlight-color: transparent;
 
   &.visible {
@@ -232,7 +358,7 @@ header.masthead {
 
   &:hover {
     transform: translate3d(0, -5px, 0);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 16px var(--color-shadow-sm);
   }
 
   &:focus { outline: none; }
@@ -283,7 +409,7 @@ header.masthead {
     position: absolute;
     top: 0.4rem;
     right: 0.4rem;
-    background: rgba(255,255,255,0.85);
+    background: var(--color-white-85);
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 0.2rem 0.5rem;
@@ -826,7 +952,7 @@ html[data-theme="dark"] .series-nav {
   transition: border-color 0.2s;
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 16px var(--color-shadow-xs);
     border-color: #c8cfd6;
   }
 }
