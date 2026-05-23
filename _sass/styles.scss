@@ -57,7 +57,8 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .home-heading {
-  padding: 200px 0 60px 0;
+  padding: 140px 0 60px 0;
+  margin-top: 60px;
 
   .subheading {
     font-size: 1.4rem;
@@ -66,7 +67,8 @@ h1, h2, h3, h4, h5, h6,
 
 @media only screen and (min-width: 768px) {
   header.masthead .home-heading {
-    padding: 380px 0 80px 0;
+    padding: 300px 0 80px 0;
+    margin-top: 80px;
   }
 }
 
