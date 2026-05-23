@@ -1561,6 +1561,36 @@ html[data-theme="dark"] .contact-link {
   }
 }
 
+// Force light theme island (e.g. resume page)
+html[data-theme="dark"] .force-light {
+  --color-text: #000000;
+  --color-bg: #ffffff;
+  --color-border: #cccccc;
+  --color-text-heading: #333333;
+  --color-text-muted: #555555;
+  --color-text-xmuted: #757575;
+  background-color: #ffffff;
+  color: #000000;
+
+  h1, h2, h3, h4, h5, h6 { color: #333333; }
+  hr { border-color: #cccccc; }
+  table, td, th { color: #000000; border-color: #cccccc; }
+  code { background-color: rgba(25, 25, 28, 0.05); color: #3f596f; }
+}
+
+// Links inside force-light content (both themes)
+.force-light a:not([class*="btn"]) {
+  color: #0099ff;
+  border-bottom: 1px solid #cccccc;
+  transition: color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: #0099ff !important;
+    border-bottom-color: #0099ff;
+    text-decoration: none;
+  }
+}
+
 // Blockquote
 .post-content blockquote:not([class*="prompt-"]),
 article blockquote:not([class*="prompt-"]) {

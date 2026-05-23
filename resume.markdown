@@ -4,6 +4,7 @@ title: Resume
 description: This is what I do
 permalink: /resume/
 background: '/assets/img/resume.jpg'
+force_light: true
 ---
 
 # Kayis Rahman
