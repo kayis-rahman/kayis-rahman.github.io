@@ -170,8 +170,6 @@ GEM
     jekyll-theme-cayman (0.2.0)
       jekyll (> 3.5, < 5.0)
       jekyll-seo-tag (~> 2.0)
-    jekyll-theme-clean-blog (4.0.12)
-      jekyll (>= 3.8.5)
     jekyll-theme-dinky (0.2.0)
       jekyll (> 3.5, < 5.0)
       jekyll-seo-tag (~> 2.0)
@@ -299,7 +297,6 @@ DEPENDENCIES
   csv
   github-pages
   jekyll-feed (~> 0.12)
-  jekyll-theme-clean-blog
   json
   liquid (~> 4.0.4)
   webrick
@@ -361,7 +358,6 @@ CHECKSUMS
   jekyll-swiss (1.0.0) sha256=c299a855dca881fe868f21545c5489be50ddfbc0d54a80e8dbeb5a2ddc4888a3
   jekyll-theme-architect (0.2.0) sha256=7275d3dcaa6b34fcf92f2fe5cee92d49d66706d3b523003b1e67e9c668ff0440
   jekyll-theme-cayman (0.2.0) sha256=3c5f14f9c72a8eb03ecc74f9a3e5ecbbc55f9381339978b42dec216921865f2a
-  jekyll-theme-clean-blog (4.0.12) sha256=d427122acb31b95188237d4681560e6d51ec4068ad8a49c489949471f3474627
   jekyll-theme-dinky (0.2.0) sha256=720b257091f0de3aa9394b25fd97d1b2b12cfaf00e060aff170f60e218a32c7c
   jekyll-theme-hacker (0.2.0) sha256=816bf9f992ded0b1e1e69d8dece2574e8480efb5e9f84a2e1ac83bd717b8f78a
   jekyll-theme-leap-day (0.2.0) sha256=921ea8305ae0285a881c9aa9dbe2375ed6f404b4f90067458e596891ef5ac7d1
