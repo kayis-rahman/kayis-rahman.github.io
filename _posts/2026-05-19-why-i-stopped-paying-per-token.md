@@ -49,6 +49,10 @@ Real numbers from actual sessions:
 - Default output request per call: **32,000 tokens**
 - Combined: exactly one token over the limit
 
+And if you are running agent teams, the situation compounds further. Each teammate maintains its own full context window and runs as a separate Claude instance simultaneously. Agent teams running in plan mode use approximately 7x more tokens than a standard session — not because they are doing 7x the work, but because of how context is allocated per agent. ([SSD Nodes](https://www.ssdnodes.com/blog/claude-code-pricing-in-2026-every-plan-explained-pro-max-api-teams))
+
+> **As of May 2026:** Claude Code operates on a 5-hour rolling window. Pro users get approximately 44,000 tokens per window, Max 5x around 88,000, and Max 20x roughly 220,000 tokens. Developers have reported burning through 4 hours of usage in 3 prompts when using plan mode to refactor a frontend architecture. ([SSD Nodes](https://www.ssdnodes.com/blog/claude-code-pricing-in-2026-every-plan-explained-pro-max-api-teams), [CloudZero](https://www.cloudzero.com/blog/claude-code-pricing))
+
 The context didn't spike. It crept. File by file, tool call by tool call, edit by edit. By the time the error fired, the session had been growing for twenty minutes and nobody noticed until it hit the ceiling at full speed.
 
 Also worth knowing: auto-compaction reserves roughly 33K tokens on a 200K window as a buffer so Claude can finish its current response when compaction triggers. Your effective working limit is always lower than the headline number. ([32blog.com](https://32blog.com/en/claude-code/claude-code-context-window-exceeded-fix))
@@ -60,6 +64,8 @@ Rate limits cut you off at the plan level. You've exhausted your 5-hour window, 
 On a paid plan, both happen. On a self-hosted instance, neither does. The context window is whatever your GPU's VRAM can hold. There's no rolling window, no shared quota, no plan ceiling.
 
 But to get there, you first need to understand how sessions grow this fast and what you can do about it while still on the API.
+
+## What You Can Do About It
 
 So you have two problems. Rate limits at the plan level and context walls at the session level.
 
@@ -90,7 +96,7 @@ Here's what the options actually look like in 2026:
 |2x RTX 4080S gpuhub|~$84/mo      |Unlimited          |Private, no throttle            |
 |2x RTX 5090 gpuhub |~$130/mo     |Unlimited          |Private, no throttle            |
 
-Token estimates are community-reported approximations. Anthropic does not publish exact per-window token counts. Sources: [Duet](https://duet.so/blog/claude-code-pricing), [CloudZero](https://www.cloudzero.com/blog/claude-code-pricing/)
+Token estimates are community-reported approximations. Anthropic does not publish exact per-window token counts. Sources: [SSD Nodes](https://www.ssdnodes.com/blog/claude-code-pricing-in-2026-every-plan-explained-pro-max-api-teams), [Duet](https://duet.so/blog/claude-code-pricing), [CloudZero](https://www.cloudzero.com/blog/claude-code-pricing/)
 
 Real gpuhub instance prices from actual sessions:
 
