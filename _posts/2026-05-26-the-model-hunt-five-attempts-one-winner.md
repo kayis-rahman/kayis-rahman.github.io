@@ -5,8 +5,8 @@ date: 2026-05-26
 categories: [llm, infrastructure, self-hosting]
 tags: [vllm, gpuhub, qwen3, self-hosted-llm, turboquant, rtx-5090]
 description: "Five model attempts, three frameworks, and one GPU graveyard later — the setup that finally worked. Qwen3.6-27B-AWQ on vLLM v0.20 with TurboQuant. Part 2 of 5."
-background: /assets/img/posts/gpu.jpg
-image: /assets/img/posts/gpu.jpg
+background: /assets/img/posts/model-hunt.jpg
+image: /assets/img/posts/model-hunt.jpg
 word_count: 4500
 reading_time: 12
 series: "Self-Hosting LLM Inference on Rented GPUs"

@@ -564,6 +564,14 @@ html[data-theme="dark"] .masthead .overlay {
   background-color: rgba(0, 0, 0, 0.72) !important;
 }
 
+html[data-theme="dark"] .masthead h1,
+html[data-theme="dark"] .masthead h2,
+html[data-theme="dark"] .masthead .subheading,
+html[data-theme="dark"] .masthead span,
+html[data-theme="dark"] .masthead p {
+  color: #ffffff !important;
+}
+
 html[data-theme="dark"] .post-preview > a {
   color: var(--color-text) !important;
 }
@@ -1679,7 +1687,6 @@ article table {
     th {
       padding: 0.4rem 1rem;
       font-size: 95%;
-      white-space: nowrap;
     }
   }
 
@@ -1692,7 +1699,6 @@ article table {
     td {
       padding: 0.4rem 1rem;
       font-size: 95%;
-      white-space: nowrap;
     }
   }
 }
