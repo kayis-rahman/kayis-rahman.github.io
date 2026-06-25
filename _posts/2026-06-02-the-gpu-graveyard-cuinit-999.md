@@ -175,7 +175,7 @@ This one is unrelated to the host driver problem but appears on almost every fir
 --max-num-batched-tokens 8192
 ```
 
-This error is in the vLLM documentation but easy to miss on first setup.
+This error is documented in community guides but easy to miss on first setup.
 
 ---
 
@@ -226,7 +226,7 @@ That is Part 4.
 
 ---
 
-*Next: [The Config That Finally Worked — vLLM flags, install script, and the chat template patch →](#)*
+*Next: [The Config That Finally Worked — vLLM flags, install script, and the chat template patch →](/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html)*
 
 *This is Part 3 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
