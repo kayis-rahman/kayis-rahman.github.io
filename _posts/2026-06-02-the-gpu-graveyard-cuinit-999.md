@@ -226,7 +226,7 @@ That is Part 4.
 
 ---
 
-*Next: [The Config That Finally Worked — vLLM flags, install script, and the chat template patch →](/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html)*
+*Next: The Config That Finally Worked — vLLM flags, install script, and the chat template patch (coming soon)*
 
 *This is Part 3 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
