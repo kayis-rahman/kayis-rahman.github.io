@@ -1,0 +1,13 @@
+<div class="share-buttons mt-4 mb-2">
+  <span class="share-label">Share:</span>
+  <a class="btn-share btn-twitter"
+     href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&url={{ page.url | absolute_url | uri_escape }}{% if site.twitter_username %}&via={{ site.twitter_username }}{% endif %}"
+     target="_blank" rel="noopener" aria-label="Share on Twitter/X">
+    <i class="fab fa-twitter"></i> Twitter / X
+  </a>
+  <a class="btn-share btn-linkedin"
+     href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}"
+     target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+    <i class="fab fa-linkedin"></i> LinkedIn
+  </a>
+</div>

@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 
 {% include head.html %}
 
 <body>
 
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   {% include navbar.html %}
 
+  <main id="main-content">
   {{ content }}
+  </main>
 
   {% include footer.html %}
 
-  {% include scripts.html %}
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
 
-  {% include google-analytics.html %}
+  {% include scripts.html %}
 
 </body>
 

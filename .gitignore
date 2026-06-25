@@ -3,3 +3,12 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+node_modules
+private/
+.idea/
+.playwright-mcp/
+.DS_Store
+screenshots/
+*-light.png
+.well-known/
+resume-snapshot.md

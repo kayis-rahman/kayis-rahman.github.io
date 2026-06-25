@@ -1,0 +1,27 @@
+<div class="author-card mt-5 pt-4">
+  <img src="{{ '/assets/img/avatar/avatar-light.png' | relative_url }}" alt="{{ site.author }}" class="author-avatar author-avatar-light" loading="lazy">
+  <img src="{{ '/assets/img/avatar/avatar-dark.png' | relative_url }}" alt="{{ site.author }}" class="author-avatar author-avatar-dark" loading="lazy">
+  <div class="author-info">
+    <div class="author-name">{{ site.author }}</div>
+    {% if site.author_bio %}
+    <p class="author-bio">{{ site.author_bio }}</p>
+    {% endif %}
+    <div class="author-links">
+      {% if site.github_username %}
+      <a href="https://github.com/{{ site.github_username }}" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      {% endif %}
+      {% if site.linkedin_username %}
+      <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      {% endif %}
+      {% if site.newsletter_username %}
+      <a href="{{ '/subscribe/' | relative_url }}" class="author-subscribe-link">
+        <i class="far fa-envelope"></i> Subscribe
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -2,7 +2,8 @@
 layout: default
 ---
 
-<!-- Page Header -->
+<div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+
 {% if page.background %}
 <header class="masthead" style="background-image: url('{{ page.background | prepend: site.baseurl | replace: '//', '/' }}')">
   {% else %}
@@ -11,7 +12,7 @@ layout: default
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="col-lg-8 col-md-10 mx-auto page-content">
           <div class="post-heading">
             <h1>{{ page.title }}</h1>
             {% if page.subtitle %}
@@ -19,8 +20,7 @@ layout: default
             {% endif %}
             <span class="meta">Posted by
               <a href="#">{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</a>
-              on {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html
-              content=page.content %}
+              on {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=page.content %}
             </span>
           </div>
         </div>
@@ -30,24 +30,44 @@ layout: default
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="col-lg-10 col-md-10 mx-auto">
 
-        {{ content }}
+        {% include series-nav.html %}
+
+        <div id="toc"></div>
+
+        <div class="post-body">
+          {{ content }}
+        </div>
+
+        {% if page.tags.size > 0 %}
+        <div class="post-tags mt-4">
+          {% for tag in page.tags %}
+          <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag-badge">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% include share-buttons.html %}
 
         <hr>
 
         <div class="clearfix">
-
           {% if page.previous.url %}
-          <a class="btn btn-primary float-left" href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{ page.previous.title }}">&larr; Previous<span class="d-none d-md-inline">
-              Post</span></a>
+          <a class="btn btn-primary float-left" href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{ page.previous.title }}">&larr; Previous<span class="d-none d-md-inline"> Post</span></a>
           {% endif %}
           {% if page.next.url %}
-          <a class="btn btn-primary float-right" href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{ page.next.title }}">Next<span class="d-none d-md-inline">
-              Post</span> &rarr;</a>
+          <a class="btn btn-primary float-right" href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{ page.next.title }}">Next<span class="d-none d-md-inline"> Post</span> &rarr;</a>
           {% endif %}
-
         </div>
+
+        {% include author-card.html %}
+
+        {% include newsletter-cta.html %}
+
+        {% include related-posts.html %}
+
+        <div id="comments" class="mt-5 pt-3"></div>
 
       </div>
     </div>

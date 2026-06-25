@@ -1,25 +1,29 @@
 ---
 permalink: /404.html
 layout: page
+title: "Page Not Found"
+description: "The page you're looking for doesn't exist."
+background: '/img/home.jpg'
 ---
 
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
+<div class="text-center py-5">
+  <h1 class="display-1 font-weight-bold" style="font-size: 6rem; color: var(--color-primary);">404</h1>
+  <h2 class="mb-3">Page not found</h2>
+  <p class="lead mb-4">The page you're looking for doesn't exist or has been moved.</p>
+  <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-lg">Go Home</a>
+  <a href="{{ '/posts' | relative_url }}" class="btn btn-outline-secondary btn-lg ml-2">Read the Blog</a>
+</div>
 
-<div class="container">
-  <h1>404</h1>
+<hr class="mt-5">
 
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+<div class="row mt-4">
+  <div class="col-lg-10 mx-auto">
+    <h4>Recent Posts</h4>
+    {% for post in site.posts limit: 3 %}
+    <div class="mb-3">
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span class="text-muted ml-2" style="font-size:0.85rem;">{{ post.date | date: '%B %d, %Y' }}</span>
+    </div>
+    {% endfor %}
+  </div>
 </div>

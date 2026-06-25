@@ -11,24 +11,31 @@ layout: default
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="page-heading">
+        <div class="col-lg-8 col-md-10 mx-auto page-content">
+          <div class="page-heading home-heading">
             <h1>{{ site.title }}</h1>
             {% if site.description %}
             <span class="subheading">{{ site.description }}</span>
             {% endif %}
             {% if site.subheading %}
-            <p class="subheading" style="margin-top: 0.5rem; font-style: italic;">{{ site.subheading }}</p>
+            <p class="subheading hero-subheading">{{ site.subheading }}</p>
             {% endif %}
+            <div class="hero-cta mt-4">
+              <a href="{{ '/posts/' | relative_url }}" class="btn btn-light hero-btn">Read the Blog</a>
+              <a href="{{ '/subscribe/' | relative_url }}" class="btn btn-outline-light hero-btn">Subscribe</a>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="scroll-down" onclick="document.querySelector('article.post-preview').scrollIntoView({behavior:'smooth'})">
+      <i class="fas fa-chevron-down"></i>
     </div>
   </header>
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="col-lg-10 col-md-10 mx-auto">
 
         {{ content }}
 
@@ -41,23 +48,27 @@ layout: default
             {% if post.subtitle %}
             <h3 class="post-subtitle">{{ post.subtitle }}</h3>
             {% else %}
-            <h3 class="post-subtitle">{{ post.excerpt | strip_html | truncatewords: 15 }}</h3>
+            <h3 class="post-subtitle">{{ post.excerpt | strip_html | truncatewords: 25 }}</h3>
             {% endif %}
           </a>
-          <p class="post-meta">Posted by
-            {% if post.author %}
-            {{ post.author }}
-            {% else %}
-            {{ site.author }}
-            {% endif %}
-            on
-            {{ post.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=post.content %}            
+          <p class="post-meta">
+            {% if post.categories.size > 0 %}<span class="post-category-badge">{{ post.categories | first }}</span>{% endif %}
+            {{ post.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=post.content %}
           </p>
+          {% if post.tags.size > 0 %}
+          <div class="post-tags">
+            {% for tag in post.tags %}
+            <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag-badge">{{ tag }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
         </article>
 
         <hr>
 
         {% endfor %}
+
+        {% include newsletter-cta.html %}
 
         <!-- Pager -->
         <div class="clearfix">

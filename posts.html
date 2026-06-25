@@ -1,0 +1,35 @@
+---
+layout: page
+title: Posts
+description: "Writing about PKI, LLM inference, Java, and building on the side."
+permalink: /posts/
+background: '/assets/img/posts.jpg'
+---
+
+{% for post in site.posts %}
+
+<article class="post-preview">
+    <a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}">
+        <h2 class="post-title">{{ post.title }}</h2>
+        {% if post.subtitle %}
+        <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+        {% else %}
+        <h3 class="post-subtitle">{{ post.excerpt | strip_html | truncatewords: 25 }}</h3>
+        {% endif %}
+    </a>
+    <p class="post-meta">
+        {% if post.categories.size > 0 %}<span class="post-category-badge">{{ post.categories | first }}</span>{% endif %}
+        {{ post.date | date: '%B %d, %Y' }} &middot; {% include read_time.html content=post.content %}
+    </p>
+    {% if post.tags.size > 0 %}
+    <div class="post-tags">
+      {% for tag in post.tags %}
+      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag-badge">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+</article>
+
+<hr>
+
+{% endfor %}

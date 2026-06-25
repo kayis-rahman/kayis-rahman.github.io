@@ -26,23 +26,39 @@ subheading: "Building automated trading systems and LLM inference infrastructure
 seo_description: "Staff Security Engineer specialising in PKI, HSM, and secure device provisioning. 10+ years of backend engineering experience. Based in Cork, Ireland."
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://kayis-rahman.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+author: Kayis Rahman
+author_bio: "Staff Security Engineer at Qualcomm. I write about PKI, Java, LLM inference, and building things on the side."
 twitter_username: kayisrahman
 github_username: kayisrahman
 linkedin_username: kayisrahman
+google_analytics: G-5TTZSZQHPY
 disable_disk_cache: false
+
+# Newsletter — sign up at buttondown.email then set your username to show the signup form
+newsletter_username: kayis
 
 navigation:
   - title: "Home"
     url: "/"
-  - title: "Resume"
-    url: "/resume/"
+  - title: "About"
+    url: "/about/"
   - title: "Blog"
     url: "/posts/"
+  - title: "Projects"
+    url: "/projects/"
+  - title: "Resume"
+    url: "/resume/"
+  - title: "Contact"
+    url: "/contact/"
 
 # Build settings
+sass:
+  style: compressed
 remote_theme: StartBootstrap/startbootstrap-clean-blog-jekyll
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme
+  - jekyll-sitemap
 
 
 # Exclude from processing.
@@ -53,14 +69,22 @@ plugins:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
+include:
+  - ".well-known"
+
 exclude:
   - .sass-cache/
   - .jekyll-cache/
   - gemfiles/
   - Gemfile
-  - Gemfile.lockme
+  - Gemfile.lock
   - node_modules/
   - vendor/bundle/
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - CLAUDE.md
+  - private/
+  - .idea/
+  - .DS_Store
+  - .playwright-mcp/

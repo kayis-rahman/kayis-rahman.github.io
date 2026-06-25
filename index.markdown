@@ -3,5 +3,6 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
-background: '/img/home.jpg'
+background: '/assets/img/home.jpg'
+description: "Building automated trading systems and LLM inference infrastructure on the side."
 ---

@@ -2,21 +2,147 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="{{ site.author | default: site.title | escape }}">
 
   <title>
-    {% if page.title %}{{ page.title | escape }} - {{ site.title | escape }}
+    {% if page.title %}{{ page.title | escape }} — {{ site.title | escape }}
     {% else %}{{ site.title | escape }}{% endif %}
   </title>
 
-  <meta name="description" content="{{ page.excerpt | default: site.seo_description | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+  <meta name="description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ page.excerpt | default: site.seo_description | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}">
 
-  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+  <meta property="og:description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ page.excerpt | default: site.seo_description | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:url" content="{{ page.url | replace:'index.html','' | absolute_url }}">
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  {% if page.image %}<meta property="og:image" content="{{ page.image | absolute_url }}">{% elsif page.background %}<meta property="og:image" content="{{ page.background | absolute_url }}">{% endif %}
 
-  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+  <meta name="twitter:description" content="{% if page.description %}{{ page.description | escape }}{% else %}{{ page.excerpt | default: site.seo_description | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}">
+  {% if page.image %}<meta name="twitter:image" content="{{ page.image | absolute_url }}">{% elsif page.background %}<meta name="twitter:image" content="{{ page.background | absolute_url }}">{% endif %}
+  {% if site.twitter_username %}<meta name="twitter:site" content="@{{ site.twitter_username }}">{% endif %}
+
+  <!-- PWA -->
+  <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
+  <meta name="theme-color" content="#0056b2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b1b1e" media="(prefers-color-scheme: dark)">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ '/favicon.svg' | relative_url }}" type="image/svg+xml">
+
+  <!-- Fonts — preconnect first to avoid extra round-trips -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Lato:wght@400;700&display=swap' rel='stylesheet'>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
 
   <link rel="stylesheet" href="{{"/assets/main.css" | relative_url }}">
+
+  <!-- Apply theme before render to prevent flash -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = stored || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
+  <link rel="search" type="application/opensearchdescription+xml" href="{{ '/opensearch.xml' | relative_url }}" title="Search {{ site.title | escape }}">
+
+  {% if page.layout == 'home' %}
+  <!-- Person schema for home page -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ site.author | default: site.title | escape }}",
+    "url": "{{ site.url }}",
+    "image": "{{ site.url }}/assets/img/about-me.png",
+    "jobTitle": "Staff Security Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Qualcomm"
+    },
+    "sameAs": [
+      {% if site.twitter_username %}"https://twitter.com/{{ site.twitter_username }}",{% endif %}
+      {% if site.linkedin_username %}"https://www.linkedin.com/in/{{ site.linkedin_username }}",{% endif %}
+      {% if site.github_username %}"https://github.com/{{ site.github_username }}"{% endif %}
+    ]
+  }
+  </script>
+  {% endif %}
+
+  {% if page.layout == 'post' %}
+  <!-- BlogPosting schema with enhanced metadata -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ page.title | escape }}",
+    "description": "{% if page.description %}{{ page.description | escape }}{% else %}{{ page.excerpt | default: page.content | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ site.author | default: site.title | escape }}",
+      "url": "{{ site.url }}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ site.title | escape }}",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ site.url }}/favicon.svg"
+      }
+    },
+    "datePublished": "{{ page.date | date_to_xmlschema }}",
+    "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+    "url": "{{ page.url | absolute_url }}"{% if page.image %},
+    "image": "{{ page.image | absolute_url }}"{% elsif page.background %},
+    "image": "{{ page.background | absolute_url }}"{% endif %}{% if page.word_count %},
+    "wordCount": {{ page.word_count }}{% endif %}{% if page.reading_time %},
+    "timeRequired": "PT{{ page.reading_time }}M"{% endif %}
+  }
+  </script>
+  <!-- BreadcrumbList schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ site.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "{{ site.url }}/posts/"
+      }{% if page.categories %}{% for category in page.categories %},
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ category | capitalize }}",
+        "item": "{{ site.url }}/posts/#{{ category }}"
+      }{% endfor %}{% endif %},
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "{{ page.title | escape }}"
+      }
+    ]
+  }
+  </script>
+  {% endif %}
 
 </head>

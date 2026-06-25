@@ -1,0 +1,35 @@
+---
+layout: page
+title: Subscribe
+description: Get articles on PKI, LLM inference, Java, and building things on the side.
+permalink: /subscribe/
+background: '/assets/img/home.jpg'
+---
+
+<div class="subscribe-page">
+
+  <p class="subscribe-intro">I write about PKI, cryptographic security, Java, LLM inference infrastructure, and the things I build on the side. Posts go out when they're ready — not on a schedule.</p>
+
+  <div class="newsletter-signup subscribe-form-block">
+    <form action="https://buttondown.email/api/emails/embed-subscribe/{{ site.newsletter_username }}" method="post" class="newsletter-form" target="_blank">
+      <div class="input-group newsletter-input-group">
+        <input type="email" name="email" placeholder="your@email.com" class="form-control form-control-lg" required aria-label="Email address">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary btn-lg">Subscribe &rarr;</button>
+        </div>
+      </div>
+    </form>
+    <p class="subscribe-note">No spam. Unsubscribe anytime. <a href="{{ '/feed.xml' | relative_url }}">RSS also available</a>.</p>
+  </div>
+
+  <div class="subscribe-topics mt-5">
+    <h5>What I write about</h5>
+    <ul>
+      <li><strong>PKI &amp; Security</strong> — HSM, certificate management, device provisioning at scale</li>
+      <li><strong>LLM Inference</strong> — self-hosting, vLLM, GPU infrastructure, Claude Code workflows</li>
+      <li><strong>Java &amp; Backend</strong> — Spring Boot, architecture patterns, performance</li>
+      <li><strong>Side Projects</strong> — trading systems, automation, what I'm currently building</li>
+    </ul>
+  </div>
+
+</div>
