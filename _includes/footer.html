@@ -76,7 +76,7 @@
           <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
           <a href="{{ '/about/' | relative_url }}">About</a>
         </nav>
-        <p class="copyright text-muted">Copyright &copy; {{ site.author }} {{ 'now' | date: "%Y" }}</p>
+        <p class="copyright text-muted">Copyright &copy; {{ site.author }} {{ site.time | date: "%Y" }}</p>
       </div>
     </div>
   </div>
