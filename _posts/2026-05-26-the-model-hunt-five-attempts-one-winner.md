@@ -275,7 +275,7 @@ Diagnosing that, understanding why entire gpuhub host nodes were affected, and l
 
 ---
 
-*Next: [The GPU Graveyard — cuInit 999, broken hosts, and how to verify an instance before you trust it →](#)*
+*Next: [The GPU Graveyard — cuInit 999, broken hosts, and how to verify an instance before you trust it →](/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html)*
 
 *This is Part 2 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
