@@ -4,7 +4,7 @@ title: "The Model Hunt: Five Attempts, One Winner — Part 2 of 5"
 date: 2026-05-26
 categories: [llm, infrastructure, self-hosting]
 tags: [vllm, gpuhub, qwen3, self-hosted-llm, turboquant, rtx-5090]
-description: "Five model attempts, three frameworks, and one GPU graveyard later — the setup that finally worked. Qwen3.6-27B-AWQ on vLLM v0.20 with TurboQuant. Part 2 of 5."
+description: "Five model attempts, three frameworks, and one GPU graveyard later — the setup that finally worked. Qwen3.6-35B-A3B-AWQ on vLLM 0.22.1 with TurboQuant. Part 2 of 5."
 background: /assets/img/posts/model-hunt.jpg
 image: /assets/img/posts/model-hunt.jpg
 word_count: 4500
@@ -146,7 +146,7 @@ NotImplementedError: The page size of the layer is not divisible
 by the maximum page size.
 ```
 
-GatedDeltaNet hybrid architecture layers have a page size incompatibility with vLLM's TurboQuant integration in versions prior to v0.20.0. FP8 KV cache dtype was used instead, which halves KV cache memory usage and was sufficient.
+GatedDeltaNet hybrid architecture layers have a page size incompatibility with vLLM's TurboQuant integration in versions prior to vLLM 0.22.1. FP8 KV cache dtype was used instead, which halves KV cache memory usage and was sufficient.
 
 Quality on Qwen3-Coder-Next is strong. 44.3% on SWE-bench Pro, comparable to Claude Sonnet 4.5 on coding benchmarks. For most Claude Code sessions the output quality was indistinguishable from the paid API in practice.
 
@@ -187,57 +187,49 @@ TurboQuant would have solved the activation memory problem. The same page size i
 
 -----
 
-## Current setup: Qwen3.6-27B-AWQ on 1x RTX 5090 with TurboQuant
+## Current setup: Qwen3.6-35B-A3B-AWQ on 1x RTX 5090
 
-The RTX 5090 is a different class of hardware. Blackwell architecture, SM120, 32GB GDDR7 with 1,792 GB/s memory bandwidth.
+The 27B ran well. It was not the destination.
 
-At 21.9GB for Qwen3.6-27B-AWQ, a single RTX 5090 leaves 10GB of headroom. Not 96GB combined. Ten gigabytes on one card. The previous setup needed 96GB to run two sequences comfortably. This one runs eight.
+Qwen3.6-35B-A3B-AWQ landed cleanly on the same RTX 5090 32GB. 35B total parameters, 3B active per token via MoE routing. At AWQ 4-bit the weights sit at roughly 21GB — a comfortable fit with meaningful headroom left for KV cache. And unlike earlier attempts that needed patches to get TurboQuant working, the 35B on vLLM 0.22.1 just worked. `turboquant_4bit_nc` loaded without patches, without workarounds, without the page size errors that blocked earlier attempts.
 
-The difference is TurboQuant, which officially landed in vLLM v0.20.0 as a new attention backend delivering 2-bit KV cache compression with 4x capacity.
+The NVFP4 variant was tried first. It failed immediately with `No supported CUDA architectures found for major versions [12]`. NVFP4 requires SM 12.x CUTLASS support not compiled in the container's flashinfer build. The AWQ variant ran cleanly without that constraint.
 
-vLLM v0.20.0 fixed the GatedDeltaNet hybrid architecture page size incompatibility that blocked TurboQuant in Attempts 4 and 5. The same model, the same quantization, the same architecture. The only change was the vLLM version. TurboQuant loaded cleanly.
-
-The result: 8 parallel sequences on a single RTX 5090 at 32GB. Before TurboQuant that required 2x RTX 4090 at 96GB combined and still only achieved 2 sequences. The numbers tell the story:
-
-|Setup                      |VRAM|Sequences|Context|Cost/hr|
-|---------------------------|----|---------|-------|-------|
-|2x RTX 4090 no TurboQuant  |96GB|2        |262K   |$0.92  |
-|1x RTX 5090 with TurboQuant|32GB|8        |262K   |$0.36  |
-
-Less hardware. More capability. Less than half the cost per hour.
-
-The serve command on 1x RTX 5090 with vLLM v0.20.x:
+The final serve command:
 
 ```bash
-export VLLM_USE_DEEP_GEMM=0
-export VLLM_USE_FLASHINFER_MOE_FP8=1
+export OMP_NUM_THREADS=1
 export PYTORCH_ALLOC_CONF=expandable_segments:True
 export VLLM_ALLOW_LONG_MAX_MODEL_LEN=1
 export CUDA_VISIBLE_DEVICES=0
 
-vllm serve /root/autodl-tmp/models/Qwen3.6-27B-AWQ \
+vllm serve /root/autodl-tmp/models/Qwen3.6-35B-A3B-AWQ \
     --host 0.0.0.0 --port 6006 \
-    --gpu-memory-utilization 0.88 \
+    --gpu-memory-utilization 0.96 \
     --max-model-len 262144 \
-    --max-num-seqs 8 \
-    --kv-cache-dtype turboquant_k8v4 \
+    --max-num-seqs 6 \
+    --kv-cache-dtype turboquant_4bit_nc \
+    --max-num-batched-tokens 8192 \
     --enable-prefix-caching \
-    --disable-custom-all-reduce \
     --language-model-only \
+    --moe-backend flashinfer_trtllm \
     --tool-call-parser qwen3_coder \
     --reasoning-parser qwen3 \
     --trust-remote-code \
     --enable-auto-tool-choice \
     --enable-chunked-prefill \
-    --max-num-batched-tokens 16384 \
+    --chat-template-content-format openai \
     --served-model-name "claude-sonnet-4-6" "claude-opus-4-6" "claude-haiku-4-5"
 ```
 
-Note --kv-cache-dtype turboquant_k8v4. Not fp8. Not turboquant4. The correct flag for vLLM v0.20.x is turboquant_k8v4. TurboQuant 4bit-nc is the most practical variant for memory-constrained setups, though k8v4 is the safer starting point with minimal quality impact.
+One non-obvious fix that will bite anyone following this path: a regex patch applied to Qwen3.6's Jinja chat template is required to silence `raise_exception('Unexpected item type in content.')` errors triggered by Claude Code's `tool_result` content blocks. Without it, Claude Code tool calls fail silently. Requests go through, responses come back, but tool actions do not execute. The patch and the full install script are covered in Part 4.
 
-The occasional fallback is a single RTX 4080S 32GB instance. Same model, same command, --language-model-only essential to save the 2GB vision encoder memory. Context tighter, sequences fewer, but functional for lighter workloads at $0.46/hr.
+| Setup | VRAM | Sequences | Context | KV cache | Cost/hr |
+|---|---|---|---|---|---|
+| 2x RTX 4090 Attempt 5 | 96GB | 2 | 262K | fp8 | $0.92 |
+| 1x RTX 5090 vLLM 0.22.1 | 32GB | 6 | 262K | turboquant_4bit_nc | $0.36 |
 
-Eight Claude Code sessions simultaneously on one GPU. That is the number that made self-hosting genuinely worthwhile.
+This setup runs Claude Code across multiple concurrent projects on a single GPU. One model. One instance. 262K context. Six parallel sessions. $0.36 an hour.
 
 -----
 
@@ -247,25 +239,25 @@ Three frameworks were tried across five attempts. The verdict is clear but the r
 
 llama.cpp is the most accessible option. Runs on anything, wide model support, active community. For a single user chatting with a model it is perfectly fine. For agentic workloads with multiple simultaneous Claude Code sessions it is the wrong architecture. Fixed KV cache slot allocation means parallel sessions divide the context pool statically at startup rather than sharing it dynamically.
 
-SGLang is legitimately fast. For hybrid architectures like Qwen3.6-27B, the official Qwen model card recommends SGLang first before vLLM. RadixAttention prefix caching is more efficient than vLLM's implementation for multi-turn agentic workloads. In practice two bugs blocked it completely. The qkqkv_proj.weight naming bug in AWQ quantized Qwen3 models caused a KeyError on load. And SGLang has no TurboQuant integration as of vLLM v0.20. Without TurboQuant the 8-sequence target on a single RTX 5090 was not achievable. SGLang is worth watching. It is not there yet.
+SGLang is legitimately fast. For hybrid architectures like Qwen3.6-27B, the official Qwen model card recommends SGLang first before vLLM. RadixAttention prefix caching is more efficient than vLLM's implementation for multi-turn agentic workloads. In practice two bugs blocked it completely. The qkqkv_proj.weight naming bug in AWQ quantized Qwen3 models caused a KeyError on load. And SGLang has no TurboQuant integration as of vLLM 0.22.1. Without TurboQuant the 8-sequence target on a single RTX 5090 was not achievable. SGLang is worth watching. It is not there yet.
 
-vLLM won by being the most complete production-ready option for this specific combination of requirements. vLLM implements the Anthropic Messages API natively. vLLM v0.20.0 added TurboQuant 2-bit KV cache compression with 4x capacity, multiple tool parsers including dedicated Qwen3 Coder support, and Blackwell SM120 optimizations. The --language-model-only flag saves 2GB by skipping the vision encoder. Multiple --served-model-name aliases mean one server responds to claude-sonnet-4-6, claude-opus-4-6, and claude-haiku-4-5 simultaneously.
+vLLM won by being the most complete production-ready option for this specific combination of requirements. vLLM implements the Anthropic Messages API natively. vLLM 0.22.1 added TurboQuant 2-bit KV cache compression with 4x capacity, multiple tool parsers including dedicated Qwen3 Coder support, and Blackwell SM120 optimizations. The --language-model-only flag saves 2GB by skipping the vision encoder. Multiple --served-model-name aliases mean one server responds to claude-sonnet-4-6, claude-opus-4-6, and claude-haiku-4-5 simultaneously.
 
-|Framework  |Tool calling     |Continuous batching|TurboQuant|Anthropic API native|Verdict           |
-|-----------|-----------------|-------------------|----------|--------------------|------------------|
-|vLLM v0.20+|Reliable         |Yes                |Yes       |Yes                 |Winner            |
-|SGLang     |Unreliable on AWQ|Yes                |No        |Via proxy           |Not yet           |
-|llama.cpp  |Intermittent     |No                 |Via fork  |No                  |Wrong architecture|
+| Framework | Tool calling | Continuous batching | TurboQuant | Anthropic API native | Verdict |
+|---|---|---|---|---|---|
+| vLLM 0.22.1 | Reliable | Yes | Yes | Yes | Winner |
+| SGLang | Unreliable on AWQ | Yes | No | Via proxy | Not yet |
+| llama.cpp | Intermittent | No | Via fork | No | Wrong architecture |
 
 -----
 
 ## What is next
 
-Five attempts. One winner.
+Six attempts if you count the 27B as a stepping stone. One model that stuck.
 
-The model question is settled. The framework question is settled. Qwen3.6-27B-AWQ on vLLM v0.20.x with TurboQuant on a single RTX 5090 runs 8 parallel Claude Code sessions at 262K context for $0.36 an hour.
+Qwen3.6-35B-A3B-AWQ on vLLM 0.22.1 with `turboquant_4bit_nc` on a single RTX 5090 — 262K context, 6 parallel Claude Code sessions, $0.36 an hour. That is the setup that runs today.
 
-But getting to that setup required provisioning a lot of GPU instances first. And roughly half of them did not work.
+But getting there required provisioning a lot of GPU instances first. And roughly half of them did not work.
 
 Not did not work well. Did not work at all.
 
@@ -277,11 +269,13 @@ cuInit: 999
 
 Unknown error. No stack trace. No helpful message. Just 999.
 
-Spoiler: it was not our fault. But it took a while to prove that.
+This had nothing to do with vLLM, the model, or the configuration. The instances themselves were broken at the host level — a CUDA driver mismatch between the container runtime and the host kernel. The model never even loaded.
 
------
+Diagnosing that, understanding why entire gpuhub host nodes were affected, and learning how to verify an instance before trusting it with a three-hour Claude Code session — that is Part 3.
 
-*Next: [Part 3 — The GPU Graveyard: cuInit 999, broken hosts, and how to verify an instance before you trust it with a three-hour Claude Code session →](#)*
+---
+
+*Next: [The GPU Graveyard — cuInit 999, broken hosts, and how to verify an instance before you trust it →](#)*
 
 *This is Part 2 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
