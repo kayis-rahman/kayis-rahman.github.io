@@ -162,7 +162,7 @@ That's Part 2.
 
 -----
 
-*Next: Part 2 — The model hunt (five attempts, one winner) — coming soon.*
+*Next: [The Model Hunt — Five Attempts, One Winner →](/llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html)*
 
 *This is Part 1 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 

@@ -253,7 +253,7 @@ vLLM won by being the most complete production-ready option for this specific co
 
 ## What is next
 
-Six attempts if you count the 27B as a stepping stone. One model that stuck.
+Five attempts. One winner.
 
 Qwen3.6-35B-A3B-AWQ on vLLM 0.22.1 with `turboquant_4bit_nc` on a single RTX 5090 — 262K context, 6 parallel Claude Code sessions, $0.36 an hour. That is the setup that runs today.
 
