@@ -17,16 +17,6 @@ Part 2 ended with a working model and a working framework. What it did not have 
 
 That turned out to be its own problem entirely.
 
-**Contents**
-
-- [The Error That Tells You Nothing](#the-error-that-tells-you-nothing)
-- [Diagnosis](#diagnosis)
-- [The Host Problem](#the-host-problem)
-- [The Account Lockout](#the-account-lockout)
-- [Which Instances Actually Worked](#which-instances-actually-worked)
-- [The Mamba Assertion Error](#the-mamba-assertion-error)
-- [The Verification Checklist](#the-verification-checklist)
-
 ---
 
 ## The Error That Tells You Nothing
