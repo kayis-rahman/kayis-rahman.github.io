@@ -226,7 +226,7 @@ The ten-second check disambiguates all three cases before you spend hours on the
 
 ---
 
-## What is next
+## What's next
 
 Instance verified. Working host confirmed. The model loads. CUDA initialises.
 
