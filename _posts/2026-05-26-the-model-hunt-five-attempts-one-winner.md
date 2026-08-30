@@ -116,6 +116,7 @@ The first container on a clean host, cuInit returned 0 on both GPUs. After three
 The serve command that worked:
 
 ```bash
+export OMP_NUM_THREADS=1
 export CUDA_VISIBLE_DEVICES=0,1
 
 vllm serve /root/autodl-tmp/models/Qwen3-Coder-Next-AWQ-4bit \
@@ -127,13 +128,17 @@ vllm serve /root/autodl-tmp/models/Qwen3-Coder-Next-AWQ-4bit \
     --kv-cache-dtype fp8 \
     --enable-prefix-caching \
     --enable-chunked-prefill \
+    --language-model-only \
+    --moe-backend flashinfer_trtllm \
     --tool-call-parser qwen3_coder \
     --reasoning-parser qwen3 \
+    --trust-remote-code \
     --enable-auto-tool-choice \
+    --chat-template-content-format openai \
     --served-model-name "claude-sonnet-4-6" "claude-opus-4-6" "claude-haiku-4-5"
 ```
 
-Saved immediately to /root/start_vllm.sh. Every fresh instance starts with one command.
+Saved immediately to /root/autodl-tmp/start_vllm.sh. Every fresh instance starts with one command.
 
 The LiteLLM double /v1 bug resurfaced here too. Diagnosed cleanly this time with a single provider and single log stream. One config line fixed it.
 
@@ -241,7 +246,7 @@ llama.cpp is the most accessible option. Runs on anything, wide model support, a
 
 SGLang is legitimately fast. For hybrid architectures like Qwen3.6-27B, the official Qwen model card recommends SGLang first before vLLM. RadixAttention prefix caching is more efficient than vLLM's implementation for multi-turn agentic workloads. In practice two bugs blocked it completely. The qkqkv_proj.weight naming bug in AWQ quantized Qwen3 models caused a KeyError on load. And SGLang has no TurboQuant integration as of vLLM 0.22.1. Without TurboQuant the 8-sequence target on a single RTX 5090 was not achievable. SGLang is worth watching. It is not there yet.
 
-vLLM won by being the most complete production-ready option for this specific combination of requirements. vLLM implements the Anthropic Messages API natively. vLLM 0.22.1 added TurboQuant 2-bit KV cache compression with 4x capacity, multiple tool parsers including dedicated Qwen3 Coder support, and Blackwell SM120 optimizations. The --language-model-only flag saves 2GB by skipping the vision encoder. Multiple --served-model-name aliases mean one server responds to claude-sonnet-4-6, claude-opus-4-6, and claude-haiku-4-5 simultaneously.
+vLLM won by being the most complete production-ready option for this specific combination of requirements. vLLM implements the Anthropic Messages API natively. vLLM 0.22.1 added TurboQuant `turboquant_4bit_nc` KV cache compression delivering roughly 6x KV cache memory reduction, multiple tool parsers including dedicated Qwen3 Coder support, and Blackwell SM120 optimizations. The --language-model-only flag saves 2GB by skipping the vision encoder. Multiple --served-model-name aliases mean one server responds to claude-sonnet-4-6, claude-opus-4-6, and claude-haiku-4-5 simultaneously.
 
 | Framework | Tool calling | Continuous batching | TurboQuant | Anthropic API native | Verdict |
 |---|---|---|---|---|---|
@@ -253,7 +258,7 @@ vLLM won by being the most complete production-ready option for this specific co
 
 ## What is next
 
-Five attempts. One winner.
+Six attempts if you count the 27B as a stepping stone. One model that stuck.
 
 Qwen3.6-35B-A3B-AWQ on vLLM 0.22.1 with `turboquant_4bit_nc` on a single RTX 5090 — 262K context, 6 parallel Claude Code sessions, $0.36 an hour. That is the setup that runs today.
 

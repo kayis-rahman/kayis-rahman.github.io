@@ -93,19 +93,17 @@ Here's what the options actually look like in 2026:
 |Claude Max 5x      |$100         |~88K tokens / 5hr* |Ok for light daily use          |
 |Claude Max 20x     |$200         |~220K tokens / 5hr*|One heavy agentic week burns it |
 |Sonnet 4.6 API     |Pay-per-token|Unlimited          |$3/M input, $15/M output        |
-|2x RTX 4080S gpuhub|~$84/mo      |Unlimited          |Private, no throttle            |
-|2x RTX 5090 gpuhub |~$130/mo     |Unlimited          |Private, no throttle            |
+| RTX 5090 gpuhub     | ~$65/mo       | Unlimited            | Private, no throttle             |
 
 Token estimates are community-reported approximations. Anthropic does not publish exact per-window token counts. Sources: [SSD Nodes](https://www.ssdnodes.com/blog/claude-code-pricing-in-2026-every-plan-explained-pro-max-api-teams), [Duet](https://duet.so/blog/claude-code-pricing), [CloudZero](https://www.cloudzero.com/blog/claude-code-pricing/)
 
 Real gpuhub instance prices from actual sessions:
 
-|GPU Instance   |VRAM         |Cost/hr   |Est. monthly (6hr/day)|
-|---------------|-------------|----------|----------------------|
-|2x RTX 4080S   |64GB combined|$0.46-0.48|~$84                  |
-|RTX 5090 single|32GB         |$0.36     |~$65                  |
-|2x RTX 5090    |64GB combined|$0.72     |~$130                 |
-|RTX PRO 6000   |96GB         |$0.91     |~$164                 |
+| GPU Instance | VRAM | Cost/hr | Est. monthly (6hr/day) |
+| ------------ | ---- | ------- | ---------------------- |
+| RTX 5090     | 32GB | $0.36   | ~$65                   |
+| RTX 4080S    | 32GB | $0.46   | ~$83                   |
+| RTX PRO 6000 | 96GB | $0.91   | ~$164                  |
 
 Prices from actual sessions. Verify current rates at [gpuhub.com](https://gpuhub.com) before provisioning. gpuhub bills per second.
 

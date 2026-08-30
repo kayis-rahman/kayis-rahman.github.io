@@ -17,6 +17,15 @@ Part 2 ended with a working model and a working framework. What it did not have 
 
 That turned out to be its own problem entirely.
 
+## Contents
+1. [The Error That Tells You Nothing](#the-error-that-tells-you-nothing)
+2. [Diagnosis](#diagnosis)
+3. [The Host Problem](#the-host-problem)
+4. [The Account Lockout](#the-account-lockout)
+5. [Which Instances Actually Worked](#which-instances-actually-worked)
+6. [The Mamba Assertion Error](#the-mamba-assertion-error)
+7. [The Verification Checklist](#the-verification-checklist)
+
 ---
 
 ## The Error That Tells You Nothing
@@ -226,7 +235,7 @@ That is Part 4.
 
 ---
 
-*Next: The Config That Finally Worked — vLLM flags, install script, and the chat template patch* →
+*Next: [The Config That Finally Worked — vLLM flags, install script, and the chat template patch →](/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html)*
 
 *This is Part 3 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
