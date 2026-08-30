@@ -4,13 +4,13 @@
 
 {% include head.html %}
 
-<body>
+<body class="site-shell layout-{{ page.layout | default: 'default' }}">
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   {% include navbar.html %}
 
-  <main id="main-content">
+  <main id="main-content" class="site-main">
   {{ content }}
   </main>
 

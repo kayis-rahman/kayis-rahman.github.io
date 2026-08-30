@@ -35,6 +35,17 @@ $(function () {
   });
 })();
 
+// ── Hero scroll control ──────────────────────────────────────────────────────
+(function () {
+  var button = document.querySelector('.scroll-down');
+  var firstPost = document.querySelector('article.post-preview');
+  if (!button || !firstPost) return;
+  button.addEventListener('click', function () {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    firstPost.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  });
+})();
+
 // ── Reading progress bar ─────────────────────────────────────────────────────
 (function () {
   var bar = document.getElementById('reading-progress');
@@ -170,7 +181,7 @@ $(function () {
 
 // ── Table wrapper (overflow scroll, Chirpy-style) ────────────────────────────
 (function () {
-  document.querySelectorAll('.post-body table').forEach(function (table) {
+  document.querySelectorAll('.post-body table, .page-content-shell table').forEach(function (table) {
     if (table.parentElement.classList.contains('table-wrapper')) return;
     var wrapper = document.createElement('div');
     wrapper.className = 'table-wrapper';
