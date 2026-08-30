@@ -111,7 +111,7 @@ One important distinction from subscription plans: gpuhub is pure pay-as-you-go.
 
 Token maths at scale:
 
-|Monthly volume   |Sonnet 4.6 API cost|2x RTX 5090 gpuhub|
+|Monthly volume   |Sonnet 4.6 API cost|RTX 5090 gpuhub   |
 |-----------------|-------------------|------------------|
 |10M in / 2M out  |~$60               |~$50-80           |
 |50M in / 10M out |~$300              |~$130             |
