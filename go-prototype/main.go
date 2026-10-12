@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
+	"html"
 	"html/template"
 	"os"
 	"path/filepath"
@@ -59,6 +61,69 @@ func readMarkdown(path string) (FrontMatter, string, error) {
 	}
 	return meta, string(parts[2]), nil
 }
+
+// resolvePath follows existing symlinks one component at a time without cleaning away
+// later .. segments first (which would change their meaning after a symlink).
+func resolvePath(path string) (string, error) {
+	current, remainder := string(filepath.Separator), path
+	if !filepath.IsAbs(path) {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		current, err = filepath.EvalSymlinks(cwd)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		remainder = strings.TrimPrefix(path, string(filepath.Separator))
+	}
+
+	for _, component := range strings.Split(remainder, string(filepath.Separator)) {
+		switch component {
+		case "", ".":
+			continue
+		case "..":
+			current = filepath.Dir(current)
+		default:
+			candidate := filepath.Join(current, component)
+			info, err := os.Lstat(candidate)
+			if err != nil && !errors.Is(err, os.ErrNotExist) {
+				return "", err
+			}
+			if err == nil && info.Mode()&os.ModeSymlink != 0 {
+				current, err = filepath.EvalSymlinks(candidate)
+				if err != nil {
+					return "", err
+				}
+			} else {
+				current = candidate
+			}
+		}
+	}
+	return filepath.Clean(current), nil
+}
+
+func pathContains(parent, candidate string) bool {
+	rel, err := filepath.Rel(parent, candidate)
+	return err == nil && (rel == "." || (rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) && !filepath.IsAbs(rel)))
+}
+
+func safeOutputPath(sourceRoot, outputPath string) (string, error) {
+	root, err := resolvePath(sourceRoot)
+	if err != nil {
+		return "", fmt.Errorf("resolve source root: %w", err)
+	}
+	output, err := resolvePath(outputPath)
+	if err != nil {
+		return "", fmt.Errorf("resolve output path: %w", err)
+	}
+	if pathContains(root, output) || pathContains(output, root) {
+		return "", fmt.Errorf("output path %q overlaps source root %q", output, root)
+	}
+	return output, nil
+}
+
 func writePage(outPath string, page Page) error {
 	if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
 		return err
@@ -75,9 +140,18 @@ func main() {
 	if len(os.Args) > 1 {
 		root = os.Args[1]
 	}
+	var err error
+	root, err = resolvePath(root)
+	if err != nil {
+		fatal(fmt.Errorf("resolve source root: %w", err))
+	}
 	out := os.Getenv("GO_PROTOTYPE_OUT")
 	if out == "" {
 		out = filepath.Join(os.TempDir(), "kayis-go-prototype-site")
+	}
+	out, err = safeOutputPath(root, out)
+	if err != nil {
+		fatal(err)
 	}
 	if err := os.RemoveAll(out); err != nil {
 		fatal(err)
@@ -100,6 +174,10 @@ func main() {
 		fatal(err)
 	}
 
+	homeMeta, _, err := readMarkdown(filepath.Join(root, "index.markdown"))
+	if err != nil {
+		fatal(err)
+	}
 	postMeta, postText, err := readMarkdown(filepath.Join(root, "_posts/2026-06-09-the-config-that-finally-worked.md"))
 	if err != nil {
 		fatal(err)
@@ -136,8 +214,8 @@ func main() {
 		fatal(err)
 	}
 
-	homeBody := `<section class="hero"><p class="eyebrow">STAFF SECURITY ENGINEER <span>·</span> CORK, IRELAND</p><h1>Kayis<br><em>Rahman.</em></h1><p class="lede">I build secure infrastructure, PKI systems, and practical tools for running AI on your own terms.</p><div class="actions"><a class="button" href="/projects/">Explore my work <span>↗</span></a><a class="text-link" href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html">Read the latest <span>↗</span></a></div></section><section class="feature"><div><p class="eyebrow">SELECTED PROJECT <span>·</span> IN PROGRESS</p><h2>Synapse</h2><p>A self-hosted AI proxy routing inference between remote GPUs and lightweight local models.</p><a href="/projects/">View project details ↗</a></div><img src="/img/home.jpg" alt=""></section><section class="latest"><p class="eyebrow">LATEST FIELD NOTE</p><h2><a href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html">The Config That Finally Worked</a></h2><p>Every vLLM flag, patch, and template fix that made the stack work.</p></section>`
-	if err := writePage(filepath.Join(out, "index.html"), Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: "Staff Security Engineer specialising in PKI, HSM, secure systems and self-hosted AI.", Canonical: "https://kayis-rahman.github.io/", HTML: template.HTML(homeBody), HideTitle: true}); err != nil {
+	homeBody := `<section class="hero"><p class="eyebrow">STAFF SECURITY ENGINEER <span>·</span> CORK, IRELAND</p><h1>Kayis<br><em>Rahman.</em></h1><p class="lede">` + html.EscapeString(homeMeta.Description) + `</p><div class="actions"><a class="button" href="/projects/">Explore my work <span>↗</span></a><a class="text-link" href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html">Read the latest <span>↗</span></a></div></section><section class="feature"><div><p class="eyebrow">SELECTED PROJECT <span>·</span> IN PROGRESS</p><h2>Synapse</h2><p>A self-hosted AI proxy routing inference between remote GPUs and lightweight local models.</p><a href="/projects/">View project details ↗</a></div><img src="/img/home.jpg" alt=""></section><section class="latest"><p class="eyebrow">LATEST FIELD NOTE</p><h2><a href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html">The Config That Finally Worked</a></h2><p>Every vLLM flag, patch, and template fix that made the stack work.</p></section>`
+	if err := writePage(filepath.Join(out, "index.html"), Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: "https://kayis-rahman.github.io/", HTML: template.HTML(homeBody), HideTitle: true}); err != nil {
 		fatal(err)
 	}
 	fmt.Printf("Built home, /projects/, and %s into %s\n", postRoute, out)
