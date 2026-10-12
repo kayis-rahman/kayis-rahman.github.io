@@ -22,8 +22,8 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	}
 	checks := map[string][]string{
 		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side."},
-		"projects/index.html": {"Synapse", "Raspberry Pi 5", "canonical"},
-		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html": {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html"},
+		"projects/index.html": {"Synapse", "Raspberry Pi 5", "canonical", "A selection of independent engineering projects", "<h2>Synapse</h2>", "Visit my GitHub profile for project updates"},
+		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html": {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html", "og:title", "og:description", "og:url", "og:image", "SELF-HOSTING LLM INFERENCE · PART 4 OF 5", "Previous: The GPU Graveyard (Part 3)", "Next: Is It Actually Worth It? (Part 5) — coming soon."},
 	}
 	for file, needles := range checks {
 		data, err := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
@@ -34,6 +34,17 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			if !strings.Contains(string(data), needle) {
 				t.Errorf("%s missing expected rendered content %q", file, needle)
 			}
+		}
+		if strings.Contains(string(data), `href="#"`) {
+			t.Errorf("%s contains a dead fragment link", file)
+		}
+		for _, property := range []string{"og:title", "og:description", "og:url"} {
+			if !strings.Contains(string(data), `property="`+property+`"`) {
+				t.Errorf("%s missing %s metadata", file, property)
+			}
+		}
+		if file == "index.html" && !strings.Contains(string(data), `alt=""`) {
+			t.Errorf("home's decorative coding image should be ignored by assistive technology")
 		}
 		if file == "index.html" && strings.Count(string(data), "<h1>") != 1 {
 			t.Errorf("home page should expose exactly one primary heading")
@@ -141,7 +152,7 @@ func TestPrototypeFailsWhenSelectedProjectIsMissing(t *testing.T) {
 	if err == nil {
 		t.Fatalf("expected missing selected project to fail, got %s", result)
 	}
-	if !strings.Contains(string(result), "projects.md has no **Synapse** section") {
+	if !strings.Contains(string(result), "projects.md has no ## Synapse section") {
 		t.Fatalf("expected explicit selected-project error, got %s", result)
 	}
 	if _, err := os.Stat(filepath.Join(output, "projects", "index.html")); !os.IsNotExist(err) {

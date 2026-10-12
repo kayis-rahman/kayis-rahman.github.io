@@ -10,14 +10,15 @@ Things I build outside of work.
 
 ---
 
-**Synapse**
-*In Progress*
+## Synapse
+
+**Status:** In progress
 
 A self-hosted AI proxy running on a Raspberry Pi 5 that routes inference requests intelligently between a remote vLLM server on rented GPUs and lightweight local models depending on task complexity. Built to replace paid API subscriptions with private, fast, self-hosted inference. Claude Code, long-context reasoning and tool use go to the full model. Simple queries route elsewhere.
 
 Stack: Java, Spring WebFlux, Raspberry Pi 5, vLLM, Qwen3.6, Redis
 
-[GitHub →](https://github.com/kayisrahman)
+[Visit my GitHub profile for project updates →](https://github.com/kayisrahman)
 
 ---
 

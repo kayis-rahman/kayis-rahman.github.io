@@ -399,8 +399,6 @@ That is Part 5.
 
 ---
 
-*Next: [Is It Actually Worth It? — cost, quality, and an honest verdict →](#)*
-
 *This is Part 4 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
 *I write about Java, PKI, LLM inference infrastructure, and building things on the side. Find me on [GitHub](https://github.com/kayis-rahman) and [LinkedIn](https://linkedin.com/in/kayisrahman).*
