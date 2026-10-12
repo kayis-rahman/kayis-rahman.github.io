@@ -19,11 +19,11 @@ Run checks with `go test ./...` from `go-prototype`; they assert rendered routes
 
 ## Comparison against Jekyll
 
-Build Jekyll independently with `bundle exec jekyll build --destination /tmp/kayis-jekyll-site` at the repository root. Inspect Jekyll's corresponding HTML at `/`, `/projects/`, and `/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html` before comparing. Both emit static HTML for GitHub Pages and retain `https://kayis-rahman.github.io` as canonical origin and current route conventions.
+Measured on the existing source tree for `/`, `/projects/`, and `/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html`. Both emit static HTML for GitHub Pages and retain `https://kayis-rahman.github.io` as canonical origin and current route conventions.
 
-- **Built HTML:** prototype page bytes and total HTML bytes can be measured with `wc -c`; compare semantic page content, metadata, and links rather than raw formatting alone.
-- **JavaScript transfer:** this prototype ships no JavaScript. Jekyll's exact transfer depends on production minification/theme output; use the generated asset references and file sizes (gzip included if served with compression) for a fair same-scope comparison.
-- **Authoring:** edit the original Jekyll Markdown files as before; the prototype reads the home description and post frontmatter/body from the existing Markdown and selects the existing Synapse prose. No content migration or custom content schema is introduced.
-- **Build complexity:** Go generator has two dependencies (Goldmark and yaml.v3), direct `go run`/`go test` commands and static file output; Jekyll remains the production build and requires its existing Ruby/Bundler/theme/plugin toolchain. The generator does not claim feature parity and would need deliberate work for all current site features.
+- **Built HTML bytes** (Go prototype / Jekyll): home, 1,967 / 17,613; projects, 1,529 / 11,836; representative post, 19,314 / 46,794. Total: 22,810 / 76,243 bytes. This compares the three generated pages only and excludes other Jekyll routes and assets.
+- **JavaScript transfer:** the prototype has no JavaScript files (0 bytes). Jekyll's local theme and site scripts are 1,966 + 9,892 = 11,858 bytes uncompressed; external jQuery and Bootstrap are also referenced, but their transfer sizes were not measured.
+- **Authoring:** both use the existing Markdown sources. The prototype reads the home description and post frontmatter/body and selects the existing Synapse prose; no content migration or custom content schema is introduced.
+- **Build complexity:** the Go generator has two direct module dependencies (Goldmark and yaml.v3), with direct `go run`/`go test` commands and static file output. The Gemfile has seven direct gem declarations: six in addition to `github-pages`. Jekyll remains the production build and requires its existing Ruby/Bundler/theme/plugin toolchain. The generator does not claim feature parity and would need deliberate work for all current site features.
 
 Prototype evidence (render checks, route checks, HTML sizes, JavaScript transfer, and local screenshot) belongs outside the repository under the task evidence directory. Do not change deployment or cut over public routes based on this experiment alone.

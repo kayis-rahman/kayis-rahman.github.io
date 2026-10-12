@@ -108,3 +108,43 @@ func TestPrototypeRejectsOutputPathsOverlappingSource(t *testing.T) {
 		}
 	}
 }
+
+func TestPrototypeFailsWhenSelectedProjectIsMissing(t *testing.T) {
+	tmp := t.TempDir()
+	root := filepath.Join(tmp, "source")
+	output := filepath.Join(tmp, "prototype-site")
+	files := map[string]string{
+		"index.markdown": "---\ndescription: Prototype\n---\n",
+		"_posts/2026-06-09-the-config-that-finally-worked.md": "---\ntitle: Example\ndescription: Example\ndate: 2026-06-09\n---\nPost body\n",
+		"projects.md": "---\ntitle: Projects\n---\nProjects intro\n\n---\n\n**Another project**\nAll projects must not be rendered as a fallback.\n",
+	}
+	for name, contents := range files {
+		path := filepath.Join(root, name)
+		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(contents), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	asset := filepath.Join(root, "img", "home.jpg")
+	if err := os.MkdirAll(filepath.Dir(asset), 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(asset, []byte("image"), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := exec.Command("go", "run", ".", root)
+	cmd.Env = append(os.Environ(), "GO_PROTOTYPE_OUT="+output)
+	result, err := cmd.CombinedOutput()
+	if err == nil {
+		t.Fatalf("expected missing selected project to fail, got %s", result)
+	}
+	if !strings.Contains(string(result), "projects.md has no **Synapse** section") {
+		t.Fatalf("expected explicit selected-project error, got %s", result)
+	}
+	if _, err := os.Stat(filepath.Join(output, "projects", "index.html")); !os.IsNotExist(err) {
+		t.Fatalf("missing selected project unexpectedly produced a projects page: %v", err)
+	}
+}

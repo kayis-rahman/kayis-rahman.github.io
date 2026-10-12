@@ -200,11 +200,13 @@ func main() {
 		fatal(err)
 	}
 	projectSource := string(projects)
-	if i := strings.Index(projectSource, "**Synapse**"); i >= 0 {
-		projectSource = projectSource[i:]
-		if j := strings.Index(projectSource, "\n---\n"); j >= 0 {
-			projectSource = projectSource[:j]
-		}
+	i := strings.Index(projectSource, "**Synapse**")
+	if i < 0 {
+		fatal(errors.New("projects.md has no **Synapse** section"))
+	}
+	projectSource = projectSource[i:]
+	if j := strings.Index(projectSource, "\n---\n"); j >= 0 {
+		projectSource = projectSource[:j]
 	}
 	projectHTML, err := renderMarkdown(projectSource)
 	if err != nil {
