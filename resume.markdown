@@ -9,7 +9,7 @@ background: '/assets/img/resume.jpg'
 # Kayis Rahman
 
 Staff Security Software Engineer · PKI · HSM · Java · Go
-Cork, Ireland · [kaisbk1@gmail.com](mailto:kaisbk1@gmail.com) · [GitHub](https://github.com/kayisrahman) · [LinkedIn](https://www.linkedin.com/in/kayisrahman)
+Cork, Ireland · [kaisbk1@gmail.com](mailto:kaisbk1@gmail.com) · [GitHub](https://github.com/kayis-rahman) · [LinkedIn](https://www.linkedin.com/in/kayisrahman/)
 
 ---
 

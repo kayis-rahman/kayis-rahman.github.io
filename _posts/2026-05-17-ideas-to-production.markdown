@@ -106,4 +106,4 @@ The stack changed every few years. The questions underneath it never did.
 
 ---
 
-I write about Java, PKI, LLM inference, and building things on the side. Find me on [GitHub](https://github.com/kayisrahman) and [LinkedIn](https://linkedin.com/in/kayisrahman).
+I write about Java, PKI, LLM inference, and building things on the side. Find me on [GitHub](https://github.com/kayis-rahman) and [LinkedIn](https://www.linkedin.com/in/kayisrahman/).

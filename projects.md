@@ -18,7 +18,7 @@ A self-hosted AI proxy running on a Raspberry Pi 5 that routes inference request
 
 Stack: Java, Spring WebFlux, Raspberry Pi 5, vLLM, Qwen3.6, Redis
 
-[Visit my GitHub profile for project updates →](https://github.com/kayisrahman)
+[Visit my GitHub profile for project updates →](https://github.com/kayis-rahman)
 
 ---
 
@@ -29,7 +29,7 @@ A fully automated swing trading engine targeting NSE/BSE Indian equities. One to
 
 Stack: Java, Spring Boot, TimescaleDB, Redis, LangChain4j, Qwen3, Zerodha Kite Connect, Telegram
 
-[GitHub →](https://github.com/kayisrahman)
+[GitHub →](https://github.com/kayis-rahman)
 
 ---
 
@@ -40,7 +40,7 @@ A focus timer for iOS with an LLM intelligence layer underneath. Not just a coun
 
 Stack: Swift, iOS, LLM inference via Synapse
 
-[GitHub →](https://github.com/kayisrahman)
+[GitHub →](https://github.com/kayis-rahman)
 
 ---
 
@@ -51,7 +51,7 @@ A certificate expiry and lifecycle management dashboard for engineers working wi
 
 Stack: Java, Spring Boot, PostgreSQL, React
 
-[GitHub →](https://github.com/kayisrahman)
+[GitHub →](https://github.com/kayis-rahman)
 
 ---
 
@@ -62,4 +62,4 @@ A public-facing stock screener surfacing signals from the swing trading system w
 
 Stack: Java, Spring Boot, TimescaleDB, Angular
 
-[GitHub →](https://github.com/kayisrahman)
+[GitHub →](https://github.com/kayis-rahman)
