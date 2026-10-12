@@ -1,6 +1,7 @@
+---
 name: Build, minify, and deploy to GitHub Pages
 
-on:
+"on":
   push:
     branches: ["main"]
   workflow_dispatch:
@@ -53,8 +54,10 @@ jobs:
       - name: Overlay Go-generated pages
         working-directory: go-prototype
         run: |
-          GO_PROTOTYPE_OUT="$RUNNER_TEMP/kayis-go-prototype-site" go run . "$GITHUB_WORKSPACE"
-          rsync -a "$RUNNER_TEMP/kayis-go-prototype-site/" "$GITHUB_WORKSPACE/_site/"
+          GO_PROTOTYPE_OUT="$RUNNER_TEMP/kayis-go-prototype-site" \
+            go run . "$GITHUB_WORKSPACE"
+          rsync -a "$RUNNER_TEMP/kayis-go-prototype-site/" \
+            "$GITHUB_WORKSPACE/_site/"
 
       - name: Minify HTML
         run: |
@@ -86,10 +89,10 @@ jobs:
         id: image-changes
         continue-on-error: true
         run: |
-          if git diff --name-only HEAD~1 HEAD | grep -q 'assets/img/'; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+          if git diff --name-only "HEAD~1" "HEAD" | grep -q 'assets/img/'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Optimize images
@@ -119,11 +122,17 @@ jobs:
             if (/\.(jpg|jpeg)$/i.test(f)) {
               await sharp(f).jpeg({ quality: 80, mozjpeg: true }).toFile(tmp);
             } else {
-              await sharp(f).png({ quality: 80, compressionLevel: 9, palette: true }).toFile(tmp);
+              await sharp(f).png({
+                quality: 80,
+                compressionLevel: 9,
+                palette: true
+              }).toFile(tmp);
             }
             fs.renameSync(tmp, f);
             console.log('Optimized:', f);
-          })).then(() => console.log(`Done. Compressed ${files.length} images.`));
+          })).then(() =>
+            console.log(`Done. Compressed ${files.length} images.`)
+          );
           EOF
 
       - name: Upload artifact
