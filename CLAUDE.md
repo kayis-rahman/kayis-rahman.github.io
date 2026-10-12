@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
 
 ## Project Overview
-Personal portfolio/blog site deployed on GitHub Pages (`kayis-rahman.github.io`). Built with Jekyll 4.4 + `startbootstrap-clean-blog-jekyll` remote theme.
+Personal portfolio/blog site deployed on GitHub Pages (`kayis-rahman.github.io`). Jekyll 4.4 + `startbootstrap-clean-blog-jekyll` builds the site, then Go-generated home, projects, and representative post pages overlay those routes before deployment.
 
 ## Structure
 ```
@@ -53,7 +53,7 @@ rbenv install 3.3.8
 A `pre-push` hook runs `jekyll build` before each push to catch build errors early.
 
 ## Deployment
-Pushes to `main` trigger a GitHub Actions workflow (`.github/workflows/jekyll-gh-pages.yml`) that builds and deploys to GitHub Pages. No manual steps needed. Manual runs via `workflow_dispatch` on the Actions tab.
+Pushes to `main` trigger `.github/workflows/jekyll-gh-pages.yml`, which builds with Jekyll, overlays the Go-generated `/`, `/projects/`, and representative post routes, then deploys to GitHub Pages. No manual steps needed. Manual runs via `workflow_dispatch` on the Actions tab.
 
 ## Theme Override Pattern
 The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides base layouts, includes, and SCSS. Custom files in `_layouts/`, `_includes/`, and `_sass/` **override** the theme's versions automatically — Jekyll prefers local files over theme-generated ones. To modify site-wide structure, edit the corresponding file in `_layouts/` or `_includes/` rather than trying to patch the theme.
