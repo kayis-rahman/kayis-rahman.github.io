@@ -32,6 +32,12 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go-prototype/go.mod
+          cache-dependency-path: go-prototype/go.sum
+
       - name: Setup Node.js with cache
         uses: actions/setup-node@v4
         with:
@@ -43,6 +49,12 @@ jobs:
 
       - name: Build with Jekyll
         run: bundle exec jekyll build --destination ./_site
+
+      - name: Overlay Go-generated pages
+        working-directory: go-prototype
+        run: |
+          GO_PROTOTYPE_OUT="$RUNNER_TEMP/kayis-go-prototype-site" go run . "$GITHUB_WORKSPACE"
+          rsync -a "$RUNNER_TEMP/kayis-go-prototype-site/" "$GITHUB_WORKSPACE/_site/"
 
       - name: Minify HTML
         run: |
