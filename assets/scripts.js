@@ -29,10 +29,6 @@ $(function () {
       localStorage.setItem('theme', next);
     });
   }
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-    if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
-  });
 })();
 
 // ── Hero scroll control ──────────────────────────────────────────────────────

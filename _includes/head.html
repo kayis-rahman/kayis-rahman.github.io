@@ -28,8 +28,7 @@
 
   <!-- PWA -->
   <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
-  <meta name="theme-color" content="#0056b2" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1b1b1e" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#10191b">
 
   <!-- Favicon -->
   <link rel="icon" href="{{ '/favicon.svg' | relative_url }}" type="image/svg+xml">
@@ -48,8 +47,7 @@
   <script>
     (function () {
       var stored = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = stored || (prefersDark ? 'dark' : 'light');
+      var theme = stored || 'dark';
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
