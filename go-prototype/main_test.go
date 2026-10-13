@@ -21,7 +21,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		t.Fatalf("generator failed: %v\n%s", err, output)
 	}
 	checks := map[string][]string{
-		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "data-variant-choice=\"signal\"", "data-variant-choice=\"fieldnotes\"", "data-variant-choice=\"systems\""},
+		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a dark, structured console aesthetic"},
 		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
 		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked"},
 		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical"},
