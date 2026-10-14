@@ -14,8 +14,9 @@
   // ── Brand ─────────────────────────────────────────────────────────────
   --color-primary: #0099ff;
   --color-primary-rgb: 0, 153, 255;
-  --color-link-accent: #8ab4f8;
-  --color-link-accent-rgb: 0, 153, 255;
+  --color-on-primary: #001a1f;
+  --color-link-accent: #005a9c;
+  --color-link-accent-rgb: 0, 90, 156;
 
   // ── Base ──────────────────────────────────────────────────────────────
   --color-text: var(--color-text-light);
@@ -30,9 +31,9 @@
   --color-text-heading: #333333;
   --color-text-muted: #555555;
   --color-text-subtle: #666666;
-  --color-text-xmuted: #757575;
-  --color-text-faint: #999999;
-  --color-text-ghost: #aaaaaa;
+  --color-text-xmuted: #6d6d6d;
+  --color-text-faint: #686868;
+  --color-text-ghost: #686868;
   --color-text-icon: #686868;
   --color-text-nav: #404040;
   --color-text-strong: #222222;
@@ -95,6 +96,7 @@ html[data-theme="dark"] {
   // Systems direction: charcoal, quiet green-gray surfaces, mint signals.
   --color-primary: #72dbb3;
   --color-primary-rgb: 114, 219, 179;
+  --color-on-primary: #062019;
   --color-link-accent: #a3f0d1;
   --color-link-accent-rgb: 114, 219, 179;
 
@@ -110,7 +112,7 @@ html[data-theme="dark"] {
   --color-text-muted: #a6b7b1;
   --color-text-subtle: #a6b7b1;
   --color-text-xmuted: #91a49d;
-  --color-text-faint: #7c9089;
+  --color-text-faint: #91a49d;
   --color-text-ghost: #b6c6c0;
   --color-text-icon: #c0cec8;
   --color-text-nav: #c0cec8;
@@ -177,7 +179,7 @@ html {
   top: -40px;
   left: 0;
   background: var(--color-primary);
-  color: var(--color-bg);
+  color: var(--color-on-primary);
   padding: 8px 16px;
   text-decoration: none;
   z-index: 100;
@@ -685,7 +687,7 @@ html[data-theme="dark"] footer a {
 .btn-primary {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
-  color: var(--color-bg);
+  color: var(--color-on-primary);
   font-size: 0.875rem;
   padding: 0.45rem 1.1rem;
   border-radius: 4px;
@@ -696,7 +698,7 @@ html[data-theme="dark"] footer a {
   &:hover, &:focus {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    color: var(--color-bg);
+    color: var(--color-on-primary);
     box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.3);
   }
 
@@ -726,7 +728,7 @@ html[data-theme="dark"] footer a {
 html[data-theme="dark"] .btn-primary {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
-  color: var(--color-bg) !important;
+  color: var(--color-on-primary) !important;
 
   &:hover, &:focus {
     background-color: var(--color-primary) !important;
@@ -1175,6 +1177,13 @@ html[data-theme="dark"] .code-lang-label { color: var(--color-text-muted) !impor
 
 .search-input { font-size: 1.1rem; }
 
+#search-hint { color: var(--color-text-muted) !important; }
+
+.form-control::placeholder {
+  color: var(--color-text-muted) !important;
+  opacity: 1;
+}
+
 .search-result {
   h4 { margin-bottom: 0.2rem; font-size: 1.1rem; }
   h4 a { color: var(--color-text-heading); text-decoration: none; &:hover { color: var(--color-primary); } }
@@ -1404,7 +1413,7 @@ html[data-theme="dark"] .newsletter-cta-icon { color: var(--color-link-accent) !
   color: var(--color-text-faint);
   margin-top: 0.6rem;
   margin-bottom: 0;
-  a { color: var(--color-primary); }
+  a { color: var(--color-link-accent); }
 }
 
 .subscribe-topics {
@@ -2042,7 +2051,7 @@ body.site-shell.layout-page {
 
 .layout-page .not-found-label {
   margin-bottom: 0.75rem;
-  color: var(--color-primary);
+  color: var(--color-link-accent);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -2102,7 +2111,7 @@ body.site-shell.layout-page {
 
 .layout-page .not-found-posts a:hover,
 .layout-page .not-found-posts a:focus-visible {
-  color: var(--color-primary);
+  color: var(--color-link-accent);
   text-decoration: underline;
 }
 

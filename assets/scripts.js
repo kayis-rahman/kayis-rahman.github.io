@@ -4,12 +4,20 @@ $(function () {
 
 // ── Dark mode ────────────────────────────────────────────────────────────────
 (function () {
-  var html   = document.documentElement;
+  var html = document.documentElement;
   var toggle = document.getElementById('theme-toggle');
-  var icon   = document.getElementById('theme-icon');
+  var icon = document.getElementById('theme-icon');
+  var state = window.__kayisThemeState || {
+    theme: html.getAttribute('data-theme') || 'light',
+    hasStoredChoice: false,
+    applyTheme: null
+  };
+  window.__kayisThemeState = state;
 
   function applyTheme(theme) {
     html.setAttribute('data-theme', theme);
+    state.theme = theme;
+    if (toggle) toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     var frame = document.querySelector('.utterances-frame');
     if (frame) {
@@ -20,13 +28,15 @@ $(function () {
     }
   }
 
-  applyTheme(html.getAttribute('data-theme') || 'light');
+  state.applyTheme = applyTheme;
+  applyTheme(state.theme || html.getAttribute('data-theme') || 'light');
 
   if (toggle) {
     toggle.addEventListener('click', function () {
       var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      state.hasStoredChoice = true;
       applyTheme(next);
-      localStorage.setItem('theme', next);
+      try { window.localStorage.setItem('theme', next); } catch (e) {}
     });
   }
 })();

@@ -34,6 +34,8 @@ Post routes derive from source categories, dates, and filenames; unpublished and
 
 The homepage offers three keyboard-operable style variants (Signal, Field notes, Systems). Variant selection is client-side and leaves all content and links unchanged. Motion is limited to restrained color transitions; reduced-motion preferences are honored. No separate JavaScript bundle or external images are needed; the existing `img/home.jpg` asset is copied into the output.
 
+All Go pages share the accessible light/dark toggle and saved `theme` preference used by Jekyll pages. First visit follows the system color preference; stored choices are used when browser storage is available. If storage is blocked, the system preference and in-page toggle still work. The theme is applied in the document head before the stylesheet to avoid a flash of the wrong theme.
+
 ## Auxiliary Jekyll routes
 
 Categories, tags, client-side search, subscription forms, RSS, sitemap, 404 handling, and static metadata continue to be emitted by the full Jekyll build and are intentionally not reimplemented in Go in this pass. The workflow overlays Go-owned routes only; it does not remove these base-site routes or assets.
