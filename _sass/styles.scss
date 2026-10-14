@@ -1865,6 +1865,26 @@ body.site-shell {
   color: var(--color-primary) !important;
 }
 
+#mainNav .navbar-toggler {
+  border-color: var(--color-border);
+  color: var(--color-text-nav);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#mainNav .navbar-toggler:hover,
+#mainNav .navbar-toggler:focus-visible {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+#mainNav .navbar-toggler:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
 .masthead {
   min-height: 420px;
   margin-bottom: 0;
@@ -1929,8 +1949,60 @@ body.site-shell {
   text-transform: uppercase;
 }
 
+body.site-shell.layout-page {
+  font-family: "SFMono-Regular", "Cascadia Code", "Roboto Mono", monospace;
+}
+
+.layout-page h1,
+.layout-page h2,
+.layout-page h3,
+.layout-page h4,
+.layout-page h5,
+.layout-page h6 {
+  font-family: inherit;
+}
+
 .layout-page .masthead {
-  min-height: 360px;
+  display: flex;
+  min-height: 0;
+  align-items: flex-end;
+  margin-bottom: 0;
+  padding: clamp(8rem, 16vh, 10rem) 0 clamp(2.5rem, 6vw, 4rem);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-surface), var(--color-bg)) !important;
+}
+
+.layout-page .masthead .container,
+.layout-page .masthead .row,
+.layout-page .masthead .page-content,
+.layout-page .masthead .page-heading {
+  height: auto !important;
+}
+
+.layout-page .masthead .page-heading {
+  padding: 0;
+  font-family: inherit;
+  text-align: left;
+}
+
+.layout-page .masthead .overlay {
+  display: none;
+}
+
+.layout-page .page-heading h1 {
+  color: var(--color-text);
+  font-weight: 700;
+  letter-spacing: -0.07em;
+}
+
+.layout-page .page-heading .subheading {
+  display: block;
+  max-width: 52ch;
+  margin-top: 1.25rem;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.5;
 }
 
 .layout-page .page-heading,
@@ -1946,7 +2018,11 @@ body.site-shell {
   letter-spacing: -0.06em;
 }
 
-.layout-page .page-content-shell,
+.layout-page .page-content-shell {
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding-bottom: clamp(4rem, 8vw, 8rem);
+}
+
 .layout-post .post-content-shell {
   padding-top: clamp(3rem, 7vw, 6rem);
   padding-bottom: clamp(4rem, 8vw, 8rem);
@@ -1955,6 +2031,85 @@ body.site-shell {
 .layout-page .page-content-shell > .row > div,
 .layout-post .post-content-shell > .row > div {
   max-width: var(--reading-max);
+}
+
+.layout-page .not-found-panel {
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
+  background: var(--color-surface);
+}
+
+.layout-page .not-found-label {
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.layout-page .not-found-code {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(4rem, 10vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.1em;
+  line-height: 0.85;
+}
+
+.layout-page .not-found-copy {
+  margin: 1.25rem 0 1.5rem;
+  color: var(--color-text-muted);
+}
+
+.layout-page .not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.layout-page .not-found-recent {
+  max-width: var(--reading-max);
+  margin: clamp(3rem, 7vw, 5rem) auto 0;
+}
+
+.layout-page .not-found-recent h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+}
+
+.layout-page .not-found-posts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layout-page .not-found-posts li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.layout-page .not-found-posts a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.layout-page .not-found-posts a:hover,
+.layout-page .not-found-posts a:focus-visible {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.layout-page .not-found-posts time {
+  flex: 0 0 auto;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
 }
 
 .layout-post .masthead {
@@ -2147,6 +2302,12 @@ footer hr {
 }
 
 @media (max-width: 767px) {
+  .layout-page .not-found-posts li {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
   #mainNav .navbar-nav {
     padding: 1rem 0;
   }

@@ -3,27 +3,26 @@ permalink: /404.html
 layout: page
 title: "Page Not Found"
 description: "The page you're looking for doesn't exist."
-background: '/img/home.jpg'
 ---
 
-<div class="text-center py-5">
-  <h1 class="display-1 font-weight-bold" style="font-size: 6rem; color: var(--color-primary);">404</h1>
-  <h2 class="mb-3">Page not found</h2>
-  <p class="lead mb-4">The page you're looking for doesn't exist or has been moved.</p>
-  <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-lg">Go Home</a>
-  <a href="{{ '/posts' | relative_url }}" class="btn btn-outline-secondary btn-lg ml-2">Read the Blog</a>
-</div>
-
-<hr class="mt-5">
-
-<div class="row mt-4">
-  <div class="col-lg-10 mx-auto">
-    <h4>Recent Posts</h4>
-    {% for post in site.posts limit: 3 %}
-    <div class="mb-3">
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <span class="text-muted ml-2" style="font-size:0.85rem;">{{ post.date | date: '%B %d, %Y' }}</span>
-    </div>
-    {% endfor %}
+<section class="not-found-panel" aria-labelledby="not-found-code">
+  <p class="not-found-label">Route status / 404</p>
+  <h2 class="not-found-code" id="not-found-code">404</h2>
+  <p class="not-found-copy">That route does not exist or has moved.</p>
+  <div class="not-found-actions">
+    <a href="{{ '/' | relative_url }}" class="btn btn-primary btn-lg">Go Home</a>
+    <a href="{{ '/posts' | relative_url }}" class="btn btn-outline-secondary btn-lg">Read the Blog</a>
   </div>
-</div>
+</section>
+
+<section class="not-found-recent" aria-labelledby="recent-posts-title">
+  <h2 id="recent-posts-title">Recent writing</h2>
+  <ul class="not-found-posts">
+    {% for post in site.posts limit: 3 %}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%B %d, %Y' }}</time>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
