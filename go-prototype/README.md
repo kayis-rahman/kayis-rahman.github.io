@@ -5,7 +5,7 @@ description: How the Go overlay builds portfolio pages alongside Jekyll's suppor
 permalink: /go-prototype/
 ---
 
-The GitHub Pages workflow builds the full Jekyll site, then overlays Go-generated home, projects, about, resume, contact, writing index, and every dated Markdown post. Both generators read the existing source Markdown; the Go generator does not move or rewrite it. The overlay preserves the current canonical paths, including the nested category/date routes for all five posts and the no-trailing-slash `/contact` URL; `/contact/` remains available as a compatibility alias canonicalized to `/contact`. Jekyll continues to supply auxiliary routes such as `/categories/`, `/tags/`, `/search/`, `/subscribe/`, RSS, sitemap, and other supporting assets.
+The GitHub Pages workflow builds the full Jekyll site, then overlays Go-generated home, projects, about, resume, contact, writing index, and each published, dated Markdown post whose date is not in the future. Both generators read the existing source Markdown; the Go generator does not move or rewrite it. The overlay preserves the current canonical paths, including the nested category/date routes for all five posts and the no-trailing-slash `/contact` URL; `/contact/` remains available as a compatibility alias canonicalized to `/contact`. Jekyll continues to supply auxiliary routes such as `/categories/`, `/tags/`, `/search/`, `/subscribe/`, RSS, sitemap, and other supporting assets.
 
 The generator validates its output destination after resolving symlinks and rejects any path that overlaps or contains the source repository before removing output. To roll back the overlay, remove the `Overlay Go-generated pages` workflow step; Jekyll remains a complete fallback.
 
@@ -30,7 +30,7 @@ Open `http://localhost:4173/`. Run tests with `go test ./...` from `go-prototype
 - `/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html`
 - `/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html`
 
-Routes derive from source post categories, dates, and filenames. Posts retain their full Markdown bodies, canonical metadata, original inline links, and series navigation; Part 5 is still marked coming soon because it is not present in the source tree. The projects page now renders every existing project rather than only Synapse.
+Post routes derive from source categories, dates, and filenames; unpublished and future-dated posts are excluded from generated routes, listings, latest-post selection, and series navigation. Posts retain their full Markdown bodies, canonical metadata, original inline links, and series navigation; Part 5 is still marked coming soon because it is not present in the source tree. The projects page now renders every existing project rather than only Synapse.
 
 The homepage offers three keyboard-operable style variants (Signal, Field notes, Systems). Variant selection is client-side and leaves all content and links unchanged. Motion is limited to restrained color transitions; reduced-motion preferences are honored. No separate JavaScript bundle or external images are needed; the existing `img/home.jpg` asset is copied into the output.
 

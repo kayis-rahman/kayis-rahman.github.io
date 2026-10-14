@@ -119,9 +119,9 @@ func TestLoadPostsExcludesUnpublishedAndFuturePosts(t *testing.T) {
 		t.Fatal(err)
 	}
 	files := map[string]string{
-		"2020-01-01-published.md": "---\ntitle: Published\ndate: 2020-01-01\n---\nVisible\n",
+		"2020-01-01-published.md":   "---\ntitle: Published\ndate: 2020-01-01\n---\nVisible\n",
 		"2020-01-02-unpublished.md": "---\ntitle: Unpublished\ndate: 2020-01-02\npublished: false\n---\nHidden\n",
-		"2020-01-03-future.md": "---\ntitle: Future\ndate: " + time.Now().Add(24*time.Hour).Format("2006-01-02 15:04:05 -0700") + "\n---\nHidden\n",
+		"2020-01-03-future.md":      "---\ntitle: Future\ndate: " + time.Now().Add(24*time.Hour).Format("2006-01-02 15:04:05 -0700") + "\n---\nHidden\n",
 	}
 	for name, contents := range files {
 		if err := os.WriteFile(filepath.Join(postsDir, name), []byte(contents), 0644); err != nil {
