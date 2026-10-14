@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
@@ -78,6 +79,32 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestLoadPostsExcludesUnpublishedAndFuturePosts(t *testing.T) {
+	root := t.TempDir()
+	postsDir := filepath.Join(root, "_posts")
+	if err := os.MkdirAll(postsDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	files := map[string]string{
+		"2020-01-01-published.md": "---\ntitle: Published\ndate: 2020-01-01\n---\nVisible\n",
+		"2020-01-02-unpublished.md": "---\ntitle: Unpublished\ndate: 2020-01-02\npublished: false\n---\nHidden\n",
+		"2020-01-03-future.md": "---\ntitle: Future\ndate: " + time.Now().Add(24*time.Hour).Format("2006-01-02 15:04:05 -0700") + "\n---\nHidden\n",
+	}
+	for name, contents := range files {
+		if err := os.WriteFile(filepath.Join(postsDir, name), []byte(contents), 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	posts, err := loadPosts(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(posts) != 1 || posts[0].Meta.Title != "Published" {
+		t.Fatalf("loadPosts() = %#v, want only the eligible Published post", posts)
 	}
 }
 

@@ -25,6 +25,7 @@ type FrontMatter struct {
 	Tags         []string `yaml:"tags"`
 	Series       string   `yaml:"series_title"`
 	LegacySeries string   `yaml:"series"`
+	Published    *bool    `yaml:"published"`
 	SeriesPart   int      `yaml:"series_part"`
 }
 type Page struct {
@@ -148,12 +149,16 @@ func writeRoute(out, route string, page Page) error {
 	}
 	return writePage(filepath.Join(out, filepath.FromSlash(name)), page)
 }
-func postRoute(meta FrontMatter, filename string) (string, time.Time, error) {
-	dateText := meta.Date
-	if len(dateText) < 10 {
-		return "", time.Time{}, fmt.Errorf("invalid post date %q", dateText)
+func parsePostDate(dateText string) (time.Time, error) {
+	for _, layout := range []string{"2006-01-02 15:04:05 -0700", time.RFC3339, "2006-01-02"} {
+		if date, err := time.Parse(layout, dateText); err == nil {
+			return date, nil
+		}
 	}
-	date, err := time.Parse("2006-01-02", dateText[:10])
+	return time.Time{}, fmt.Errorf("invalid post date %q", dateText)
+}
+func postRoute(meta FrontMatter, filename string) (string, time.Time, error) {
+	date, err := parsePostDate(meta.Date)
 	if err != nil {
 		return "", time.Time{}, err
 	}
@@ -179,12 +184,15 @@ func loadPosts(root string) ([]Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		if meta.Date == "" || meta.Title == "" {
+		if meta.Date == "" || meta.Title == "" || (meta.Published != nil && !*meta.Published) {
 			continue
 		}
 		route, date, err := postRoute(meta, file)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", file, err)
+		}
+		if date.After(time.Now()) {
+			continue
 		}
 		htmlBody, err := renderMarkdown(body)
 		if err != nil {
