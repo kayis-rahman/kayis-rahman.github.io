@@ -30,8 +30,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical"},
 		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical"},
 		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html", "SELF-HOSTING LLM INFERENCE", "Previous: The GPU Graveyard", "Is It Actually Worth It?"},
-		"contact.html":       {"mailto:kaisbk1@gmail.com", "github.com/kayis-rahman", "linkedin.com/in/kayisrahman/", "canonical"},
-		"contact/index.html": {"mailto:kaisbk1@gmail.com", "canonical", "https://kayis-rahman.github.io/contact"},
+		"contact.html": {"mailto:kaisbk1@gmail.com", "twitter.com/kayisrahman", "github.com/kayis-rahman", "linkedin.com/in/kayisrahman/", "canonical", "https://kayis-rahman.github.io/contact"},
 	}
 	for file, needles := range checks {
 		data, err := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
@@ -72,6 +71,24 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	css, err := os.ReadFile(filepath.Join(tmp, "prototype-site", "prototype.css"))
 	if err != nil || !strings.Contains(string(css), "prefers-reduced-motion") || !strings.Contains(string(css), ".theme-toggle") {
 		t.Errorf("generated styles are missing reduced-motion support or theme-toggle styling: %v", err)
+	}
+	if err == nil && !strings.Contains(string(css), ".table-scroll{max-width:100%;overflow-x:auto") {
+		t.Errorf("generated styles do not constrain wide tables")
+	}
+	for file, header := range map[string]string{
+		"resume/index.html": "<th>Language</th>",
+		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": "<th>Setup</th>",
+	} {
+		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
+		if readErr != nil {
+			t.Fatalf("read generated table page %s: %v", file, readErr)
+		}
+		if !strings.Contains(string(data), `<div class="table-scroll" role="region" aria-label="Scrollable table" tabindex="0"><table>`) || !strings.Contains(string(data), header) {
+			t.Errorf("%s does not expose its rendered table as a keyboard-scrollable region", file)
+		}
+	}
+	if _, err := os.Stat(filepath.Join(tmp, "prototype-site", "contact", "index.html")); !os.IsNotExist(err) {
+		t.Errorf("unexpected noncanonical /contact/ route: %v", err)
 	}
 	err = filepath.WalkDir(filepath.Join(tmp, "prototype-site"), func(path string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {

@@ -29,6 +29,7 @@ url: "https://kayis-rahman.github.io" # the base hostname & protocol for your si
 author: Kayis Rahman
 author_bio: "Staff Security Engineer at Qualcomm. I write about PKI, Java, LLM inference, and building things on the side."
 github_username: kayis-rahman
+twitter_username: kayisrahman
 linkedin_username: kayisrahman
 google_analytics: G-5TTZSZQHPY
 disable_disk_cache: false
