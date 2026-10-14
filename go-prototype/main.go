@@ -205,25 +205,26 @@ func loadPosts(root string) ([]Post, error) {
 }
 func postArticle(posts []Post, i int) template.HTML {
 	body := string(posts[i].HTML)
-	if posts[i].Meta.SeriesPart == 0 {
+	current := posts[i].Meta
+	if current.SeriesPart == 0 || current.LegacySeries == "" {
 		return template.HTML(body)
 	}
-	series := `<nav class="series-nav" aria-label="Self-hosting series navigation"><p class="eyebrow">SELF-HOSTING LLM INFERENCE · PART ` + fmt.Sprint(posts[i].Meta.SeriesPart) + ` OF 5</p>`
+	series := `<nav class="series-nav" aria-label="Series navigation"><p class="eyebrow">` + html.EscapeString(strings.ToUpper(current.LegacySeries)) + ` · PART ` + fmt.Sprint(current.SeriesPart) + ` OF 5</p>`
 	for _, post := range posts {
 		part := post.Meta.SeriesPart
-		if part == 0 || part == posts[i].Meta.SeriesPart {
+		if post.Meta.LegacySeries != current.LegacySeries || part == 0 || part == current.SeriesPart {
 			continue
 		}
-		if part == posts[i].Meta.SeriesPart-1 {
+		if part == current.SeriesPart-1 {
 			label := strings.Split(post.Meta.Title, " — ")[0]
 			series += `<a href="` + html.EscapeString(post.URL) + `">← Previous: ` + html.EscapeString(label) + `</a>`
 		}
-		if part == posts[i].Meta.SeriesPart+1 {
+		if part == current.SeriesPart+1 {
 			label := strings.Split(post.Meta.Title, " — ")[0]
 			series += `<a href="` + html.EscapeString(post.URL) + `">Next: ` + html.EscapeString(label) + ` →</a>`
 		}
 	}
-	if posts[i].Meta.SeriesPart == 4 {
+	if current.LegacySeries == "Self-Hosting LLM Inference on Rented GPUs" && current.SeriesPart == 4 {
 		series += `<p>Part 5 — Is It Actually Worth It? <span class="coming-soon">Coming soon</span></p>`
 	}
 	series += `</nav>`

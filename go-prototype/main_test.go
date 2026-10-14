@@ -87,6 +87,31 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	}
 }
 
+func TestPostArticleKeepsSeriesNavigationWithinSeries(t *testing.T) {
+	posts := []Post{
+		{Meta: FrontMatter{Title: "Previous — Part 1", LegacySeries: "Series A", SeriesPart: 1}, URL: "/a/previous.html"},
+		{Meta: FrontMatter{Title: "Current — Part 2", LegacySeries: "Series A", SeriesPart: 2}},
+		{Meta: FrontMatter{Title: "Other Previous — Part 1", LegacySeries: "Series B", SeriesPart: 1}, URL: "/b/previous.html"},
+		{Meta: FrontMatter{Title: "Next — Part 3", LegacySeries: "Series A", SeriesPart: 3}, URL: "/a/next.html"},
+		{Meta: FrontMatter{Title: "Other Next — Part 3", LegacySeries: "Series B", SeriesPart: 3}, URL: "/b/next.html"},
+	}
+	article := string(postArticle(posts, 1))
+	for _, expected := range []string{`href="/a/previous.html"`, `href="/a/next.html"`, "SERIES A · PART 2 OF 5"} {
+		if !strings.Contains(article, expected) {
+			t.Errorf("series article missing %q: %s", expected, article)
+		}
+	}
+	for _, unexpected := range []string{`href="/b/previous.html"`, `href="/b/next.html"`} {
+		if strings.Contains(article, unexpected) {
+			t.Errorf("series article includes cross-series destination %q: %s", unexpected, article)
+		}
+	}
+	unassigned := []Post{{Meta: FrontMatter{Title: "Unassigned", SeriesPart: 1}}}
+	if article := string(postArticle(unassigned, 0)); strings.Contains(article, `class="series-nav"`) {
+		t.Errorf("post without series identity has series navigation: %s", article)
+	}
+}
+
 func TestLoadPostsExcludesUnpublishedAndFuturePosts(t *testing.T) {
 	root := t.TempDir()
 	postsDir := filepath.Join(root, "_posts")

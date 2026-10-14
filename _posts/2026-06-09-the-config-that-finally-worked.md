@@ -5,7 +5,7 @@ date: 2026-06-09
 categories: [llm, infrastructure, self-hosting]
 tags: [vllm, gpuhub, qwen3, self-hosted-llm, turboquant, rtx-5090, claude-code]
 description: "The full install script, every vLLM flag explained, the chat template patch that makes Claude Code tool calls work, and the settings.json that ties it together. Part 4 of 5."
-series: self-hosting-llm
+series: "Self-Hosting LLM Inference on Rented GPUs"
 series_part: 4
 series_title: "Why I Stopped Paying Per Token"
 ---
