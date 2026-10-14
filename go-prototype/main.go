@@ -152,7 +152,18 @@ func writeRoute(out, route string, page Page) error {
 	if strings.HasSuffix(route, "/") {
 		name += "index.html"
 	}
-	return writePage(filepath.Join(out, filepath.FromSlash(name)), page)
+	root, err := resolvePath(out)
+	if err != nil {
+		return fmt.Errorf("resolve output root: %w", err)
+	}
+	target, err := resolvePath(filepath.Join(root, filepath.FromSlash(name)))
+	if err != nil {
+		return fmt.Errorf("resolve route %q: %w", route, err)
+	}
+	if !pathContains(root, target) || target == root {
+		return fmt.Errorf("route %q escapes output root %q", route, root)
+	}
+	return writePage(target, page)
 }
 func parsePostDate(dateText string) (time.Time, error) {
 	for _, layout := range []string{"2006-01-02 15:04:05 -0700", time.RFC3339, "2006-01-02"} {
@@ -324,11 +335,6 @@ func main() {
 	}
 	writeSourcePage("about.markdown", "/about/")
 	writeSourcePage("resume.markdown", "/resume/")
-	contact := `<p>For professional enquiries, please get in touch by email or connect through a verified profile.</p><p class="actions"><a class="button" href="mailto:kaisbk1@gmail.com">Email Kayis ↗</a><a class="text-link" href="https://twitter.com/kayisrahman" rel="noopener noreferrer">Twitter ↗</a><a class="text-link" href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a><a class="text-link" href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a></p>`
-	contactPage := Page{Title: "Contact", Description: "Contact Kayis Rahman by email, GitHub, or LinkedIn.", Canonical: "https://kayis-rahman.github.io/contact", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: template.HTML(contact)}
-	if err := writeRoute(out, "/contact.html", contactPage); err != nil {
-		fatal(err)
-	}
 
 	var listing strings.Builder
 	for _, post := range posts {
@@ -343,7 +349,7 @@ func main() {
 	if err := writeRoute(out, "/", Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: "https://kayis-rahman.github.io/", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", Variant: "systems", HTML: template.HTML(homeBody), HideTitle: true}); err != nil {
 		fatal(err)
 	}
-	fmt.Printf("Built home, about, resume, contact, projects, posts index, and %d writing posts into %s\n", len(posts), out)
+	fmt.Printf("Built home, about, resume, projects, posts index, and %d writing posts into %s\n", len(posts), out)
 }
 func fatal(err error) { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
 

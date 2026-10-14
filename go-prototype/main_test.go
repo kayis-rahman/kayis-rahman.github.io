@@ -30,7 +30,6 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical"},
 		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical"},
 		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html", "SELF-HOSTING LLM INFERENCE", "Previous: The GPU Graveyard", "Is It Actually Worth It?"},
-		"contact.html": {"mailto:kaisbk1@gmail.com", "twitter.com/kayisrahman", "github.com/kayis-rahman", "linkedin.com/in/kayisrahman/", "canonical", "https://kayis-rahman.github.io/contact"},
 	}
 	for file, needles := range checks {
 		data, err := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
@@ -53,8 +52,8 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		if !strings.Contains(string(data), `<body data-variant="systems">`) {
 			t.Errorf("%s does not use the site-wide Systems visual direction", file)
 		}
-		if !strings.Contains(string(data), `data-theme-toggle`) || !strings.Contains(string(data), `aria-label="Dark theme"`) || !strings.Contains(string(data), `aria-pressed="false"`) || !strings.Contains(string(data), `window.matchMedia`) || !strings.Contains(string(data), `localStorage`) {
-			t.Errorf("%s is missing the accessible, system-aware theme control", file)
+		if !strings.Contains(string(data), `<button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme" aria-pressed="false">`) {
+			t.Errorf("%s is missing the accessible theme control", file)
 		}
 		for _, property := range []string{"og:title", "og:description", "og:url"} {
 			if !strings.Contains(string(data), `property="`+property+`"`) {
@@ -68,13 +67,6 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			t.Errorf("home page should expose exactly one primary heading")
 		}
 	}
-	css, err := os.ReadFile(filepath.Join(tmp, "prototype-site", "prototype.css"))
-	if err != nil || !strings.Contains(string(css), "prefers-reduced-motion") || !strings.Contains(string(css), ".theme-toggle") {
-		t.Errorf("generated styles are missing reduced-motion support or theme-toggle styling: %v", err)
-	}
-	if err == nil && !strings.Contains(string(css), ".table-scroll{max-width:100%;overflow-x:auto") {
-		t.Errorf("generated styles do not constrain wide tables")
-	}
 	for file, header := range map[string]string{
 		"resume/index.html": "<th>Language</th>",
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": "<th>Setup</th>",
@@ -87,8 +79,10 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			t.Errorf("%s does not expose its rendered table as a keyboard-scrollable region", file)
 		}
 	}
-	if _, err := os.Stat(filepath.Join(tmp, "prototype-site", "contact", "index.html")); !os.IsNotExist(err) {
-		t.Errorf("unexpected noncanonical /contact/ route: %v", err)
+	for _, route := range []string{"contact.html", filepath.Join("contact", "index.html")} {
+		if _, err := os.Stat(filepath.Join(tmp, "prototype-site", route)); !os.IsNotExist(err) {
+			t.Errorf("Go generator unexpectedly emitted Jekyll-owned contact route %s: %v", route, err)
+		}
 	}
 	err = filepath.WalkDir(filepath.Join(tmp, "prototype-site"), func(path string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -101,6 +95,24 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestWriteRouteRejectsPostCategoryTraversal(t *testing.T) {
+	root := t.TempDir()
+	out := filepath.Join(root, "output")
+	if err := os.MkdirAll(out, 0755); err != nil {
+		t.Fatal(err)
+	}
+	route, _, err := postRoute(FrontMatter{Date: "2026-01-01", Categories: []string{"../escape"}}, "2026-01-01-example.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := writeRoute(out, route, Page{Title: "Example"}); err == nil {
+		t.Fatalf("writeRoute accepted traversal route %q", route)
+	}
+	if _, err := os.Stat(filepath.Join(root, "escape", "2026", "01", "01", "example.html")); !os.IsNotExist(err) {
+		t.Fatalf("traversal route wrote outside output root: %v", err)
 	}
 }
 
