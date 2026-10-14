@@ -22,7 +22,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		t.Fatalf("generator failed: %v\n%s", err, output)
 	}
 	checks := map[string][]string{
-		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<html lang=\"en\" data-theme=\"dark\"", "data-theme-toggle", "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a dark, structured console aesthetic"},
+		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<html lang=\"en\" data-theme=\"dark\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a dark, structured console aesthetic"},
 		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
 		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked"},
 		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical"},
@@ -46,11 +46,16 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		if strings.Contains(string(data), `href="#"`) {
 			t.Errorf("%s contains a dead fragment link", file)
 		}
+		for _, destination := range []string{`href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`} {
+			if !strings.Contains(string(data), destination) {
+				t.Errorf("%s is missing shared navigation destination %s", file, destination)
+			}
+		}
 		if !strings.Contains(string(data), `<body data-variant="systems">`) {
 			t.Errorf("%s does not use the site-wide Systems visual direction", file)
 		}
-		if !strings.Contains(string(data), `data-theme-toggle`) {
-			t.Errorf("%s is missing the site-wide theme toggle", file)
+		if strings.Contains(string(data), `data-theme-toggle`) || strings.Contains(string(data), `localStorage`) {
+			t.Errorf("%s contains optional theme-toggle behavior", file)
 		}
 		for _, property := range []string{"og:title", "og:description", "og:url"} {
 			if !strings.Contains(string(data), `property="`+property+`"`) {
@@ -65,7 +70,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		}
 	}
 	css, err := os.ReadFile(filepath.Join(tmp, "prototype-site", "prototype.css"))
-	if err != nil || !strings.Contains(string(css), "prefers-reduced-motion") {
+	if err != nil || !strings.Contains(string(css), "prefers-reduced-motion") || strings.Contains(string(css), ".theme-toggle") {
 		t.Errorf("generated styles are missing reduced-motion support: %v", err)
 	}
 	err = filepath.WalkDir(filepath.Join(tmp, "prototype-site"), func(path string, d os.DirEntry, walkErr error) error {
