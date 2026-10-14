@@ -24,8 +24,7 @@ type FrontMatter struct {
 	Date         string   `yaml:"date"`
 	Categories   []string `yaml:"categories"`
 	Tags         []string `yaml:"tags"`
-	Series       string   `yaml:"series_title"`
-	LegacySeries string   `yaml:"series"`
+	Series       string   `yaml:"series"`
 	Published    *bool    `yaml:"published"`
 	SeriesPart   int      `yaml:"series_part"`
 }
@@ -222,13 +221,13 @@ func loadPosts(root string) ([]Post, error) {
 func postArticle(posts []Post, i int) template.HTML {
 	body := string(posts[i].HTML)
 	current := posts[i].Meta
-	if current.SeriesPart == 0 || current.LegacySeries == "" {
+	if current.SeriesPart == 0 || current.Series == "" {
 		return template.HTML(body)
 	}
-	series := `<nav class="series-nav" aria-label="Series navigation"><p class="eyebrow">` + html.EscapeString(strings.ToUpper(current.LegacySeries)) + ` · PART ` + fmt.Sprint(current.SeriesPart) + ` OF 5</p>`
+	series := `<nav class="series-nav" aria-label="Series navigation"><p class="eyebrow">` + html.EscapeString(strings.ToUpper(current.Series)) + ` · PART ` + fmt.Sprint(current.SeriesPart) + ` OF 5</p>`
 	for _, post := range posts {
 		part := post.Meta.SeriesPart
-		if post.Meta.LegacySeries != current.LegacySeries || part == 0 || part == current.SeriesPart {
+		if post.Meta.Series != current.Series || part == 0 || part == current.SeriesPart {
 			continue
 		}
 		if part == current.SeriesPart-1 {
@@ -240,7 +239,7 @@ func postArticle(posts []Post, i int) template.HTML {
 			series += `<a href="` + html.EscapeString(post.URL) + `">Next: ` + html.EscapeString(label) + ` →</a>`
 		}
 	}
-	if current.LegacySeries == "Self-Hosting LLM Inference on Rented GPUs" && current.SeriesPart == 4 {
+	if current.Series == "Self-Hosting LLM Inference on Rented GPUs" && current.SeriesPart == 4 {
 		series += `<p>Part 5 — Is It Actually Worth It? <span class="coming-soon">Coming soon</span></p>`
 	}
 	series += `</nav>`
@@ -338,7 +337,7 @@ func main() {
 
 	var listing strings.Builder
 	for _, post := range posts {
-		listing.WriteString(`<section class="post-card"><p class="eyebrow">` + post.Date.Format("02 Jan 2006") + ` · ` + strings.Join(post.Meta.Categories, " / ") + `</p><h2><a href="` + html.EscapeString(post.URL) + `">` + html.EscapeString(post.Meta.Title) + `</a></h2><p>` + html.EscapeString(post.Meta.Description) + `</p></section>`)
+		listing.WriteString(`<section class="post-card"><p class="eyebrow">` + post.Date.Format("02 Jan 2006") + ` · ` + html.EscapeString(strings.Join(post.Meta.Categories, " / ")) + `</p><h2><a href="` + html.EscapeString(post.URL) + `">` + html.EscapeString(post.Meta.Title) + `</a></h2><p>` + html.EscapeString(post.Meta.Description) + `</p></section>`)
 	}
 	if err := writeRoute(out, "/posts/", Page{Title: "Writing", Description: "Writing on security engineering, PKI, Java, and self-hosted LLM inference.", Canonical: "https://kayis-rahman.github.io/posts/", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: template.HTML(listing.String())}); err != nil {
 		fatal(err)
