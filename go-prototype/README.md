@@ -5,7 +5,7 @@ description: How the Go overlay builds portfolio pages alongside Jekyll's suppor
 permalink: /go-prototype/
 ---
 
-The GitHub Pages workflow builds the full Jekyll site, then overlays Go-generated home, projects, about, resume, contact, writing index, and each published, dated Markdown post whose date is not in the future. Both generators read the existing source Markdown; the Go generator does not move or rewrite it. The overlay preserves the current canonical paths, including the nested category/date routes for all five posts and the no-trailing-slash `/contact` URL; `/contact/` remains available as a compatibility alias canonicalized to `/contact`. Jekyll continues to supply auxiliary routes such as `/categories/`, `/tags/`, `/search/`, `/subscribe/`, RSS, sitemap, and other supporting assets.
+The GitHub Pages workflow builds the full Jekyll site, then overlays Go-generated home, projects, about, resume, contact, writing index, and each published, dated Markdown post whose date is not in the future. Both generators read the existing source Markdown; the Go generator does not move or rewrite it. The overlay preserves the current canonical paths, including the nested category/date routes for all five posts and the no-trailing-slash `/contact` URL. Jekyll continues to supply auxiliary routes such as `/categories/`, `/tags/`, `/search/`, `/subscribe/`, RSS, sitemap, and other supporting assets.
 
 The generator validates its output destination after resolving symlinks and rejects any path that overlaps or contains the source repository before removing output. To roll back the overlay, remove the `Overlay Go-generated pages` workflow step; Jekyll remains a complete fallback.
 
@@ -23,7 +23,7 @@ Open `http://localhost:4173/`. Run tests with `go test ./...` from `go-prototype
 
 ## Generated routes
 
-- `/`, `/about/`, `/resume/`, `/contact`, `/contact/` (canonical alias), `/projects/`, `/posts/`
+- `/`, `/about/`, `/resume/`, `/contact`, `/projects/`, `/posts/`
 - `/career/engineering/2026/05/17/ideas-to-production.html`
 - `/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html`
 - `/llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html`
