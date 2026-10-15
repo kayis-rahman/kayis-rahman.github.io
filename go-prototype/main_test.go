@@ -64,10 +64,10 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		t.Fatalf("generator failed: %v\n%s", err, output)
 	}
 	checks := map[string][]string{
-		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", `<title>Security Engineering &amp; Systems · Kayis Rahman</title>`, `<meta property="og:title" content="Security Engineering &amp; Systems · Kayis Rahman">`, `<meta name="twitter:title" content="Security Engineering &amp; Systems · Kayis Rahman">`, "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
-		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
-		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `<p class="post-subtitle">I was on the $20 Claude Pro plan and hitting rate limits every other session.</p>`, `Part 1 ended with one change in ~/.claude/settings.json:`, `Part 2 ended with a working model and a working framework. What it did not have was a working GPU instance.`, `Part 3 ended with a working GPU instance. cuInit returned 0. PyTorch saw the GPU. Nothing was broken.`, `<span class="reading-time">11 mins read</span>`, `href="/tags/#career"`, `href="/tags/#vllm"`},
-		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
+		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", `<title>Kayis Rahman</title>`, `<meta property="og:title" content="Kayis Rahman">`, `<meta name="twitter:title" content="Kayis Rahman">`, "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
+		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates", `<title>Projects · Kayis Rahman</title>`, `<meta property="og:title" content="Projects">`, `<meta property="og:description" content="Things I&#39;m building outside of work.">`, `<meta name="twitter:title" content="Projects">`},
+		"posts/index.html":    {"Posts", "Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked", `<title>Posts · Kayis Rahman</title>`, `<meta property="og:title" content="Posts">`, `<meta property="og:description" content="Writing about PKI, LLM inference, Java, and building on the side.">`, `<meta name="twitter:title" content="Posts">`, `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `<p class="post-subtitle">I was on the $20 Claude Pro plan and hitting rate limits every other session.</p>`, `Part 1 ended with one change in ~/.claude/settings.json:`, `Part 2 ended with a working model and a working framework. What it did not have was a working GPU instance.`, `Part 3 ended with a working GPU instance. cuInit returned 0. PyTorch saw the GPU. Nothing was broken.`, `<span class="reading-time">11 mins read</span>`, `href="/tags/#career"`, `href="/tags/#vllm"`},
+		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<title>Ideas to Production — Ten Years, Five Companies, One Direction · Kayis Rahman</title>`, `<meta property="og:title" content="Ideas to Production — Ten Years, Five Companies, One Direction">`, `<meta name="twitter:title" content="Ideas to Production — Ten Years, Five Companies, One Direction">`, `<p class="post-meta">Posted by Kayis Rahman on May 17, 2026 · 11 mins read</p>`, `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
 		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"The Cost Maths", "Part 1", "canonical"},
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical", `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html" title="Why I Stopped Paying Per Token — Part 1 of 5">← Previous Post`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html" title="The GPU Graveyard: cuInit 999, Broken Hosts, and How to Verify an Instance — Part 3 of 5">Next Post →`, "Related Posts", `href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html"`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html"`, `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html"`},
 		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical", `<div id="toc"></div><div class="post-body">`, `<h2 id="the-error-that-tells-you-nothing">The Error That Tells You Nothing</h2>`, `href="#the-error-that-tells-you-nothing"`},
@@ -122,6 +122,11 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			assertFragmentLinksResolve(t, data)
 			if !strings.Contains(string(data), `<div id="toc"></div><div class="post-body">`) {
 				t.Errorf("%s is missing the shared table-of-contents and post-body targets", file)
+			}
+			for _, expected := range []string{`<p class="post-meta">Posted by Kayis Rahman on `, ` mins read</p>`, `<div id="comments" class="mt-5 pt-3"></div>`, `https://utteranc.es/client.js`, `kayis-rahman/kayis-rahman.github.io`, `issue-term','pathname`} {
+				if !strings.Contains(string(data), expected) {
+					t.Errorf("%s is missing post metadata or Utterances integration %q", file, expected)
+				}
 			}
 		}
 		if file == "llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html" {
@@ -218,6 +223,44 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			t.Errorf("%s does not use its front-matter image for social metadata", file)
 		}
 	}
+	for file, expected := range map[string][]string{
+		"index.html": {
+			`<title>Kayis Rahman</title>`, `<meta property="og:title" content="Kayis Rahman">`, `<meta name="twitter:title" content="Kayis Rahman">`,
+			`<meta property="og:description" content="Building automated trading systems and LLM inference infrastructure on the side.">`,
+		},
+		"about/index.html": {
+			`<title>About · Kayis Rahman</title>`, `<meta property="og:title" content="About">`, `<meta name="twitter:title" content="About">`,
+			`<meta property="og:description" content="Kerala roots. Cork now. Ten years of shipping software.">`,
+		},
+		"projects/index.html": {
+			`<title>Projects · Kayis Rahman</title>`, `<meta property="og:title" content="Projects">`, `<meta name="twitter:title" content="Projects">`,
+			`<meta property="og:description" content="Things I&#39;m building outside of work.">`,
+		},
+		"resume/index.html": {
+			`<title>Resume · Kayis Rahman</title>`, `<meta property="og:title" content="Resume">`, `<meta name="twitter:title" content="Resume">`,
+			`<meta property="og:description" content="Staff Security Engineer at Qualcomm. PKI, HSM, Java, Go.">`,
+		},
+		"posts/index.html": {
+			`<title>Posts · Kayis Rahman</title>`, `<meta property="og:title" content="Posts">`, `<meta name="twitter:title" content="Posts">`,
+			`<meta property="og:description" content="Writing about PKI, LLM inference, Java, and building on the side.">`,
+		},
+		"career/engineering/2026/05/17/ideas-to-production.html": {
+			`<title>Ideas to Production — Ten Years, Five Companies, One Direction · Kayis Rahman</title>`,
+			`<meta property="og:title" content="Ideas to Production — Ten Years, Five Companies, One Direction">`,
+			`<meta name="twitter:title" content="Ideas to Production — Ten Years, Five Companies, One Direction">`,
+			`<meta property="og:description" content="Ten years, five companies, two continents. A retrospective on what stayed the same across every job, stack, and city.">`,
+		},
+	} {
+		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
+		if readErr != nil {
+			t.Fatalf("read generated metadata page %s: %v", file, readErr)
+		}
+		for _, expectedOutput := range expected {
+			if !strings.Contains(string(data), expectedOutput) {
+				t.Errorf("%s is missing source-derived metadata %q", file, expectedOutput)
+			}
+		}
+	}
 	for file, expected := range map[string]struct {
 		image       string
 		schemaImage string
@@ -276,6 +319,16 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		}
 		if !homeOK || !blogOK || !categoryOK || homeItem["name"] != "Home" || blogItem["name"] != "Blog" || categoryItem["item"] != siteURL+"/categories/#"+tagSlug(category) {
 			t.Errorf("%s BreadcrumbList does not preserve its Home, Blog, and category ancestors: %#v", file, breadcrumbList)
+		}
+		for index, rawItem := range items {
+			item, itemOK := rawItem.(map[string]any)
+			if !itemOK || item["position"] != float64(index+1) {
+				t.Errorf("%s BreadcrumbList position %d is not sequential: %#v", file, index+1, rawItem)
+			}
+		}
+		articleItem, articleOK := items[len(items)-1].(map[string]any)
+		if !articleOK || articleItem["name"] != blogPosting["headline"] || articleItem["position"] != float64(len(items)) {
+			t.Errorf("%s BreadcrumbList article is not positioned after its categories: %#v", file, articleItem)
 		}
 	}
 	for _, route := range []string{"contact.html", filepath.Join("contact", "index.html")} {
