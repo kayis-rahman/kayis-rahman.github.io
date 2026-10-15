@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
 
 ## Project Overview
-Personal portfolio/blog site deployed on GitHub Pages (`kayis-rahman.github.io`). Jekyll 4.4 + `startbootstrap-clean-blog-jekyll` builds the site, then Go-generated home, projects, and representative post pages overlay those routes before deployment.
+Personal portfolio/blog site deployed on GitHub Pages (`kayis-rahman.github.io`). Jekyll 4.4 + `startbootstrap-clean-blog-jekyll` builds the base site; Go-generated portfolio and writing routes overlay it before deployment. See `go-prototype/README.md` for route ownership and generator usage.
 
 ## Structure
 ```
@@ -11,7 +11,7 @@ _config.yml          # Site config: title, navigation, remote theme, URL
 index.markdown       # Home page (layout: home)
 about.markdown       # About page (layout: page, permalink: /about/)
 resume.markdown      # Resume/CV (layout: page, permalink: /resume/)
-projects.html        # Projects page (layout: page, permalink: /projects/)
+projects.md          # Projects page source (Go-generated /projects/)
 contact.html         # Contact form (layout: page, permalink: /contact)
 subscribe.html       # Newsletter landing page (permalink: /subscribe/)
 search.html          # Client-side search (permalink: /search/)
@@ -31,10 +31,10 @@ assets/scripts.js    # Client-side JS: dark mode, reading progress, TOC, back-to
 # Install dependencies
 bundle install
 
-# Local dev server (requires restart after _config.yml changes)
+# Jekyll-only local preview (does not apply the Go overlay)
 bundle exec jekyll serve
 
-# Build static site to _site/
+# Build the Jekyll base output; deployment overlays Go-generated routes
 bundle exec jekyll build
 
 # Run on a specific port
@@ -53,7 +53,7 @@ rbenv install 3.3.8
 A `pre-push` hook runs `jekyll build` before each push to catch build errors early.
 
 ## Deployment
-Pushes to `main` trigger `.github/workflows/jekyll-gh-pages.yml`, which builds with Jekyll, overlays the Go-generated `/`, `/projects/`, and representative post routes, then deploys to GitHub Pages. No manual steps needed. Manual runs via `workflow_dispatch` on the Actions tab.
+Pushes to `main` trigger `.github/workflows/jekyll-gh-pages.yml`, which builds with Jekyll, overlays Go-generated portfolio and writing routes, then deploys to GitHub Pages. See `go-prototype/README.md` for route ownership. No manual steps needed. Manual runs via `workflow_dispatch` on the Actions tab.
 
 ## Theme Override Pattern
 The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides base layouts, includes, and SCSS. Custom files in `_layouts/`, `_includes/`, and `_sass/` **override** the theme's versions automatically — Jekyll prefers local files over theme-generated ones. To modify site-wide structure, edit the corresponding file in `_layouts/` or `_includes/` rather than trying to patch the theme.
@@ -61,7 +61,7 @@ The remote theme (`StartBootstrap/startbootstrap-clean-blog-jekyll`) provides ba
 ## Key Conventions
 - Pages use YAML frontmatter for layout, title, permalink, and background image
 - Background images are referenced as `'/assets/img/<name>.jpg'` in frontmatter
-- Navigation is defined in `_config.yml` under `navigation:` key (6 items: Home, About, Blog, Projects, Resume, Contact). Navbar also includes Search, RSS, and Theme Toggle icons hardcoded in `_includes/navbar.html`.
+- Jekyll navigation is defined in `_config.yml`; Go-generated routes use their own navigation. See `go-prototype/README.md` for Go route details.
 - `baseurl` is empty string (site deploys at repo root, not a subpath)
 - Blog posts go in `_posts/` with filenames like `YYYY-MM-DD-slug.markdown`
 
@@ -103,7 +103,7 @@ date: 2026-05-19
 categories: [llm, infrastructure, self-hosting]  # Use lowercase, for /categories/ page
 tags: [vllm, gpuhub, claude-code]                # Individual topic keywords
 description: "Unique 160-char description for meta tags and preview text"
-background: /assets/img/posts/hero.jpg           # Post hero/masthead image
+background: /assets/img/posts/hero.jpg           # Jekyll masthead and Go social-image fallback
 image: /assets/img/og-image.jpg                   # og:image meta tag (social sharing)
 word_count: 4500                                  # For schema.org BlogPosting
 reading_time: 12                                  # Displayed in post meta
@@ -112,7 +112,7 @@ series_part: 1
 ---
 ```
 
-Categories show up on `/categories/` page and post cards. Tags link to `/tags/` page. Use `background:` for post hero image (checked in `_layouts/post.html`), not `image:`.
+Categories show up on `/categories/` page and post cards. Tags link to `/tags/` page. Go-generated posts use `image:` or `background:` as social-image metadata; Jekyll post layouts use `background:` for mastheads.
 
 ## Growth Audit Pattern
 **Before writing new posts, audit for quick wins across three dimensions:**
@@ -132,32 +132,7 @@ Categories show up on `/categories/` page and post cards. Tags link to `/tags/` 
 See memory `growth_audit_pattern.md` for detailed approach and when to apply.
 
 ## Color System & Theme
-**Aesthetic: Brutalist minimalism + technical accent**
-
-- **Base**: Pure black (`#000000`) and white (`#ffffff`) — brutal, unforgettable, zero distraction
-- **Accent**: Bright blue (`#0099ff`) — reserved for CTAs (Subscribe, Read Blog), links, and interactive states
-- **Dark theme**: Black background, white text, same bright blue accent
-
-**CSS Variables** (`_sass/styles.scss`):
-```scss
-:root {
-  --color-primary: #0099ff;    // Bright blue accent only
-  --color-text: #000000;       // Black text on white
-  --color-bg: #ffffff;         // White background
-  --color-border: #cccccc;     // Light gray borders
-  --color-link-hover: #0099ff; // Bright blue on hover
-}
-
-html[data-theme="dark"] {
-  --color-primary: #0099ff;
-  --color-text: #ffffff;
-  --color-bg: #000000;
-  --color-border: #333333;
-  --color-link-hover: #0099ff;
-}
-```
-
-Use `var(--color-primary)` for all accents. Bright blue should appear only on interactive elements (buttons, links, hover states), not as a dominant color.
+Theme tokens and Go-generated route styles are defined in `_sass/styles.scss` and `go-prototype/main.go`; treat those implementations as the source of truth.
 
 **STRICT RULE: No Hardcoded Colors**
 Never use hex values (`#fff`), `rgb()`, or `rgba()` with literal numbers directly in component styles in `_sass/styles.scss`. Every color must come from a CSS variable defined in `:root` or `html[data-theme="dark"]`. When adding a new color:
@@ -168,13 +143,6 @@ Documented exceptions (leave as-is):
 - Syntax highlighting token colors in `.highlight` block (GitHub Solarized theme)
 - Print media colors in `@media print` (CSS variables unreliable in print)
 - Semantic alert colors in `blockquote.prompt-*` (tip/info/warning/danger)
-
-## Home Header Positioning
-Push name and buttons down slightly to reveal more of the face background image. Use `margin-top` on `.home-heading`:
-- Mobile: `20px`
-- Desktop: `30px`
-
-Don't change masthead padding — only adjust content margin. Keeps header visual balance while showing more of the background photo.
 
 ## Gotchas
 - **Before adding scripts/includes, check `default.html`** — it already includes `google-analytics.html`, `scripts.html`, `navbar.html`, and `footer.html`. Adding the same script to both caused duplicate GA tags. Remove the old include after adding to a new file.
