@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html"
@@ -20,21 +21,27 @@ import (
 )
 
 type FrontMatter struct {
-	Title       string   `yaml:"title"`
-	Subtitle    string   `yaml:"subtitle"`
-	Description string   `yaml:"description"`
-	Date        string   `yaml:"date"`
-	Categories  []string `yaml:"categories"`
-	Tags        []string `yaml:"tags"`
-	Series      string   `yaml:"series"`
-	Published   *bool    `yaml:"published"`
-	SeriesPart  int      `yaml:"series_part"`
+	Title          string   `yaml:"title"`
+	Subtitle       string   `yaml:"subtitle"`
+	Description    string   `yaml:"description"`
+	Date           string   `yaml:"date"`
+	Categories     []string `yaml:"categories"`
+	Tags           []string `yaml:"tags"`
+	Series         string   `yaml:"series"`
+	Image          string   `yaml:"image"`
+	Background     string   `yaml:"background"`
+	WordCount      int      `yaml:"word_count"`
+	ReadingTime    int      `yaml:"reading_time"`
+	LastModifiedAt string   `yaml:"last_modified_at"`
+	Published      *bool    `yaml:"published"`
+	SeriesPart     int      `yaml:"series_part"`
 }
 type Page struct {
 	Title, Subtitle, Description, Canonical, Date string
 	OGType, OGImage                               string
 	Variant                                       string
 	HTML                                          template.HTML
+	StructuredData                                []template.JS
 	HideTitle                                     bool
 }
 type Post struct {
@@ -44,12 +51,14 @@ type Post struct {
 	URL  string
 }
 
+const siteURL = "https://kayis-rahman.github.io"
+
 var frontMatter = regexp.MustCompile(`(?s)^---\s*\n(.*?)\n---\s*\n(.*)$`)
 var liquidRaw = regexp.MustCompile(`(?s)\{%\s*(?:raw|endraw)\s*%\}`)
 var markdownTable = regexp.MustCompile(`(?s)<table(?:\s[^>]*)?>.*?</table>`)
 var markdown = goldmark.New(goldmark.WithExtensions(extension.Table))
 var pageTemplate = template.Must(template.New("page").Parse(`<!doctype html>
-<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{{.Description}}"><title>{{.Title}} · Kayis Rahman</title><link rel="canonical" href="{{.Canonical}}"><meta property="og:type" content="{{.OGType}}"><meta property="og:title" content="{{.Title}} · Kayis Rahman"><meta property="og:description" content="{{.Description}}"><meta property="og:url" content="{{.Canonical}}"><meta property="og:image" content="{{.OGImage}}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{.Title}} · Kayis Rahman"><meta name="twitter:description" content="{{.Description}}"><meta name="twitter:image" content="{{.OGImage}}"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#10191b" media="(prefers-color-scheme: dark)"><script>(function(){var root=document.documentElement,key='theme',stored=null,media=null;try{stored=window.localStorage.getItem(key)}catch(e){}try{media=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null}catch(e){}var valid=stored==='light'||stored==='dark',state={theme:valid?stored:(media&&media.matches?'dark':'light'),hasStoredChoice:valid};state.syncThemeColor=function(theme){var color=theme==='dark'?'#10191b':'#ffffff';document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){meta.setAttribute('content',color)})};root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme);window.__kayisThemeState=state;if(media){var onChange=function(event){if(state.hasStoredChoice)return;state.theme=event.matches?'dark':'light';if(state.applyTheme)state.applyTheme(state.theme);else{root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme)}};if(media.addEventListener)media.addEventListener('change',onChange);else if(media.addListener)media.addListener(onChange)}})();</script><link rel="stylesheet" href="/prototype.css"></head><body data-variant="{{.Variant}}">
+<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{{.Description}}"><title>{{.Title}} · Kayis Rahman</title><link rel="canonical" href="{{.Canonical}}"><meta property="og:type" content="{{.OGType}}"><meta property="og:title" content="{{.Title}} · Kayis Rahman"><meta property="og:description" content="{{.Description}}"><meta property="og:url" content="{{.Canonical}}"><meta property="og:image" content="{{.OGImage}}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{.Title}} · Kayis Rahman"><meta name="twitter:description" content="{{.Description}}"><meta name="twitter:image" content="{{.OGImage}}"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#10191b" media="(prefers-color-scheme: dark)">{{range .StructuredData}}<script type="application/ld+json">{{.}}</script>{{end}}<script>(function(){var root=document.documentElement,key='theme',stored=null,media=null;try{stored=window.localStorage.getItem(key)}catch(e){}try{media=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null}catch(e){}var valid=stored==='light'||stored==='dark',state={theme:valid?stored:(media&&media.matches?'dark':'light'),hasStoredChoice:valid};state.syncThemeColor=function(theme){var color=theme==='dark'?'#10191b':'#ffffff';document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){meta.setAttribute('content',color)})};root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme);window.__kayisThemeState=state;if(media){var onChange=function(event){if(state.hasStoredChoice)return;state.theme=event.matches?'dark':'light';if(state.applyTheme)state.applyTheme(state.theme);else{root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme)}};if(media.addEventListener)media.addEventListener('change',onChange);else if(media.addListener)media.addListener(onChange)}})();</script><link rel="stylesheet" href="/prototype.css"></head><body data-variant="{{.Variant}}">
 <a class="skip-link" href="#main-content">Skip to main content</a><header class="site-header"><a class="wordmark" href="/" aria-label="Kayis Rahman home">KR<span>.</span></a><nav aria-label="Primary"><a href="/about/">About</a><a href="/posts/">Writing</a><a href="/projects/">Projects</a><a href="/resume/">Resume</a><a href="/contact">Contact</a><a href="/search/">Search</a><a href="/feed.xml">RSS</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme" aria-pressed="false"><span aria-hidden="true">◐</span> Dark mode</button></header>
 <main id="main-content">{{if not .HideTitle}}{{if .Date}}<p class="eyebrow">FIELD NOTES <span>·</span> {{.Date}}</p>{{end}}<h1>{{.Title}}</h1>{{if .Subtitle}}<p class="post-subtitle">{{.Subtitle}}</p>{{end}}{{if .Description}}<p class="lede">{{.Description}}</p>{{end}}{{end}}<article>{{.HTML}}</article></main><footer><span>Kayis Rahman · Cork, Ireland</span><nav aria-label="Social and site links"><a href="mailto:kaisbk1@gmail.com">Email</a><a href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a></nav></footer><script>(function(){var root=document.documentElement,button=document.querySelector('[data-theme-toggle]'),state=window.__kayisThemeState||{theme:root.getAttribute('data-theme')||'light',hasStoredChoice:false};if(!button)return;function update(){button.setAttribute('aria-pressed',String(root.getAttribute('data-theme')==='dark'))}function apply(theme){root.setAttribute('data-theme',theme);state.theme=theme;if(state.syncThemeColor)state.syncThemeColor(theme);update()}state.applyTheme=apply;apply(root.getAttribute('data-theme')||state.theme||'light');button.addEventListener('click',function(){var next=root.getAttribute('data-theme')==='dark'?'light':'dark';state.hasStoredChoice=true;apply(next);try{window.localStorage.setItem('theme',next)}catch(e){}})})();</script></body></html>`))
 
@@ -223,6 +232,126 @@ func loadPosts(root string) ([]Post, error) {
 
 var tagSlugPattern = regexp.MustCompile(`[^a-z0-9]+`)
 
+func absoluteSiteURL(path string) string {
+	base, _ := url.Parse(siteURL)
+	reference, err := url.Parse(path)
+	if err != nil {
+		return siteURL + "/" + strings.TrimLeft(path, "/")
+	}
+	return base.ResolveReference(reference).String()
+}
+
+func postImageURL(meta FrontMatter) string {
+	image := meta.Image
+	if image == "" {
+		image = meta.Background
+	}
+	if image == "" {
+		image = "/img/home.jpg"
+	}
+	return absoluteSiteURL(image)
+}
+
+func jsonLD(value any) (template.JS, error) {
+	data, err := json.Marshal(value)
+	if err != nil {
+		return "", err
+	}
+	return template.JS(data), nil
+}
+
+func postStructuredData(post Post) ([]template.JS, error) {
+	dateModified := post.Date
+	if post.Meta.LastModifiedAt != "" {
+		parsed, err := parsePostDate(post.Meta.LastModifiedAt)
+		if err != nil {
+			return nil, err
+		}
+		dateModified = parsed
+	}
+	blogPosting := map[string]any{
+		"@context":    "https://schema.org",
+		"@type":       "BlogPosting",
+		"headline":    post.Meta.Title,
+		"description": post.Meta.Description,
+		"author": map[string]string{
+			"@type": "Person",
+			"name":  "Kayis Rahman",
+			"url":   siteURL,
+		},
+		"publisher": map[string]any{
+			"@type": "Organization",
+			"name":  "Kayis Rahman",
+			"logo": map[string]string{
+				"@type": "ImageObject",
+				"url":   siteURL + "/favicon.svg",
+			},
+		},
+		"datePublished": post.Date.Format(time.RFC3339),
+		"dateModified":  dateModified.Format(time.RFC3339),
+		"url":           siteURL + post.URL,
+	}
+	if post.Meta.Image != "" {
+		blogPosting["image"] = absoluteSiteURL(post.Meta.Image)
+	} else if post.Meta.Background != "" {
+		blogPosting["image"] = absoluteSiteURL(post.Meta.Background)
+	}
+	if post.Meta.WordCount > 0 {
+		blogPosting["wordCount"] = post.Meta.WordCount
+	}
+	if post.Meta.ReadingTime > 0 {
+		blogPosting["timeRequired"] = fmt.Sprintf("PT%dM", post.Meta.ReadingTime)
+	}
+	breadcrumbs := []any{
+		map[string]any{"@type": "ListItem", "position": 1, "name": "Home", "item": siteURL},
+		map[string]any{"@type": "ListItem", "position": 2, "name": "Blog", "item": siteURL + "/posts/"},
+	}
+	for _, category := range post.Meta.Categories {
+		name := category
+		if len(name) > 0 {
+			name = strings.ToUpper(name[:1]) + name[1:]
+		}
+		breadcrumbs = append(breadcrumbs, map[string]any{
+			"@type":    "ListItem",
+			"position": 3,
+			"name":     name,
+			"item":     siteURL + "/posts/#" + category,
+		})
+	}
+	breadcrumbs = append(breadcrumbs, map[string]any{"@type": "ListItem", "position": 4, "name": post.Meta.Title})
+	breadcrumbList := map[string]any{
+		"@context":        "https://schema.org",
+		"@type":           "BreadcrumbList",
+		"itemListElement": breadcrumbs,
+	}
+	blogJSON, err := jsonLD(blogPosting)
+	if err != nil {
+		return nil, err
+	}
+	breadcrumbJSON, err := jsonLD(breadcrumbList)
+	if err != nil {
+		return nil, err
+	}
+	return []template.JS{blogJSON, breadcrumbJSON}, nil
+}
+
+func personStructuredData() (template.JS, error) {
+	return jsonLD(map[string]any{
+		"@context": "https://schema.org",
+		"@type":    "Person",
+		"name":     "Kayis Rahman",
+		"url":      siteURL,
+		"image":    absoluteSiteURL("/assets/img/about-me.png"),
+		"jobTitle": "Staff Security Engineer",
+		"worksFor": map[string]string{"@type": "Organization", "name": "Qualcomm"},
+		"sameAs": []string{
+			"https://twitter.com/kayisrahman",
+			"https://www.linkedin.com/in/kayisrahman",
+			"https://github.com/kayis-rahman",
+		},
+	})
+}
+
 func postArticle(posts []Post, i int) template.HTML {
 	current := posts[i]
 	body := string(current.HTML)
@@ -255,7 +384,7 @@ func postArticle(posts []Post, i int) template.HTML {
 		}
 		body += `</nav>`
 	}
-	shareURL := "https://kayis-rahman.github.io" + current.URL
+	shareURL := siteURL + current.URL
 	twitterQuery := url.Values{"text": {current.Meta.Title}, "url": {shareURL}, "via": {"kayisrahman"}}
 	linkedinQuery := url.Values{"url": {shareURL}}
 	body += `<nav class="post-share" aria-label="Share this post"><a href="` + html.EscapeString("https://twitter.com/intent/tweet?"+twitterQuery.Encode()) + `" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter/X">Twitter / X</a><a href="` + html.EscapeString("https://www.linkedin.com/sharing/share-offsite/?"+linkedinQuery.Encode()) + `" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">LinkedIn</a></nav>`
@@ -329,7 +458,11 @@ func main() {
 		fatal(errors.New("no dated writing posts found"))
 	}
 	for i, post := range posts {
-		if err := writeRoute(out, post.URL, Page{Title: post.Meta.Title, Subtitle: post.Meta.Subtitle, Description: post.Meta.Description, Canonical: "https://kayis-rahman.github.io" + post.URL, Date: post.Date.Format("02 Jan 2006"), OGType: "article", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: postArticle(posts, i)}); err != nil {
+		structuredData, err := postStructuredData(post)
+		if err != nil {
+			fatal(fmt.Errorf("%s structured data: %w", post.URL, err))
+		}
+		if err := writeRoute(out, post.URL, Page{Title: post.Meta.Title, Subtitle: post.Meta.Subtitle, Description: post.Meta.Description, Canonical: siteURL + post.URL, Date: post.Date.Format("02 Jan 2006"), OGType: "article", OGImage: postImageURL(post.Meta), HTML: postArticle(posts, i), StructuredData: structuredData}); err != nil {
 			fatal(err)
 		}
 	}
@@ -345,7 +478,7 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
-	if err := writeRoute(out, "/projects/", Page{Title: "Projects", Description: "A selection of independent engineering projects in AI infrastructure, security, and thoughtful software.", Canonical: "https://kayis-rahman.github.io/projects/", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: projectHTML}); err != nil {
+	if err := writeRoute(out, "/projects/", Page{Title: "Projects", Description: "A selection of independent engineering projects in AI infrastructure, security, and thoughtful software.", Canonical: siteURL + "/projects/", OGType: "website", OGImage: siteURL + "/img/home.jpg", HTML: projectHTML}); err != nil {
 		fatal(err)
 	}
 
@@ -358,7 +491,7 @@ func main() {
 		if e != nil {
 			fatal(e)
 		}
-		if e = writeRoute(out, route, Page{Title: meta.Title, Description: meta.Description, Canonical: "https://kayis-rahman.github.io" + route, OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: body}); e != nil {
+		if e = writeRoute(out, route, Page{Title: meta.Title, Description: meta.Description, Canonical: siteURL + route, OGType: "website", OGImage: siteURL + "/img/home.jpg", HTML: body}); e != nil {
 			fatal(e)
 		}
 	}
@@ -369,13 +502,17 @@ func main() {
 	for _, post := range posts {
 		listing.WriteString(`<section class="post-card"><p class="eyebrow">` + post.Date.Format("02 Jan 2006") + ` · ` + html.EscapeString(strings.Join(post.Meta.Categories, " / ")) + `</p><h2><a href="` + html.EscapeString(post.URL) + `">` + html.EscapeString(post.Meta.Title) + `</a></h2><p>` + html.EscapeString(post.Meta.Description) + `</p></section>`)
 	}
-	if err := writeRoute(out, "/posts/", Page{Title: "Writing", Description: "Writing on security engineering, PKI, Java, and self-hosted LLM inference.", Canonical: "https://kayis-rahman.github.io/posts/", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: template.HTML(listing.String())}); err != nil {
+	if err := writeRoute(out, "/posts/", Page{Title: "Writing", Description: "Writing on security engineering, PKI, Java, and self-hosted LLM inference.", Canonical: siteURL + "/posts/", OGType: "website", OGImage: siteURL + "/img/home.jpg", HTML: template.HTML(listing.String())}); err != nil {
 		fatal(err)
 	}
 
 	latest := posts[0]
 	homeBody := `<section class="hero"><p class="eyebrow">STAFF SECURITY ENGINEER <span>·</span> CORK, IRELAND</p><h1>Kayis<br><em>Rahman.</em></h1><p class="lede">` + html.EscapeString(homeMeta.Description) + `</p><div class="actions"><a class="button" href="/projects/">Explore my work <span>↗</span></a><a class="text-link" href="` + html.EscapeString(latest.URL) + `">Read the latest <span>↗</span></a></div><p class="focus-note">PKI · HSM · secure provisioning · systems that hold</p></section><section class="feature"><div><p class="eyebrow">SELECTED PROJECT · IN PROGRESS</p><h2>Synapse</h2><p>A self-hosted AI proxy routing inference between remote GPUs and lightweight local models.</p><a href="/projects/">View project details ↗</a></div><img src="/img/home.jpg" alt="" width="1200" height="700"></section><section class="latest"><p class="eyebrow">LATEST FIELD NOTE</p><h2><a href="` + html.EscapeString(latest.URL) + `">` + html.EscapeString(latest.Meta.Title) + `</a></h2><p>` + html.EscapeString(latest.Meta.Description) + `</p><a href="/posts/">Browse all writing ↗</a></section><section class="variant-picker" aria-labelledby="variant-title"><p class="eyebrow">LANDING DIRECTIONS · PROTOTYPE</p><h2 id="variant-title">Choose a visual direction</h2><p>Each direction uses the same content and routes; the presentation changes.</p><div class="variant-controls" role="group" aria-label="Landing page direction"><button type="button" data-variant-choice="signal" aria-pressed="false">01 · Signal</button><button type="button" data-variant-choice="fieldnotes" aria-pressed="false">02 · Field notes</button><button type="button" data-variant-choice="systems" aria-pressed="true">03 · Systems</button></div><p class="variant-description" aria-live="polite">Systems — a structured console aesthetic with project-first navigation.</p></section><section class="contact-strip"><p>Building careful systems. Curious about the hard edges.</p><a href="/contact">Start a conversation ↗</a></section><script>(function(){var body=document.body,buttons=document.querySelectorAll('[data-variant-choice]'),copy={signal:'Signal — high-contrast editorial, a clear first action, and one vivid technical accent.',fieldnotes:'Field notes — warm paper, compact typography, and writing-led discovery.',systems:'Systems — a structured console aesthetic with project-first navigation.'};buttons.forEach(function(button){button.addEventListener('click',function(){var value=button.getAttribute('data-variant-choice');body.setAttribute('data-variant',value);buttons.forEach(function(item){item.setAttribute('aria-pressed',String(item===button));});document.querySelector('.variant-description').textContent=copy[value];});});})();</script>`
-	if err := writeRoute(out, "/", Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: "https://kayis-rahman.github.io/", OGType: "website", OGImage: "https://kayis-rahman.github.io/img/home.jpg", Variant: "systems", HTML: template.HTML(homeBody), HideTitle: true}); err != nil {
+	person, err := personStructuredData()
+	if err != nil {
+		fatal(err)
+	}
+	if err := writeRoute(out, "/", Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: siteURL + "/", OGType: "website", OGImage: siteURL + "/img/home.jpg", Variant: "systems", HTML: template.HTML(homeBody), HideTitle: true, StructuredData: []template.JS{person}}); err != nil {
 		fatal(err)
 	}
 	fmt.Printf("Built home, about, resume, projects, posts index, and %d writing posts into %s\n", len(posts), out)

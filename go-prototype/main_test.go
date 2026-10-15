@@ -1,13 +1,40 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
 )
+
+var jsonLDScriptPattern = regexp.MustCompile(`(?s)<script type="application/ld\+json">(.*?)</script>`)
+
+func parseJSONLDScripts(t *testing.T, page []byte) []map[string]any {
+	t.Helper()
+	matches := jsonLDScriptPattern.FindAllSubmatch(page, -1)
+	schemas := make([]map[string]any, 0, len(matches))
+	for _, match := range matches {
+		var schema map[string]any
+		if err := json.Unmarshal(match[1], &schema); err != nil {
+			t.Fatalf("invalid JSON-LD script: %v", err)
+		}
+		schemas = append(schemas, schema)
+	}
+	return schemas
+}
+
+func schemaOfType(schemas []map[string]any, schemaType string) map[string]any {
+	for _, schema := range schemas {
+		if schema["@type"] == schemaType {
+			return schema
+		}
+	}
+	return nil
+}
 
 func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	root, err := filepath.Abs("..")
@@ -89,6 +116,75 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			t.Errorf("%s does not expose its rendered table as a keyboard-scrollable region", file)
 		}
 	}
+	homePage, err := os.ReadFile(filepath.Join(tmp, "prototype-site", "index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	homeSchemas := parseJSONLDScripts(t, homePage)
+	person := schemaOfType(homeSchemas, "Person")
+	if len(homeSchemas) != 1 || person == nil || person["url"] != siteURL || person["image"] != siteURL+"/assets/img/about-me.png" {
+		t.Errorf("home JSON-LD does not preserve its Person schema: %#v", homeSchemas)
+	}
+	for file, expected := range map[string]struct {
+		image       string
+		schemaImage string
+	}{
+		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"/assets/img/posts/ideas-to-production.jpg", "/assets/img/posts/ideas-to-production.jpg"},
+		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"/assets/img/posts/gpu.jpg", "/assets/img/posts/gpu.jpg"},
+		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"/assets/img/posts/model-hunt.jpg", "/assets/img/posts/model-hunt.jpg"},
+		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"/assets/img/posts/gpu.jpg", "/assets/img/posts/gpu.jpg"},
+		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"/img/home.jpg", ""},
+	} {
+		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
+		if readErr != nil {
+			t.Fatalf("read generated post %s: %v", file, readErr)
+		}
+		wantImage := siteURL + expected.image
+		if !strings.Contains(string(data), `<meta property="og:image" content="`+wantImage+`">`) || !strings.Contains(string(data), `<meta name="twitter:image" content="`+wantImage+`">`) {
+			t.Errorf("%s does not use its front-matter image for social metadata", file)
+		}
+		schemas := parseJSONLDScripts(t, data)
+		blogPosting := schemaOfType(schemas, "BlogPosting")
+		breadcrumbList := schemaOfType(schemas, "BreadcrumbList")
+		if len(schemas) != 2 || blogPosting == nil || breadcrumbList == nil {
+			t.Errorf("%s must emit BlogPosting and BreadcrumbList schemas: %#v", file, schemas)
+			continue
+		}
+		wantCanonical := siteURL + "/" + file
+		if blogPosting["url"] != wantCanonical {
+			t.Errorf("%s BlogPosting URL = %v, want %s", file, blogPosting["url"], wantCanonical)
+		}
+		author, authorOK := blogPosting["author"].(map[string]any)
+		publisher, publisherOK := blogPosting["publisher"].(map[string]any)
+		if !authorOK || author["@type"] != "Person" || author["name"] != "Kayis Rahman" || author["url"] != siteURL || !publisherOK || publisher["@type"] != "Organization" || publisher["name"] != "Kayis Rahman" || blogPosting["datePublished"] == nil || blogPosting["dateModified"] == nil {
+			t.Errorf("%s BlogPosting lost existing author, publisher, or date fields: %#v", file, blogPosting)
+		}
+		if file == "llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html" && (blogPosting["wordCount"] != float64(4500) || blogPosting["timeRequired"] != "PT12M") {
+			t.Errorf("BlogPosting word count or reading time missing: %#v", blogPosting)
+		}
+		if expected.schemaImage == "" {
+			if _, exists := blogPosting["image"]; exists {
+				t.Errorf("%s BlogPosting unexpectedly has an image: %v", file, blogPosting["image"])
+			}
+		} else if blogPosting["image"] != siteURL+expected.schemaImage {
+			t.Errorf("%s BlogPosting image = %v, want %s", file, blogPosting["image"], siteURL+expected.schemaImage)
+		}
+		items, ok := breadcrumbList["itemListElement"].([]any)
+		if !ok || len(items) < 3 {
+			t.Errorf("%s BreadcrumbList does not contain its ancestors: %#v", file, breadcrumbList)
+			continue
+		}
+		homeItem, homeOK := items[0].(map[string]any)
+		blogItem, blogOK := items[1].(map[string]any)
+		categoryItem, categoryOK := items[2].(map[string]any)
+		category := "llm"
+		if strings.HasPrefix(file, "career/") {
+			category = "career"
+		}
+		if !homeOK || !blogOK || !categoryOK || homeItem["name"] != "Home" || blogItem["name"] != "Blog" || categoryItem["item"] != siteURL+"/posts/#"+category {
+			t.Errorf("%s BreadcrumbList does not preserve its Home, Blog, and category ancestors: %#v", file, breadcrumbList)
+		}
+	}
 	for _, route := range []string{"contact.html", filepath.Join("contact", "index.html")} {
 		if _, err := os.Stat(filepath.Join(tmp, "prototype-site", route)); !os.IsNotExist(err) {
 			t.Errorf("Go generator unexpectedly emitted Jekyll-owned contact route %s: %v", route, err)
@@ -105,6 +201,21 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestPostImageURLUsesImageBackgroundThenFallback(t *testing.T) {
+	for _, testCase := range []struct {
+		meta FrontMatter
+		want string
+	}{
+		{FrontMatter{Image: "/posts/image.jpg", Background: "/posts/background.jpg"}, siteURL + "/posts/image.jpg"},
+		{FrontMatter{Background: "/posts/background.jpg"}, siteURL + "/posts/background.jpg"},
+		{FrontMatter{}, siteURL + "/img/home.jpg"},
+	} {
+		if got := postImageURL(testCase.meta); got != testCase.want {
+			t.Errorf("postImageURL(%#v) = %q, want %q", testCase.meta, got, testCase.want)
+		}
 	}
 }
 
