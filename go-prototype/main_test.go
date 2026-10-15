@@ -156,8 +156,10 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		t.Errorf("home JSON-LD does not preserve its Person schema: %#v", homeSchemas)
 	}
 	for file, image := range map[string]string{
-		"about/index.html":  "/assets/img/about-me.png",
-		"resume/index.html": "/assets/img/resume.jpg",
+		"index.html":          "/assets/img/home.jpg",
+		"about/index.html":    "/assets/img/about-me.png",
+		"projects/index.html": "/assets/img/projects.jpg",
+		"resume/index.html":   "/assets/img/resume.jpg",
 	} {
 		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
 		if readErr != nil {

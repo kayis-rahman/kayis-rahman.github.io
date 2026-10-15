@@ -520,7 +520,7 @@ func main() {
 		}
 	}
 
-	_, projectText, err := readMarkdown(filepath.Join(root, "projects.md"))
+	projectMeta, projectText, err := readMarkdown(filepath.Join(root, "projects.md"))
 	if err != nil {
 		fatal(err)
 	}
@@ -531,7 +531,7 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
-	if err := writeRoute(out, "/projects/", Page{Title: "Projects", Description: "A selection of independent engineering projects in AI infrastructure, security, and thoughtful software.", Canonical: siteURL + "/projects/", OGType: "website", OGImage: siteURL + "/img/home.jpg", HTML: projectHTML}); err != nil {
+	if err := writeRoute(out, "/projects/", Page{Title: "Projects", Description: "A selection of independent engineering projects in AI infrastructure, security, and thoughtful software.", Canonical: siteURL + "/projects/", OGType: "website", OGImage: frontMatterImageURL(projectMeta), HTML: projectHTML}); err != nil {
 		fatal(err)
 	}
 
@@ -565,7 +565,7 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
-	if err := writeRoute(out, "/", Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: siteURL + "/", OGType: "website", OGImage: siteURL + "/img/home.jpg", Variant: "systems", HTML: template.HTML(homeBody), HideTitle: true, StructuredData: []template.JS{person}}); err != nil {
+	if err := writeRoute(out, "/", Page{Title: "Kayis Rahman — Security Engineering & Systems", Description: homeMeta.Description, Canonical: siteURL + "/", OGType: "website", OGImage: frontMatterImageURL(homeMeta), Variant: "systems", HTML: template.HTML(homeBody), HideTitle: true, StructuredData: []template.JS{person}}); err != nil {
 		fatal(err)
 	}
 	fmt.Printf("Built home, about, resume, projects, posts index, and %d writing posts into %s\n", len(posts), out)
