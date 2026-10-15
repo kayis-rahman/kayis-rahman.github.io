@@ -102,7 +102,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 				t.Errorf("%s missing %s metadata", file, property)
 			}
 		}
-		for _, name := range []string{"twitter:title", "twitter:description", "twitter:image"} {
+		for _, name := range []string{"twitter:title", "twitter:description"} {
 			if !strings.Contains(string(data), `name="`+name+`"`) {
 				t.Errorf("%s missing %s metadata", file, name)
 			}
@@ -145,6 +145,9 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	}
 	if strings.Count(string(postsListing), `class="post-card"`) != 5 || strings.Count(string(postsListing), `class="post-subtitle"`) != 5 || strings.Count(string(postsListing), `class="reading-time"`) != 5 || strings.Count(string(postsListing), `aria-label="Post tags"`) != 5 {
 		t.Errorf("writing index cards must preserve all five summaries, read times, and tag groups")
+	}
+	if strings.Contains(string(postsListing), `property="og:image"`) || strings.Contains(string(postsListing), `name="twitter:image"`) {
+		t.Errorf("writing index emitted social images without source image metadata")
 	}
 	for _, file := range []string{
 		"index.html",
@@ -269,15 +272,21 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"/assets/img/posts/gpu.jpg", "/assets/img/posts/gpu.jpg"},
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"/assets/img/posts/model-hunt.jpg", "/assets/img/posts/model-hunt.jpg"},
 		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"/assets/img/posts/gpu.jpg", "/assets/img/posts/gpu.jpg"},
-		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"/img/home.jpg", ""},
+		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"", ""},
 	} {
 		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
 		if readErr != nil {
 			t.Fatalf("read generated post %s: %v", file, readErr)
 		}
-		wantImage := siteURL + expected.image
-		if !strings.Contains(string(data), `<meta property="og:image" content="`+wantImage+`">`) || !strings.Contains(string(data), `<meta name="twitter:image" content="`+wantImage+`">`) {
-			t.Errorf("%s does not use its front-matter image for social metadata", file)
+		if expected.image == "" {
+			if strings.Contains(string(data), `property="og:image"`) || strings.Contains(string(data), `name="twitter:image"`) {
+				t.Errorf("%s emitted social images without source image metadata", file)
+			}
+		} else {
+			wantImage := siteURL + expected.image
+			if !strings.Contains(string(data), `<meta property="og:image" content="`+wantImage+`">`) || !strings.Contains(string(data), `<meta name="twitter:image" content="`+wantImage+`">`) {
+				t.Errorf("%s does not use its front-matter image for social metadata", file)
+			}
 		}
 		schemas := parseJSONLDScripts(t, data)
 		blogPosting := schemaOfType(schemas, "BlogPosting")
@@ -350,14 +359,14 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	}
 }
 
-func TestFrontMatterImageUsesImageBackgroundThenFallback(t *testing.T) {
+func TestFrontMatterImagePrefersImageThenBackgroundAndOmitsMissing(t *testing.T) {
 	for _, testCase := range []struct {
 		meta FrontMatter
 		want string
 	}{
 		{FrontMatter{Image: "/posts/image.jpg", Background: "/posts/background.jpg"}, siteURL + "/posts/image.jpg"},
 		{FrontMatter{Background: "/posts/background.jpg"}, siteURL + "/posts/background.jpg"},
-		{FrontMatter{}, siteURL + "/img/home.jpg"},
+		{FrontMatter{}, ""},
 	} {
 		if got := frontMatterImageURL(testCase.meta); got != testCase.want {
 			t.Errorf("frontMatterImageURL(%#v) = %q, want %q", testCase.meta, got, testCase.want)
