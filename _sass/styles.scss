@@ -533,7 +533,7 @@ html[data-theme="dark"] .post-body table {
 // ── Navbar active link ───────────────────────────────────────────────────────
 
 #mainNav .nav-item.active .nav-link {
-  color: var(--color-primary) !important;
+  color: var(--color-link-accent) !important;
   font-weight: 600;
 }
 
@@ -1871,6 +1871,11 @@ body.site-shell {
 }
 
 #mainNav .nav-item.active .nav-link,
+#mainNav .nav-item.active .nav-link:hover,
+#mainNav .nav-item.active .nav-link:focus {
+  color: var(--color-link-accent) !important;
+}
+
 #mainNav .nav-link:hover,
 #mainNav .nav-link:focus {
   color: var(--color-primary) !important;
