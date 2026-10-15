@@ -66,7 +66,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	checks := map[string][]string{
 		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
 		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
-		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked"},
+		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `<p class="post-subtitle">I was on the $20 Claude Pro plan and hitting rate limits every other session.</p>`, `Part 1 ended with one change in ~/.claude/settings.json:`, `Part 2 ended with a working model and a working framework. What it did not have was a working GPU instance.`, `Part 3 ended with a working GPU instance. cuInit returned 0. PyTorch saw the GPU. Nothing was broken.`, `<span class="reading-time">11 mins read</span>`, `href="/tags/#career"`, `href="/tags/#vllm"`},
 		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
 		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"The Cost Maths", "Part 1", "canonical"},
 		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical", `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html" title="Why I Stopped Paying Per Token — Part 1 of 5">← Previous Post`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html" title="The GPU Graveyard: cuInit 999, Broken Hosts, and How to Verify an Instance — Part 3 of 5">Next Post →`, "Related Posts", `href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html"`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html"`, `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html"`},
@@ -131,6 +131,47 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			relatedStart := strings.Index(string(data), `<div class="related-posts`)
 			if relatedStart < 0 || strings.Contains(string(data)[relatedStart:], `href="/llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html"`) {
 				t.Errorf("related posts should exclude the current post")
+			}
+		}
+	}
+	postsListing, err := os.ReadFile(filepath.Join(tmp, "prototype-site", "posts", "index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Count(string(postsListing), `class="post-card"`) != 5 || strings.Count(string(postsListing), `class="post-subtitle"`) != 5 || strings.Count(string(postsListing), `class="reading-time"`) != 5 || strings.Count(string(postsListing), `aria-label="Post tags"`) != 5 {
+		t.Errorf("writing index cards must preserve all five summaries, read times, and tag groups")
+	}
+	for _, file := range []string{
+		"index.html",
+		"about/index.html",
+		"resume/index.html",
+		"projects/index.html",
+		"posts/index.html",
+		"career/engineering/2026/05/17/ideas-to-production.html",
+		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html",
+		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html",
+		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html",
+		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html",
+	} {
+		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
+		if readErr != nil {
+			t.Fatalf("read generated page %s: %v", file, readErr)
+		}
+		for _, destination := range []string{
+			`href="/posts/">Blog</a>`,
+			`href="/categories/">Categories</a>`,
+			`href="/tags/">Tags</a>`,
+			`href="/subscribe/">Subscribe</a>`,
+			`href="/feed.xml">RSS</a>`,
+			`href="/about/">About</a>`,
+			`href="/search/">Search</a>`,
+			`href="mailto:kaisbk1@gmail.com">Email</a>`,
+			`href="https://twitter.com/kayisrahman" rel="noopener noreferrer">Twitter ↗</a>`,
+			`href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a>`,
+			`href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a>`,
+		} {
+			if !strings.Contains(string(data), destination) {
+				t.Errorf("%s is missing shared navigation destination %s", file, destination)
 			}
 		}
 	}
@@ -226,7 +267,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		if strings.HasPrefix(file, "career/") {
 			category = "career"
 		}
-		if !homeOK || !blogOK || !categoryOK || homeItem["name"] != "Home" || blogItem["name"] != "Blog" || categoryItem["item"] != siteURL+"/posts/#"+category {
+		if !homeOK || !blogOK || !categoryOK || homeItem["name"] != "Home" || blogItem["name"] != "Blog" || categoryItem["item"] != siteURL+"/categories/#"+tagSlug(category) {
 			t.Errorf("%s BreadcrumbList does not preserve its Home, Blog, and category ancestors: %#v", file, breadcrumbList)
 		}
 	}
