@@ -12,6 +12,8 @@ import (
 )
 
 var jsonLDScriptPattern = regexp.MustCompile(`(?s)<script type="application/ld\+json">(.*?)</script>`)
+var localFragmentPattern = regexp.MustCompile(`href="#([^"]+)"`)
+var elementIDPattern = regexp.MustCompile(`\bid="([^"]+)"`)
 
 func parseJSONLDScripts(t *testing.T, page []byte) []map[string]any {
 	t.Helper()
@@ -25,6 +27,19 @@ func parseJSONLDScripts(t *testing.T, page []byte) []map[string]any {
 		schemas = append(schemas, schema)
 	}
 	return schemas
+}
+
+func assertFragmentLinksResolve(t *testing.T, page []byte) {
+	t.Helper()
+	ids := make(map[string]struct{})
+	for _, match := range elementIDPattern.FindAllSubmatch(page, -1) {
+		ids[string(match[1])] = struct{}{}
+	}
+	for _, match := range localFragmentPattern.FindAllSubmatch(page, -1) {
+		if _, exists := ids[string(match[1])]; !exists {
+			t.Errorf("fragment link #%s has no target", match[1])
+		}
+	}
 }
 
 func schemaOfType(schemas []map[string]any, schemaType string) map[string]any {
@@ -54,8 +69,8 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked"},
 		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
 		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"The Cost Maths", "Part 1", "canonical"},
-		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical", `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html" title="Why I Stopped Paying Per Token — Part 1 of 5">← Previous Post`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html" title="The GPU Graveyard: cuInit 999, Broken Hosts, and How to Verify an Instance — Part 3 of 5">Next Post →`},
-		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical"},
+		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical", `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html" title="Why I Stopped Paying Per Token — Part 1 of 5">← Previous Post`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html" title="The GPU Graveyard: cuInit 999, Broken Hosts, and How to Verify an Instance — Part 3 of 5">Next Post →`, "Related Posts", `href="/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html"`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html"`, `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html"`},
+		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical", `<div id="toc"></div><div class="post-body">`, `<h2 id="the-error-that-tells-you-nothing">The Error That Tells You Nothing</h2>`, `href="#the-error-that-tells-you-nothing"`},
 		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html", "SELF-HOSTING LLM INFERENCE", "Previous: The GPU Graveyard", "Is It Actually Worth It?"},
 	}
 	for file, needles := range checks {
@@ -103,6 +118,21 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		if file == "index.html" && strings.Count(string(data), "<h1>") != 1 {
 			t.Errorf("home page should expose exactly one primary heading")
 		}
+		if strings.Contains(file, "/2026/") {
+			assertFragmentLinksResolve(t, data)
+			if !strings.Contains(string(data), `<div id="toc"></div><div class="post-body">`) {
+				t.Errorf("%s is missing the shared table-of-contents and post-body targets", file)
+			}
+		}
+		if file == "llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html" {
+			if strings.Count(string(data), `class="related-post-card"`) != 3 {
+				t.Errorf("related posts should include the three nearest same-tag posts")
+			}
+			relatedStart := strings.Index(string(data), `<div class="related-posts`)
+			if relatedStart < 0 || strings.Contains(string(data)[relatedStart:], `href="/llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html"`) {
+				t.Errorf("related posts should exclude the current post")
+			}
+		}
 	}
 	for file, header := range map[string]string{
 		"resume/index.html": "<th>Language</th>",
@@ -124,6 +154,19 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	person := schemaOfType(homeSchemas, "Person")
 	if len(homeSchemas) != 1 || person == nil || person["url"] != siteURL || person["image"] != siteURL+"/assets/img/about-me.png" {
 		t.Errorf("home JSON-LD does not preserve its Person schema: %#v", homeSchemas)
+	}
+	for file, image := range map[string]string{
+		"about/index.html":  "/assets/img/about-me.png",
+		"resume/index.html": "/assets/img/resume.jpg",
+	} {
+		data, readErr := os.ReadFile(filepath.Join(tmp, "prototype-site", file))
+		if readErr != nil {
+			t.Fatalf("read generated source page %s: %v", file, readErr)
+		}
+		wantImage := siteURL + image
+		if !strings.Contains(string(data), `<meta property="og:image" content="`+wantImage+`">`) || !strings.Contains(string(data), `<meta name="twitter:image" content="`+wantImage+`">`) {
+			t.Errorf("%s does not use its front-matter image for social metadata", file)
+		}
 	}
 	for file, expected := range map[string]struct {
 		image       string
@@ -204,7 +247,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 	}
 }
 
-func TestPostImageURLUsesImageBackgroundThenFallback(t *testing.T) {
+func TestFrontMatterImageUsesImageBackgroundThenFallback(t *testing.T) {
 	for _, testCase := range []struct {
 		meta FrontMatter
 		want string
@@ -213,8 +256,8 @@ func TestPostImageURLUsesImageBackgroundThenFallback(t *testing.T) {
 		{FrontMatter{Background: "/posts/background.jpg"}, siteURL + "/posts/background.jpg"},
 		{FrontMatter{}, siteURL + "/img/home.jpg"},
 	} {
-		if got := postImageURL(testCase.meta); got != testCase.want {
-			t.Errorf("postImageURL(%#v) = %q, want %q", testCase.meta, got, testCase.want)
+		if got := frontMatterImageURL(testCase.meta); got != testCase.want {
+			t.Errorf("frontMatterImageURL(%#v) = %q, want %q", testCase.meta, got, testCase.want)
 		}
 	}
 }
