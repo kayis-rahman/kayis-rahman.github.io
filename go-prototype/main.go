@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html"
 	"html/template"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -19,21 +20,22 @@ import (
 )
 
 type FrontMatter struct {
-	Title        string   `yaml:"title"`
-	Description  string   `yaml:"description"`
-	Date         string   `yaml:"date"`
-	Categories   []string `yaml:"categories"`
-	Tags         []string `yaml:"tags"`
-	Series       string   `yaml:"series"`
-	Published    *bool    `yaml:"published"`
-	SeriesPart   int      `yaml:"series_part"`
+	Title       string   `yaml:"title"`
+	Subtitle    string   `yaml:"subtitle"`
+	Description string   `yaml:"description"`
+	Date        string   `yaml:"date"`
+	Categories  []string `yaml:"categories"`
+	Tags        []string `yaml:"tags"`
+	Series      string   `yaml:"series"`
+	Published   *bool    `yaml:"published"`
+	SeriesPart  int      `yaml:"series_part"`
 }
 type Page struct {
-	Title, Description, Canonical, Date string
-	OGType, OGImage                     string
-	Variant                             string
-	HTML                                template.HTML
-	HideTitle                           bool
+	Title, Subtitle, Description, Canonical, Date string
+	OGType, OGImage                               string
+	Variant                                       string
+	HTML                                          template.HTML
+	HideTitle                                     bool
 }
 type Post struct {
 	Meta FrontMatter
@@ -47,9 +49,9 @@ var liquidRaw = regexp.MustCompile(`(?s)\{%\s*(?:raw|endraw)\s*%\}`)
 var markdownTable = regexp.MustCompile(`(?s)<table(?:\s[^>]*)?>.*?</table>`)
 var markdown = goldmark.New(goldmark.WithExtensions(extension.Table))
 var pageTemplate = template.Must(template.New("page").Parse(`<!doctype html>
-<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{{.Description}}"><title>{{.Title}} · Kayis Rahman</title><link rel="canonical" href="{{.Canonical}}"><meta property="og:type" content="{{.OGType}}"><meta property="og:title" content="{{.Title}} · Kayis Rahman"><meta property="og:description" content="{{.Description}}"><meta property="og:url" content="{{.Canonical}}"><meta property="og:image" content="{{.OGImage}}"><meta name="twitter:card" content="summary_large_image"><script>(function(){var root=document.documentElement,key='theme',stored=null,media=null;try{stored=window.localStorage.getItem(key)}catch(e){}try{media=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null}catch(e){}var valid=stored==='light'||stored==='dark',state={theme:valid?stored:(media&&media.matches?'dark':'light'),hasStoredChoice:valid};root.setAttribute('data-theme',state.theme);window.__kayisThemeState=state;if(media){var onChange=function(event){if(state.hasStoredChoice)return;state.theme=event.matches?'dark':'light';if(state.applyTheme)state.applyTheme(state.theme);else root.setAttribute('data-theme',state.theme)};if(media.addEventListener)media.addEventListener('change',onChange);else if(media.addListener)media.addListener(onChange)}})();</script><link rel="stylesheet" href="/prototype.css"></head><body data-variant="{{.Variant}}">
+<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="{{.Description}}"><title>{{.Title}} · Kayis Rahman</title><link rel="canonical" href="{{.Canonical}}"><meta property="og:type" content="{{.OGType}}"><meta property="og:title" content="{{.Title}} · Kayis Rahman"><meta property="og:description" content="{{.Description}}"><meta property="og:url" content="{{.Canonical}}"><meta property="og:image" content="{{.OGImage}}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{{.Title}} · Kayis Rahman"><meta name="twitter:description" content="{{.Description}}"><meta name="twitter:image" content="{{.OGImage}}"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#10191b" media="(prefers-color-scheme: dark)"><script>(function(){var root=document.documentElement,key='theme',stored=null,media=null;try{stored=window.localStorage.getItem(key)}catch(e){}try{media=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null}catch(e){}var valid=stored==='light'||stored==='dark',state={theme:valid?stored:(media&&media.matches?'dark':'light'),hasStoredChoice:valid};state.syncThemeColor=function(theme){var color=theme==='dark'?'#10191b':'#ffffff';document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){meta.setAttribute('content',color)})};root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme);window.__kayisThemeState=state;if(media){var onChange=function(event){if(state.hasStoredChoice)return;state.theme=event.matches?'dark':'light';if(state.applyTheme)state.applyTheme(state.theme);else{root.setAttribute('data-theme',state.theme);state.syncThemeColor(state.theme)}};if(media.addEventListener)media.addEventListener('change',onChange);else if(media.addListener)media.addListener(onChange)}})();</script><link rel="stylesheet" href="/prototype.css"></head><body data-variant="{{.Variant}}">
 <a class="skip-link" href="#main-content">Skip to main content</a><header class="site-header"><a class="wordmark" href="/" aria-label="Kayis Rahman home">KR<span>.</span></a><nav aria-label="Primary"><a href="/about/">About</a><a href="/posts/">Writing</a><a href="/projects/">Projects</a><a href="/resume/">Resume</a><a href="/contact">Contact</a><a href="/search/">Search</a><a href="/feed.xml">RSS</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme" aria-pressed="false"><span aria-hidden="true">◐</span> Dark mode</button></header>
-<main id="main-content">{{if not .HideTitle}}{{if .Date}}<p class="eyebrow">FIELD NOTES <span>·</span> {{.Date}}</p>{{end}}<h1>{{.Title}}</h1>{{if .Description}}<p class="lede">{{.Description}}</p>{{end}}{{end}}<article>{{.HTML}}</article></main><footer><span>Kayis Rahman · Cork, Ireland</span><nav aria-label="Social and site links"><a href="mailto:kaisbk1@gmail.com">Email</a><a href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a></nav></footer><script>(function(){var root=document.documentElement,button=document.querySelector('[data-theme-toggle]'),state=window.__kayisThemeState||{theme:root.getAttribute('data-theme')||'light',hasStoredChoice:false};if(!button)return;function update(){button.setAttribute('aria-pressed',String(root.getAttribute('data-theme')==='dark'))}function apply(theme){root.setAttribute('data-theme',theme);state.theme=theme;update()}state.applyTheme=apply;apply(root.getAttribute('data-theme')||state.theme||'light');button.addEventListener('click',function(){var next=root.getAttribute('data-theme')==='dark'?'light':'dark';state.hasStoredChoice=true;apply(next);try{window.localStorage.setItem('theme',next)}catch(e){}})})();</script></body></html>`))
+<main id="main-content">{{if not .HideTitle}}{{if .Date}}<p class="eyebrow">FIELD NOTES <span>·</span> {{.Date}}</p>{{end}}<h1>{{.Title}}</h1>{{if .Subtitle}}<p class="post-subtitle">{{.Subtitle}}</p>{{end}}{{if .Description}}<p class="lede">{{.Description}}</p>{{end}}{{end}}<article>{{.HTML}}</article></main><footer><span>Kayis Rahman · Cork, Ireland</span><nav aria-label="Social and site links"><a href="mailto:kaisbk1@gmail.com">Email</a><a href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a></nav></footer><script>(function(){var root=document.documentElement,button=document.querySelector('[data-theme-toggle]'),state=window.__kayisThemeState||{theme:root.getAttribute('data-theme')||'light',hasStoredChoice:false};if(!button)return;function update(){button.setAttribute('aria-pressed',String(root.getAttribute('data-theme')==='dark'))}function apply(theme){root.setAttribute('data-theme',theme);state.theme=theme;if(state.syncThemeColor)state.syncThemeColor(theme);update()}state.applyTheme=apply;apply(root.getAttribute('data-theme')||state.theme||'light');button.addEventListener('click',function(){var next=root.getAttribute('data-theme')==='dark'?'light':'dark';state.hasStoredChoice=true;apply(next);try{window.localStorage.setItem('theme',next)}catch(e){}})})();</script></body></html>`))
 
 func renderMarkdown(source string) (template.HTML, error) {
 	var out bytes.Buffer
@@ -218,32 +220,60 @@ func loadPosts(root string) ([]Post, error) {
 	sort.Slice(posts, func(i, j int) bool { return posts[i].Date.After(posts[j].Date) })
 	return posts, nil
 }
+
+var tagSlugPattern = regexp.MustCompile(`[^a-z0-9]+`)
+
 func postArticle(posts []Post, i int) template.HTML {
-	body := string(posts[i].HTML)
-	current := posts[i].Meta
-	if current.SeriesPart == 0 || current.Series == "" {
-		return template.HTML(body)
-	}
-	series := `<nav class="series-nav" aria-label="Series navigation"><p class="eyebrow">` + html.EscapeString(strings.ToUpper(current.Series)) + ` · PART ` + fmt.Sprint(current.SeriesPart) + ` OF 5</p>`
-	for _, post := range posts {
-		part := post.Meta.SeriesPart
-		if post.Meta.Series != current.Series || part == 0 || part == current.SeriesPart {
-			continue
+	current := posts[i]
+	body := string(current.HTML)
+	if current.Meta.SeriesPart != 0 && current.Meta.Series != "" {
+		series := `<nav class="series-nav" aria-label="Series navigation"><p class="eyebrow">` + html.EscapeString(strings.ToUpper(current.Meta.Series)) + ` · PART ` + fmt.Sprint(current.Meta.SeriesPart) + ` OF 5</p>`
+		for _, post := range posts {
+			part := post.Meta.SeriesPart
+			if post.Meta.Series != current.Meta.Series || part == 0 || part == current.Meta.SeriesPart {
+				continue
+			}
+			if part == current.Meta.SeriesPart-1 {
+				label := strings.Split(post.Meta.Title, " — ")[0]
+				series += `<a href="` + html.EscapeString(post.URL) + `">← Previous: ` + html.EscapeString(label) + `</a>`
+			}
+			if part == current.Meta.SeriesPart+1 {
+				label := strings.Split(post.Meta.Title, " — ")[0]
+				series += `<a href="` + html.EscapeString(post.URL) + `">Next: ` + html.EscapeString(label) + ` →</a>`
+			}
 		}
-		if part == current.SeriesPart-1 {
-			label := strings.Split(post.Meta.Title, " — ")[0]
-			series += `<a href="` + html.EscapeString(post.URL) + `">← Previous: ` + html.EscapeString(label) + `</a>`
+		if current.Meta.Series == "Self-Hosting LLM Inference on Rented GPUs" && current.Meta.SeriesPart == 4 {
+			series += `<p>Part 5 — Is It Actually Worth It? <span class="coming-soon">Coming soon</span></p>`
 		}
-		if part == current.SeriesPart+1 {
-			label := strings.Split(post.Meta.Title, " — ")[0]
-			series += `<a href="` + html.EscapeString(post.URL) + `">Next: ` + html.EscapeString(label) + ` →</a>`
+		body += series + `</nav>`
+	}
+	if len(current.Meta.Tags) > 0 {
+		body += `<nav class="post-tags" aria-label="Post tags">`
+		for _, tag := range current.Meta.Tags {
+			slug := strings.Trim(tagSlugPattern.ReplaceAllString(strings.ToLower(tag), "-"), "-")
+			body += `<a class="tag-badge" href="/tags/#` + html.EscapeString(slug) + `">` + html.EscapeString(tag) + `</a>`
 		}
+		body += `</nav>`
 	}
-	if current.Series == "Self-Hosting LLM Inference on Rented GPUs" && current.SeriesPart == 4 {
-		series += `<p>Part 5 — Is It Actually Worth It? <span class="coming-soon">Coming soon</span></p>`
+	shareURL := "https://kayis-rahman.github.io" + current.URL
+	twitterQuery := url.Values{"text": {current.Meta.Title}, "url": {shareURL}, "via": {"kayisrahman"}}
+	linkedinQuery := url.Values{"url": {shareURL}}
+	body += `<nav class="post-share" aria-label="Share this post"><a href="` + html.EscapeString("https://twitter.com/intent/tweet?"+twitterQuery.Encode()) + `" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter/X">Twitter / X</a><a href="` + html.EscapeString("https://www.linkedin.com/sharing/share-offsite/?"+linkedinQuery.Encode()) + `" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">LinkedIn</a></nav>`
+	if i > 0 || i+1 < len(posts) {
+		body += `<nav class="post-navigation" aria-label="Post navigation">`
+		if i+1 < len(posts) {
+			previous := posts[i+1]
+			body += `<a href="` + html.EscapeString(previous.URL) + `" title="` + html.EscapeString(previous.Meta.Title) + `">← Previous Post</a>`
+		}
+		if i > 0 {
+			next := posts[i-1]
+			body += `<a href="` + html.EscapeString(next.URL) + `" title="` + html.EscapeString(next.Meta.Title) + `">Next Post →</a>`
+		}
+		body += `</nav>`
 	}
-	series += `</nav>`
-	return template.HTML(body + series)
+	body += `<aside class="author-card"><h2>About Kayis Rahman</h2><p>Staff Security Engineer at Qualcomm. I write about PKI, Java, LLM inference, and building things on the side.</p><nav aria-label="Author links"><a href="https://github.com/kayis-rahman" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://www.linkedin.com/in/kayisrahman/" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="/subscribe/">Subscribe</a></nav></aside>`
+	body += `<section class="newsletter-cta" aria-labelledby="newsletter-heading"><h2 id="newsletter-heading">Join engineers in the loop</h2><p>PKI, Java, LLM inference, and what I'm building on the side — straight to your inbox. No spam. Unsubscribe anytime.</p><form action="https://buttondown.email/api/emails/embed-subscribe/kayis" method="post" target="_blank"><label for="newsletter-email">Email address</label><input id="newsletter-email" type="email" name="email" placeholder="your@email.com" required><button type="submit">Subscribe →</button></form></section>`
+	return template.HTML(body)
 }
 func main() {
 	root := ".."
@@ -299,7 +329,7 @@ func main() {
 		fatal(errors.New("no dated writing posts found"))
 	}
 	for i, post := range posts {
-		if err := writeRoute(out, post.URL, Page{Title: post.Meta.Title, Description: post.Meta.Description, Canonical: "https://kayis-rahman.github.io" + post.URL, Date: post.Date.Format("02 Jan 2006"), OGType: "article", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: postArticle(posts, i)}); err != nil {
+		if err := writeRoute(out, post.URL, Page{Title: post.Meta.Title, Subtitle: post.Meta.Subtitle, Description: post.Meta.Description, Canonical: "https://kayis-rahman.github.io" + post.URL, Date: post.Date.Format("02 Jan 2006"), OGType: "article", OGImage: "https://kayis-rahman.github.io/img/home.jpg", HTML: postArticle(posts, i)}); err != nil {
 			fatal(err)
 		}
 	}
@@ -352,4 +382,4 @@ func main() {
 }
 func fatal(err error) { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
 
-const css = `:root{color-scheme:light;--ink:#17191c;--paper:#fff;--muted:#5c6670;--blue:#005a9c;--line:#d4dbe0;--surface:#f2f4f6;--ease-out:cubic-bezier(.23,1,.32,1)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 Georgia,"Times New Roman",serif;transition:background-color .2s ease,color .2s ease}.skip-link{position:absolute;left:12px;top:-60px;background:var(--ink);color:var(--paper);padding:10px;z-index:5}.skip-link:focus{top:12px}.site-header,footer{max-width:1160px;margin:auto;padding:25px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.wordmark{font:900 24px/1 system-ui,sans-serif;letter-spacing:-2px;color:var(--ink);text-decoration:none}.wordmark span,h1 em{color:var(--blue)}nav{display:flex;gap:24px}.theme-toggle{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 11px;font:700 12px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer}.theme-toggle span{color:var(--blue);margin-right:6px}.theme-toggle:hover{border-color:var(--blue)}html[data-theme=dark]{color-scheme:dark;--ink:#f2f5f7;--paper:#11161a;--muted:#bcc7cf;--blue:#87c8ff;--line:#3c4750;--surface:#1b2329}a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:4px}.site-header nav,footer nav{font:600 13px/1.3 system-ui,sans-serif}.site-header nav a,footer nav a{padding:8px 0}main{max-width:1160px;margin:auto;padding:86px 38px 96px}h1,h2{font-family:system-ui,-apple-system,sans-serif}h1{font-size:clamp(58px,10vw,118px);line-height:.91;letter-spacing:-.085em;margin:15px 0 24px;font-weight:850}h1 em{font-style:normal}.eyebrow{font:700 10px/1.5 system-ui,sans-serif;letter-spacing:.17em;color:var(--muted);text-transform:uppercase}.eyebrow span{color:var(--blue)}.lede{font-size:clamp(19px,2vw,23px);line-height:1.55;max-width:670px;color:var(--muted)}.actions{display:flex;align-items:center;gap:27px;margin-top:32px;flex-wrap:wrap}.button{display:inline-flex;gap:22px;align-items:center;background:var(--blue);color:var(--paper);padding:14px 19px;font:700 14px system-ui,sans-serif}.button:hover{color:var(--paper);opacity:.84}.text-link,article a,.feature a,.latest>a,.contact-strip a{color:var(--blue);font:650 14px system-ui,sans-serif;text-decoration:underline;text-underline-offset:.2em}.focus-note{font:700 10px system-ui,sans-serif;text-transform:uppercase;letter-spacing:.13em;margin-top:50px;color:var(--muted)}.feature{display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:54px;border-top:1px solid var(--line);padding:50px 0;margin-top:88px}.feature img{width:100%;height:280px;object-fit:cover}.feature p:not(.eyebrow),.latest p{color:var(--muted);max-width:560px}.feature h2,.latest h2,.variant-picker h2{font-size:clamp(32px,5vw,48px);letter-spacing:-.06em;line-height:1.1;margin:10px 0 16px}.latest,.variant-picker,.contact-strip{border-top:1px solid var(--line);padding:38px 0}.latest h2{max-width:750px}.post-card{padding:26px 0;border-bottom:1px solid var(--line)}.post-card h2{font-size:clamp(24px,4vw,36px);line-height:1.15;letter-spacing:-.04em}.post-card p:last-child{color:var(--muted)}article{max-width:790px;margin-top:44px;font-size:18px;line-height:1.82}article h2{font-size:32px;margin-top:48px}article h3{margin-top:36px}.table-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;border:1px solid var(--line)}.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}.table-scroll table{min-width:max-content;border-collapse:collapse}.table-scroll th,.table-scroll td{padding:8px 12px;border:1px solid var(--line);text-align:left}.table-scroll th{background:var(--surface)}article pre{overflow:auto;max-width:100%;padding:22px;background:var(--surface);border:1px solid var(--line);font-size:13px;line-height:1.55}article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}article p code,article li code{overflow-wrap:anywhere}article blockquote{border-left:3px solid var(--blue);padding-left:20px;color:var(--muted)}article img{max-width:100%;height:auto}.series-nav{border-top:1px solid var(--line);margin-top:48px;padding-top:24px;display:grid;gap:14px}.series-nav p{margin:6px 0}.coming-soon{display:inline-block;margin-left:8px;color:var(--muted);font:700 11px system-ui,sans-serif}.variant-picker{margin-top:28px}.variant-controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}.variant-controls button{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:12px 15px;font:700 12px system-ui,sans-serif;cursor:pointer}.variant-controls button[aria-pressed=true]{border-color:var(--blue);background:var(--blue);color:var(--paper)}.variant-description{color:var(--muted)}.contact-strip{display:flex;align-items:center;justify-content:space-between;gap:20px}.contact-strip p{font-size:20px}footer{border-top:1px solid var(--line);border-bottom:0;color:var(--muted);font:13px system-ui,sans-serif}.post-card a:hover{text-decoration:underline}.site-header nav a:hover,footer nav a:hover{color:var(--blue)}body[data-variant=fieldnotes]{--paper:#f4efe5;--surface:#ebe4d8;--ink:#241f18;--muted:#686056;--blue:#a34d24;--line:#d2c8b9;font-family:Georgia,"Times New Roman",serif}html[data-theme=dark] body[data-variant=fieldnotes]{--paper:#211c17;--surface:#302920;--ink:#f4eadb;--muted:#c3b49f;--blue:#ffb286;--line:#514638}body[data-variant=fieldnotes] .hero{max-width:820px}body[data-variant=fieldnotes] h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.07em}body[data-variant=fieldnotes] .latest h2{letter-spacing:normal}body[data-variant=systems]{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}html[data-theme=dark] body[data-variant=systems]{--paper:#10191b;--surface:#172426;--ink:#e8f1ed;--muted:#a6b7b1;--blue:#72dbb3;--line:#324345}body[data-variant=systems] h1,body[data-variant=systems] h2{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:normal}body[data-variant=systems] .feature img{filter:saturate(.6) contrast(1.1)}@media(max-width:700px){.site-header,footer{padding:19px 20px}.site-header{gap:14px;flex-wrap:wrap}.site-header .wordmark{order:0}.site-header .theme-toggle{order:1;margin-left:auto}.site-header nav{order:2;flex:1 1 100%;gap:10px;flex-wrap:wrap;justify-content:flex-start;font-size:11px}.site-header nav a{white-space:nowrap}main{padding:60px 22px 72px}.feature{grid-template-columns:1fr;gap:20px;margin-top:64px}.feature img{height:210px}.contact-strip{align-items:flex-start;flex-direction:column;gap:5px}}@media(max-width:420px){.site-header{padding:17px 15px}.site-header nav{gap:6px;font-size:10px}.wordmark{font-size:21px}main{padding:50px 18px 64px}h1{font-size:clamp(52px,15vw,68px)}.actions{gap:17px}.feature{margin-top:52px}article{font-size:17px}article pre{padding:14px}.variant-controls button{flex:1 1 100%}footer{align-items:flex-start;flex-direction:column;gap:14px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}`
+const css = `:root{color-scheme:light;--ink:#17191c;--paper:#fff;--muted:#5c6670;--blue:#005a9c;--line:#d4dbe0;--surface:#f2f4f6;--ease-out:cubic-bezier(.23,1,.32,1)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 Georgia,"Times New Roman",serif;transition:background-color .2s ease,color .2s ease}.post-subtitle{max-width:70ch;color:var(--muted);font-size:clamp(18px,2vw,24px);line-height:1.5}.post-tags,.post-share,.post-navigation,.author-card nav{display:flex;flex-wrap:wrap;gap:10px}.post-tags{margin:30px 0 16px}.post-tags a{border:1px solid var(--line);padding:4px 9px;font:600 11px system-ui,sans-serif}.post-share,.post-navigation{margin:22px 0}.author-card,.newsletter-cta{border-top:1px solid var(--line);margin-top:40px;padding-top:22px}.author-card h2,.newsletter-cta h2{font-size:24px;letter-spacing:-.03em}.author-card p,.newsletter-cta p{color:var(--muted)}.newsletter-cta form{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.newsletter-cta label{font:600 12px system-ui,sans-serif}.newsletter-cta input,.newsletter-cta button{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 12px;font:14px system-ui,sans-serif}.newsletter-cta button{background:var(--blue);color:var(--paper);border-color:var(--blue);font-weight:700;cursor:pointer}.skip-link{position:absolute;left:12px;top:-60px;background:var(--ink);color:var(--paper);padding:10px;z-index:5}.skip-link:focus{top:12px}.site-header,footer{max-width:1160px;margin:auto;padding:25px 38px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.wordmark{font:900 24px/1 system-ui,sans-serif;letter-spacing:-2px;color:var(--ink);text-decoration:none}.wordmark span,h1 em{color:var(--blue)}nav{display:flex;gap:24px}.theme-toggle{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 11px;font:700 12px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer}.theme-toggle span{color:var(--blue);margin-right:6px}.theme-toggle:hover{border-color:var(--blue)}html[data-theme=dark]{color-scheme:dark;--ink:#f2f5f7;--paper:#11161a;--muted:#bcc7cf;--blue:#87c8ff;--line:#3c4750;--surface:#1b2329}a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:4px}.site-header nav,footer nav{font:600 13px/1.3 system-ui,sans-serif}.site-header nav a,footer nav a{padding:8px 0}main{max-width:1160px;margin:auto;padding:86px 38px 96px}h1,h2{font-family:system-ui,-apple-system,sans-serif}h1{font-size:clamp(58px,10vw,118px);line-height:.91;letter-spacing:-.085em;margin:15px 0 24px;font-weight:850}h1 em{font-style:normal}.eyebrow{font:700 10px/1.5 system-ui,sans-serif;letter-spacing:.17em;color:var(--muted);text-transform:uppercase}.eyebrow span{color:var(--blue)}.lede{font-size:clamp(19px,2vw,23px);line-height:1.55;max-width:670px;color:var(--muted)}.actions{display:flex;align-items:center;gap:27px;margin-top:32px;flex-wrap:wrap}.button{display:inline-flex;gap:22px;align-items:center;background:var(--blue);color:var(--paper);padding:14px 19px;font:700 14px system-ui,sans-serif}.button:hover{color:var(--paper);opacity:.84}.text-link,article a,.feature a,.latest>a,.contact-strip a{color:var(--blue);font:650 14px system-ui,sans-serif;text-decoration:underline;text-underline-offset:.2em}.focus-note{font:700 10px system-ui,sans-serif;text-transform:uppercase;letter-spacing:.13em;margin-top:50px;color:var(--muted)}.feature{display:grid;grid-template-columns:1fr 1.05fr;align-items:center;gap:54px;border-top:1px solid var(--line);padding:50px 0;margin-top:88px}.feature img{width:100%;height:280px;object-fit:cover}.feature p:not(.eyebrow),.latest p{color:var(--muted);max-width:560px}.feature h2,.latest h2,.variant-picker h2{font-size:clamp(32px,5vw,48px);letter-spacing:-.06em;line-height:1.1;margin:10px 0 16px}.latest,.variant-picker,.contact-strip{border-top:1px solid var(--line);padding:38px 0}.latest h2{max-width:750px}.post-card{padding:26px 0;border-bottom:1px solid var(--line)}.post-card h2{font-size:clamp(24px,4vw,36px);line-height:1.15;letter-spacing:-.04em}.post-card p:last-child{color:var(--muted)}article{max-width:790px;margin-top:44px;font-size:18px;line-height:1.82}article h2{font-size:32px;margin-top:48px}article h3{margin-top:36px}.table-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;border:1px solid var(--line)}.table-scroll:focus-visible{outline:3px solid var(--blue);outline-offset:3px}.table-scroll table{min-width:max-content;border-collapse:collapse}.table-scroll th,.table-scroll td{padding:8px 12px;border:1px solid var(--line);text-align:left}.table-scroll th{background:var(--surface)}article pre{overflow:auto;max-width:100%;padding:22px;background:var(--surface);border:1px solid var(--line);font-size:13px;line-height:1.55}article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}article p code,article li code{overflow-wrap:anywhere}article blockquote{border-left:3px solid var(--blue);padding-left:20px;color:var(--muted)}article img{max-width:100%;height:auto}.series-nav{border-top:1px solid var(--line);margin-top:48px;padding-top:24px;display:grid;gap:14px}.series-nav p{margin:6px 0}.coming-soon{display:inline-block;margin-left:8px;color:var(--muted);font:700 11px system-ui,sans-serif}.variant-picker{margin-top:28px}.variant-controls{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}.variant-controls button{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:12px 15px;font:700 12px system-ui,sans-serif;cursor:pointer}.variant-controls button[aria-pressed=true]{border-color:var(--blue);background:var(--blue);color:var(--paper)}.variant-description{color:var(--muted)}.contact-strip{display:flex;align-items:center;justify-content:space-between;gap:20px}.contact-strip p{font-size:20px}footer{border-top:1px solid var(--line);border-bottom:0;color:var(--muted);font:13px system-ui,sans-serif}.post-card a:hover{text-decoration:underline}.site-header nav a:hover,footer nav a:hover{color:var(--blue)}body[data-variant=fieldnotes]{--paper:#f4efe5;--surface:#ebe4d8;--ink:#241f18;--muted:#686056;--blue:#a34d24;--line:#d2c8b9;font-family:Georgia,"Times New Roman",serif}html[data-theme=dark] body[data-variant=fieldnotes]{--paper:#211c17;--surface:#302920;--ink:#f4eadb;--muted:#c3b49f;--blue:#ffb286;--line:#514638}body[data-variant=fieldnotes] .hero{max-width:820px}body[data-variant=fieldnotes] h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.07em}body[data-variant=fieldnotes] .latest h2{letter-spacing:normal}body[data-variant=systems]{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}html[data-theme=dark] body[data-variant=systems]{--paper:#10191b;--surface:#172426;--ink:#e8f1ed;--muted:#a6b7b1;--blue:#72dbb3;--line:#324345}body[data-variant=systems] h1,body[data-variant=systems] h2{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:normal}body[data-variant=systems] .feature img{filter:saturate(.6) contrast(1.1)}@media(max-width:700px){.site-header,footer{padding:19px 20px}.site-header{gap:14px;flex-wrap:wrap}.site-header .wordmark{order:0}.site-header .theme-toggle{order:1;margin-left:auto}.site-header nav{order:2;flex:1 1 100%;gap:10px;flex-wrap:wrap;justify-content:flex-start;font-size:11px}.site-header nav a{white-space:nowrap}main{padding:60px 22px 72px}.feature{grid-template-columns:1fr;gap:20px;margin-top:64px}.feature img{height:210px}.contact-strip{align-items:flex-start;flex-direction:column;gap:5px}}@media(max-width:420px){.site-header{padding:17px 15px}.site-header nav{gap:6px;font-size:10px}.wordmark{font-size:21px}main{padding:50px 18px 64px}h1{font-size:clamp(52px,15vw,68px)}.actions{gap:17px}.feature{margin-top:52px}article{font-size:17px}article pre{padding:14px}.variant-controls button{flex:1 1 100%}footer{align-items:flex-start;flex-direction:column;gap:14px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}`

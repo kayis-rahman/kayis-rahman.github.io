@@ -28,7 +28,8 @@
 
   <!-- PWA -->
   <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
-  <meta name="theme-color" content="#10191b">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10191b" media="(prefers-color-scheme: dark)">
 
   <!-- Favicon -->
   <link rel="icon" href="{{ '/favicon.svg' | relative_url }}" type="image/svg+xml">
@@ -56,14 +57,24 @@
         applyTheme: null
       };
       var root = document.documentElement;
+      state.syncThemeColor = function (theme) {
+        var color = theme === 'dark' ? '#10191b' : '#ffffff';
+        document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+          meta.setAttribute('content', color);
+        });
+      };
       root.setAttribute('data-theme', state.theme);
+      state.syncThemeColor(state.theme);
       window.__kayisThemeState = state;
       if (media) {
         var onSystemChange = function (event) {
           if (state.hasStoredChoice) return;
           state.theme = event.matches ? 'dark' : 'light';
           if (state.applyTheme) state.applyTheme(state.theme);
-          else root.setAttribute('data-theme', state.theme);
+          else {
+            root.setAttribute('data-theme', state.theme);
+            state.syncThemeColor(state.theme);
+          }
         };
         if (media.addEventListener) media.addEventListener('change', onSystemChange);
         else if (media.addListener) media.addListener(onSystemChange);

@@ -25,9 +25,9 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
 		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
 		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked"},
-		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical"},
+		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
 		"llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html":          {"The Cost Maths", "Part 1", "canonical"},
-		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical"},
+		"llm/infrastructure/self-hosting/2026/05/26/the-model-hunt-five-attempts-one-winner.html": {"Attempt 1", "Part 2", "canonical", `href="/llm/infrastructure/self-hosting/2026/05/19/why-i-stopped-paying-per-token.html" title="Why I Stopped Paying Per Token — Part 1 of 5">← Previous Post`, `href="/llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html" title="The GPU Graveyard: cuInit 999, Broken Hosts, and How to Verify an Instance — Part 3 of 5">Next Post →`},
 		"llm/infrastructure/self-hosting/2026/06/02/the-gpu-graveyard-cuinit-999.html":            {"cuInit: 999", "Part 3", "canonical"},
 		"llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html":          {"CUDA 13", "vLLM", "canonical", "llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html", "SELF-HOSTING LLM INFERENCE", "Previous: The GPU Graveyard", "Is It Actually Worth It?"},
 	}
@@ -58,6 +58,16 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		for _, property := range []string{"og:title", "og:description", "og:url"} {
 			if !strings.Contains(string(data), `property="`+property+`"`) {
 				t.Errorf("%s missing %s metadata", file, property)
+			}
+		}
+		for _, name := range []string{"twitter:title", "twitter:description", "twitter:image"} {
+			if !strings.Contains(string(data), `name="`+name+`"`) {
+				t.Errorf("%s missing %s metadata", file, name)
+			}
+		}
+		for _, media := range []string{`media="(prefers-color-scheme: light)"`, `media="(prefers-color-scheme: dark)"`} {
+			if !strings.Contains(string(data), media) {
+				t.Errorf("%s missing browser theme color for %s", file, media)
 			}
 		}
 		if file == "index.html" && !strings.Contains(string(data), `alt=""`) {
@@ -130,9 +140,14 @@ func TestPostArticleKeepsSeriesNavigationWithinSeries(t *testing.T) {
 			t.Errorf("series article missing %q: %s", expected, article)
 		}
 	}
+	seriesEnd := strings.Index(article, `</nav>`)
+	if seriesEnd < 0 {
+		t.Fatal("series navigation is not closed")
+	}
+	seriesArticle := article[:seriesEnd]
 	for _, unexpected := range []string{`href="/b/previous.html"`, `href="/b/next.html"`} {
-		if strings.Contains(article, unexpected) {
-			t.Errorf("series article includes cross-series destination %q: %s", unexpected, article)
+		if strings.Contains(seriesArticle, unexpected) {
+			t.Errorf("series article includes cross-series destination %q: %s", unexpected, seriesArticle)
 		}
 	}
 	unassigned := []Post{{Meta: FrontMatter{Title: "Unassigned", SeriesPart: 1}}}

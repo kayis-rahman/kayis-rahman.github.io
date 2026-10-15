@@ -17,6 +17,7 @@ $(function () {
   function applyTheme(theme) {
     html.setAttribute('data-theme', theme);
     state.theme = theme;
+    if (state.syncThemeColor) state.syncThemeColor(theme);
     if (toggle) toggle.setAttribute('aria-pressed', String(theme === 'dark'));
     if (icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     var frame = document.querySelector('.utterances-frame');
