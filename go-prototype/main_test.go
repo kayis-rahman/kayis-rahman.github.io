@@ -64,7 +64,7 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 		t.Fatalf("generator failed: %v\n%s", err, output)
 	}
 	checks := map[string][]string{
-		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
+		"index.html":          {"Kayis", "Synapse", "The Config That Finally Worked", "canonical", "Building automated trading systems and LLM inference infrastructure on the side.", `<title>Security Engineering &amp; Systems · Kayis Rahman</title>`, `<meta property="og:title" content="Security Engineering &amp; Systems · Kayis Rahman">`, `<meta name="twitter:title" content="Security Engineering &amp; Systems · Kayis Rahman">`, "<html lang=\"en\" data-theme=\"light\"", `href="/search/">Search</a>`, `href="/feed.xml">RSS</a>`, "<body data-variant=\"systems\"", "data-variant-choice=\"signal\" aria-pressed=\"false\"", "data-variant-choice=\"fieldnotes\" aria-pressed=\"false\"", "data-variant-choice=\"systems\" aria-pressed=\"true\"", "Systems — a structured console aesthetic"},
 		"projects/index.html": {"Synapse", "Raspberry Pi 5", "Swing Trading System", "Pomodoro Timer iOS", "PKI Certificate Lifecycle Tool", "Nifty Screener", "canonical", "Visit my GitHub profile for project updates"},
 		"posts/index.html":    {"Ideas to Production", "Why I Stopped Paying Per Token", "The Model Hunt", "The GPU Graveyard", "The Config That Finally Worked", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `<p class="post-subtitle">I was on the $20 Claude Pro plan and hitting rate limits every other session.</p>`, `Part 1 ended with one change in ~/.claude/settings.json:`, `Part 2 ended with a working model and a working framework. What it did not have was a working GPU instance.`, `Part 3 ended with a working GPU instance. cuInit returned 0. PyTorch saw the GPU. Nothing was broken.`, `<span class="reading-time">11 mins read</span>`, `href="/tags/#career"`, `href="/tags/#vllm"`},
 		"career/engineering/2026/05/17/ideas-to-production.html":                                  {"Ten years", "MediSoft", "Qualcomm", "canonical", `<p class="post-subtitle">A decade of building things, across five companies and two continents.</p>`, `href="/tags/#career"`, `href="/tags/#engineering"`, `Share on Twitter/X`, `Share on LinkedIn`, `About Kayis Rahman`, `https://buttondown.email/api/emails/embed-subscribe/kayis`, `href="/subscribe/"`},
@@ -166,6 +166,13 @@ func TestPrototypeBuildEmitsPagesAtExistingRoutes(t *testing.T) {
 			`href="/about/">About</a>`,
 			`href="/search/">Search</a>`,
 			`href="mailto:kaisbk1@gmail.com">Email</a>`,
+			`<meta name="author" content="Kayis Rahman">`,
+			`<link rel="icon" href="/favicon.svg" type="image/svg+xml">`,
+			`<link rel="manifest" href="/manifest.json">`,
+			`<meta property="og:site_name" content="Kayis Rahman">`,
+			`<meta name="twitter:site" content="@kayisrahman">`,
+			`<link rel="alternate" type="application/rss+xml" title="Kayis Rahman" href="/feed.xml">`,
+			`<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Search Kayis Rahman">`,
 			`href="https://twitter.com/kayisrahman" rel="noopener noreferrer">Twitter ↗</a>`,
 			`href="https://github.com/kayis-rahman" rel="noopener noreferrer">GitHub ↗</a>`,
 			`href="https://www.linkedin.com/in/kayisrahman/" rel="noopener noreferrer">LinkedIn ↗</a>`,
