@@ -28,8 +28,8 @@
 
   <!-- PWA -->
   <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
-  <meta name="theme-color" content="#0056b2" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1b1b1e" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10191b" media="(prefers-color-scheme: dark)">
 
   <!-- Favicon -->
   <link rel="icon" href="{{ '/favicon.svg' | relative_url }}" type="image/svg+xml">
@@ -42,17 +42,47 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha384-t1nt8BQoYMLFN5p42tRAtuAAFQaCQODekUVeKKZrEnEyp4H2R0RHFz0KWpmj7i8g" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="{{"/assets/main.css" | relative_url }}">
-
-  <!-- Apply theme before render to prevent flash -->
+  <!-- Apply the saved or system theme before stylesheets render. -->
   <script>
     (function () {
-      var stored = localStorage.getItem('theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = stored || (prefersDark ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
+      var key = 'theme';
+      var stored = null;
+      var media = null;
+      try { stored = window.localStorage.getItem(key); } catch (e) {}
+      try { media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null; } catch (e) {}
+      var validStoredChoice = stored === 'light' || stored === 'dark';
+      var state = {
+        theme: validStoredChoice ? stored : (media && media.matches ? 'dark' : 'light'),
+        hasStoredChoice: validStoredChoice,
+        applyTheme: null
+      };
+      var root = document.documentElement;
+      state.syncThemeColor = function (theme) {
+        var color = theme === 'dark' ? '#10191b' : '#ffffff';
+        document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+          meta.setAttribute('content', color);
+        });
+      };
+      root.setAttribute('data-theme', state.theme);
+      state.syncThemeColor(state.theme);
+      window.__kayisThemeState = state;
+      if (media) {
+        var onSystemChange = function (event) {
+          if (state.hasStoredChoice) return;
+          state.theme = event.matches ? 'dark' : 'light';
+          if (state.applyTheme) state.applyTheme(state.theme);
+          else {
+            root.setAttribute('data-theme', state.theme);
+            state.syncThemeColor(state.theme);
+          }
+        };
+        if (media.addEventListener) media.addEventListener('change', onSystemChange);
+        else if (media.addListener) media.addListener(onSystemChange);
+      }
     })();
   </script>
+
+  <link rel="stylesheet" href="{{"/assets/main.css" | relative_url }}">
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">

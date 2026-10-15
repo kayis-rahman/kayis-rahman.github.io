@@ -239,4 +239,4 @@ That is Part 4.
 
 *This is Part 3 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
-*I write about Java, PKI, LLM inference infrastructure, and building things on the side. Find me on [GitHub](https://github.com/kayisrahman) and [LinkedIn](https://linkedin.com/in/kayisrahman).*
+*I write about Java, PKI, LLM inference infrastructure, and building things on the side. Find me on [GitHub](https://github.com/kayis-rahman) and [LinkedIn](https://www.linkedin.com/in/kayisrahman/).*

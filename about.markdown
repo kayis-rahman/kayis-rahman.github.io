@@ -22,4 +22,4 @@ Outside work I play and watch football, play cricket, and spend more time than I
 
 If something here is relevant to you, whether you're building in a similar space, have a hard problem that needs a security or backend engineering perspective, or just want to talk, reach out.
 
-[GitHub](https://github.com/kayisrahman) · [LinkedIn](https://linkedin.com/in/kayisrahman) · [Blog](https://kayis-rahman.github.io/posts) · [kaisbk1@gmail.com](mailto:kaisbk1@gmail.com)
+[GitHub](https://github.com/kayis-rahman) · [LinkedIn](https://www.linkedin.com/in/kayisrahman/) · [Blog](https://kayis-rahman.github.io/posts) · [kaisbk1@gmail.com](mailto:kaisbk1@gmail.com)

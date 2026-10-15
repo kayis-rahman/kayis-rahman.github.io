@@ -1,6 +1,13 @@
-# Go static-generator prototype (reversible)
+---
+layout: page
+title: Go static-site generator
+description: How the Go overlay builds portfolio pages alongside Jekyll's supporting routes.
+permalink: /go-prototype/
+---
 
-This is an HTML-first Go generator for three selected pages. The GitHub Pages workflow still builds the complete site with Jekyll, then overlays the Go-generated `/`, `/projects/`, and representative post pages before minification and deployment. This keeps all other Jekyll routes and assets intact while these selected routes use the Go output. The generator reads the home description from `index.markdown`, the selected project from `projects.md`, and the representative post directly from the existing source tree; it does not copy or rewrite the Markdown. Generated files default to the operating system's temp directory as `kayis-go-prototype-site` (override with `GO_PROTOTYPE_OUT`). Before removing any output, the generator resolves path components and symlinks and rejects outputs inside, equal to, or containing the source repository. To roll back the cutover, remove the `Overlay Go-generated pages` step from `.github/workflows/jekyll-gh-pages.yml`; the Jekyll build remains the complete fallback site.
+The GitHub Pages workflow builds the full Jekyll site, then overlays Go-generated home, projects, about, resume, writing index, and each published, dated Markdown post whose date is not in the future. Both generators read the existing source Markdown; the Go generator does not move or rewrite it. The overlay preserves the current canonical paths, including nested category/date routes for published posts. Jekyll owns `/contact` and continues to supply auxiliary routes such as `/categories/`, `/tags/`, `/search/`, `/subscribe/`, RSS, sitemap, and other supporting assets.
+
+The generator validates its output destination after resolving symlinks and rejects any path that overlaps or contains the source repository before removing output. To roll back the overlay, remove the `Overlay Go-generated pages` workflow step; Jekyll remains a complete fallback.
 
 ## Build and preview
 
@@ -8,21 +15,20 @@ From the repository root:
 
 ```sh
 cd go-prototype
-go mod download
 GO_PROTOTYPE_OUT=/tmp/kayis-go-prototype-site go run . ..
 python3 -m http.server 4173 --directory /tmp/kayis-go-prototype-site
 ```
 
-Then open `http://localhost:4173/`. Routes generated: `/`, `/projects/`, and `/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html`. The project page intentionally contains the existing Synapse section only. The home page introduces the engineering focus and links to the project and representative post. Generated pages include Open Graph and Twitter card metadata; the representative article includes its series part and previous/next orientation. The Go generator is not a replacement for Jekyll and intentionally does not port its complete search, taxonomy, RSS, newsletter, or auxiliary-page surface; those features remain available on the Jekyll-generated routes and assets that are not overlaid.
+Open `http://localhost:4173/`. Run tests with `go test ./...` from `go-prototype`.
 
-Run checks with `go test ./...` from `go-prototype`; they assert rendered routes, preserved home Markdown description, canonical origin, zero JavaScript files, and that unsafe destination paths (including traversal and symlink forms) fail without removing a source sentinel.
+## Generated post routes
 
-## Comparison against Jekyll
+Post routes derive from source categories, dates, and filenames; unpublished and future-dated posts are excluded from generated routes, listings, latest-post selection, and series navigation. Posts retain their full Markdown bodies, canonical metadata, original inline links, and series navigation; Part 5 is still marked coming soon because it is not present in the source tree. The projects page now renders every existing project rather than only Synapse.
 
-Measured on the existing source tree for `/`, `/projects/`, and `/llm/infrastructure/self-hosting/2026/06/09/the-config-that-finally-worked.html`. Both emit static HTML for GitHub Pages and retain `https://kayis-rahman.github.io` as canonical origin and current route conventions.
+The homepage offers three keyboard-operable style variants (Signal, Field notes, Systems). Variant selection is client-side and leaves all content and links unchanged. Motion is limited to restrained color transitions; reduced-motion preferences are honored. No separate JavaScript bundle or external images are needed; the existing `img/home.jpg` asset is copied into the output.
 
-- **JavaScript transfer:** the prototype has no JavaScript files (0 bytes). Jekyll's local theme and site scripts are 1,966 + 9,892 = 11,858 bytes uncompressed; external jQuery and Bootstrap are also referenced, but their transfer sizes were not measured.
-- **Authoring:** both use the existing Markdown sources. The prototype reads the home description and post frontmatter/body and selects the existing Synapse prose; no content migration or custom content schema is introduced.
-- **Build complexity:** the Go generator has two direct module dependencies (Goldmark and yaml.v3), with direct `go run`/`go test` commands and static file output. The Gemfile has seven direct gem declarations: six in addition to `github-pages`. Jekyll provides the complete base production build and requires its existing Ruby/Bundler/theme/plugin toolchain; Go overlays the three selected routes. The generator does not claim feature parity and would need deliberate work for all current site features.
+All Go pages share the accessible light/dark toggle and saved `theme` preference used by Jekyll pages. First visit follows the system color preference; stored choices are used when browser storage is available. If storage is blocked, the system preference and in-page toggle still work. The theme is applied in the document head before the stylesheet to avoid a flash of the wrong theme.
 
-The deployment overlay is intentionally limited to the prototype's three generated pages. Future expansion to other routes requires deliberate parity work and route-by-route validation.
+## Auxiliary Jekyll routes
+
+Categories, tags, client-side search, subscription forms, RSS, sitemap, 404 handling, and supporting discovery assets continue to be emitted by the full Jekyll build and are intentionally not reimplemented in Go in this pass. The workflow overlays Go-owned routes only; it does not remove these base-site routes or assets.

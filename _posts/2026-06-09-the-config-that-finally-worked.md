@@ -5,9 +5,8 @@ date: 2026-06-09
 categories: [llm, infrastructure, self-hosting]
 tags: [vllm, gpuhub, qwen3, self-hosted-llm, turboquant, rtx-5090, claude-code]
 description: "The full install script, every vLLM flag explained, the chat template patch that makes Claude Code tool calls work, and the settings.json that ties it together. Part 4 of 5."
-series: self-hosting-llm
+series: "Self-Hosting LLM Inference on Rented GPUs"
 series_part: 4
-series_title: "Why I Stopped Paying Per Token"
 ---
 
 Part 3 ended with a working GPU instance. cuInit returned 0. PyTorch saw the GPU. Nothing was broken.
@@ -401,4 +400,4 @@ That is Part 5.
 
 *This is Part 4 of a 5-part series on self-hosting LLM inference on rented GPUs.*
 
-*I write about Java, PKI, LLM inference infrastructure, and building things on the side. Find me on [GitHub](https://github.com/kayis-rahman) and [LinkedIn](https://linkedin.com/in/kayisrahman).*
+*I write about Java, PKI, LLM inference infrastructure, and building things on the side. Find me on [GitHub](https://github.com/kayis-rahman) and [LinkedIn](https://www.linkedin.com/in/kayisrahman/).*

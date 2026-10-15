@@ -6,6 +6,7 @@ vendor
 node_modules
 private/
 .idea/
+go-prototype/go-prototype
 .playwright-mcp/
 .DS_Store
 screenshots/

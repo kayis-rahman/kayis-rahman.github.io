@@ -28,8 +28,8 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://kayis-rahman.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 author: Kayis Rahman
 author_bio: "Staff Security Engineer at Qualcomm. I write about PKI, Java, LLM inference, and building things on the side."
+github_username: kayis-rahman
 twitter_username: kayisrahman
-github_username: kayisrahman
 linkedin_username: kayisrahman
 google_analytics: G-5TTZSZQHPY
 disable_disk_cache: false
@@ -49,7 +49,7 @@ navigation:
   - title: "Resume"
     url: "/resume/"
   - title: "Contact"
-    url: "/contact/"
+    url: "/contact"
 
 # Build settings
 sass:
